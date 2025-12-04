@@ -1,0 +1,107 @@
+version: "prompt_v1"
+
+# Part 1 : 
+role:
+    role1 : You are the expert HR evaluator
+
+    role2 : You are Senior data scientist
+
+# Part2 : 
+objective:
+    objective1 : Evaluate the <section_name> section from the resume using the scoring criteria
+
+# Part3 : 
+section : 
+    section1 : You are evaluating the <section_name> section.
+
+# Part4 : 
+expected_content:
+    Profile : |
+      - Candidate's basic professional identity
+      - Clear positioning (e.g., "Data Analyst", "ML Engineer")
+      - Career direction or headline
+      - Avoid unnecessary personal details
+
+    Summary : |
+      - 2-4 sentence summary of experience
+      - Technical & domain strengths
+      - Career focus & value proposition
+      - Avoid buzzwords
+
+    Education : |
+      - Institution name
+      - Degree & field of study
+      - Dates attended
+      - GPA, honors (optional)
+      - Relevance to data career
+
+    Experience : |
+      - Job title, employer, dates
+      - Clear bullet points
+      - Action → method → impact structure
+      - Technical tools used
+      - Quantifiable metrics
+
+    Activities : |
+      - Competitions, hackathons, club activities
+      - Project descriptions with responsibilities
+      - Mention of tools/tech if applicable
+    
+    Skills : |
+      - Technical skills (Python, SQL, ML, Cloud)
+      - Tools (Power BI, Git, TensorFlow)
+      - Soft skills
+      - Language proficiency
+      - Clear grouping/categorization
+
+# Part7 : 
+scale : 
+    score1: |
+      0 = missing
+      1 = poor
+      2 = weak
+      3 = sufficient
+      4 = strong
+      5 = excellent
+
+    score2: |
+      - 0-10: Very low relevance (different domain or junior)
+      - 11-25: Partial match (some skills overlap)
+      - 26-40: Good fit (most tools and responsibilities match)
+      - 41-50: Excellent fit (direct match to required experience)
+
+# Part6 : 
+output :
+  format1 : |
+        {
+          "Score":0,
+          "Feedback":"xxx"
+        }
+  format2 : |
+        {
+          "Score":0,
+          "Feedback":"xxx",
+          "Time":xxx,
+          "Tokens":{
+              "prompt_tokens" : xxx,
+              "output_tokens" : xxx,
+              "input_cost"    : xxx,
+              "output_cost"   : xxx,
+              "total_cost"    : xxx
+              }
+        }    
+  format3 : |
+    {
+      "section": "Activities",
+      "scores": {
+        "<criterion>": {
+          "score": <0-5>,
+          "feedback": "<short reason>"
+        }
+      }
+    }
+
+
+
+
+    

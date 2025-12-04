@@ -1,0 +1,45 @@
+version: "weights_v1"
+
+weights:
+    Profile:
+        section_weight: 0.1
+        Completeness: 10
+        ContentQuality: 10
+        Grammar : 10
+        Length : 10
+        RoleRelevance : 10
+    Summary:
+        section_weight: 0.1
+        Completeness: 10
+        ContentQuality: 10
+        Grammar : 10
+        Length : 10
+        RoleRelevance : 10
+    Education:
+        section_weight: 0.2
+        Completeness: 10
+        ContentQuality: 10
+        Grammar : 10
+        Length : 10
+        RoleRelevance : 10
+    Experience:
+        section_weight: 0.2
+        Completeness: 10
+        ContentQuality: 10
+        Grammar : 10
+        Length : 10
+        RoleRelevance : 10
+    Activities:
+        section_weight: 0.2
+        Completeness: 10
+        ContentQuality: 10
+        Grammar : 10
+        Length : 10
+        RoleRelevance : 10
+    Skills:
+        section_weight: 0.2
+        Completeness: 10
+        ContentQuality: 10
+        Grammar : 10
+        Length : 10
+        RoleRelevance : 10                                         

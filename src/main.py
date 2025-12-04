@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from datetime import datetime, timezone, timedelta
 
-
+from core.llmcaller import LlmCaller
 class AnalyseRequest(BaseModel):
     JSON: str | None = None
 
@@ -37,3 +37,11 @@ def health_fastapi():
     return {"status": "ok", "service": "FastAPI"}
 
 
+caller = LlmCaller()
+# 02. Gemini health x
+@app.get("/health/gemini", tags=["Health & Metadata"])
+def health_gemini():
+    res = caller.call(
+        "Return this as JSON: {'status': 'connected'}"
+    )
+    return {"response":res}

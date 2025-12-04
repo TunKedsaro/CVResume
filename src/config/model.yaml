@@ -1,0 +1,5 @@
+model:
+  provider: google
+  embedding_model: text-embedding-004
+  generation_model: gemini-2.5-flash
+                                                            

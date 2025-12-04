@@ -1,7 +1,8 @@
 FROM python:3.12-slim
 
 ENV PYTHONUNBUFFERED=True
-ENV PYTHONPATH=/app
+ENV PYTHONPATH=/app/src
+
 
 WORKDIR /app
 
