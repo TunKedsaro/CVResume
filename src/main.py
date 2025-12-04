@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from datetime import datetime, timezone, timedelta
 
 from core.llmcaller import LlmCaller
+from core.getmetadata import get_metadata
 class AnalyseRequest(BaseModel):
     JSON: str | None = None
 
@@ -36,7 +37,6 @@ app.add_middleware(
 def health_fastapi():
     return {"status": "ok", "service": "FastAPI"}
 
-
 caller = LlmCaller()
 # 02. Gemini health x
 @app.get("/health/gemini", tags=["Health & Metadata"])
@@ -45,3 +45,8 @@ def health_gemini():
         "Return this as JSON: {'status': 'connected'}"
     )
     return {"response":res}
+
+# 03. Metadata
+@app.get("/health/metadata", tags=["Health & Metadata"])
+def metadata():
+    return {"message":get_metadata()}
