@@ -5,13 +5,18 @@ import os
 class Helper:
     @staticmethod
     def load_file(filepath: str) -> str:
-        with open(filepath, "r", encoding="utf-8") as f:
-            return f.read()
+        with open(filepath, "r", encoding="utf-8") as file:
+            return file.read()
 
     @staticmethod
     def load_yaml(filepath: str) -> dict:
         with open(filepath, "r", encoding="utf-8") as f:
             return yaml.safe_load(f)
+        
+    @staticmethod
+    def save_yaml(newconfig,filepath: str):
+        with open(filepath,"w",encoding="utf-8") as file:
+            return yaml.dump(newconfig,file,sort_keys=False)
 
     @staticmethod
     def fop(num: float) -> float:
