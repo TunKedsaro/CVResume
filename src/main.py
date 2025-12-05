@@ -62,8 +62,8 @@ class test(BaseModel):
     generation_model :str | None = Field (default="gemini-2.5-flash")
 
 from core.modelupdate import update_model
-@app.put("/config/model",tags=["admin"])
-def updatemodel(payload:test):
+@app.put("/config/model",tags=["Admin"])
+def update_model_config(payload:test):
     update_model(payload.model_dump())
     return {
         "status":"updated",
@@ -95,9 +95,90 @@ class GlobalUpdatePayload(BaseModel):
     pricing: Optional[PricingConfig] = Field(default=None)
     scoring: Optional[ScoringConfig] = Field(default=None)
 
-@app.put("/config/global",tags=["admin"])
+@app.put("/config/global",tags=["Admin"])
 def update_global_config(payload:GlobalUpdatePayload):
     updated = update_global(payload.model_dump())
+    return {
+        "status":"updated",
+        "config":updated
+    }
+
+from core.weightupdate import update_weight
+class Criteria(BaseModel):
+    Completeness: Optional[int]   = Field(default=10)
+    ContentQuality: Optional[int] = Field(default=10)
+    Grammar: Optional[int]        = Field(default=10)
+    Length: Optional[int]         = Field(default=10)
+    RoleRelevance: Optional[int]  = Field(default=10)
+    section_weight: Optional[float] = Field(default=0.1)
+class ResumeParts(BaseModel):
+    Profile: Optional[Criteria]  = Field(
+        default = None,
+        example={
+            "Completeness": 10,
+            "ContentQuality": 10,
+            "Grammar": 10,
+            "Length": 10,
+            "RoleRelevance": 10,
+            "section_weight": 0.1
+        })
+    Summary: Optional[Criteria]  = Field(
+        default = None,
+        example={
+            "Completeness": 10,
+            "ContentQuality": 10,
+            "Grammar": 10,
+            "Length": 10,
+            "RoleRelevance": 10,
+            "section_weight": 0.1
+        })
+    Education: Optional[Criteria]  = Field(
+        default = None,
+        example={
+            "Completeness": 10,
+            "ContentQuality": 10,
+            "Grammar": 10,
+            "Length": 10,
+            "RoleRelevance": 10,
+            "section_weight": 0.2
+        })
+    Experience: Optional[Criteria]  = Field(
+        default = None,
+        example={
+            "Completeness": 10,
+            "ContentQuality": 10,
+            "Grammar": 10,
+            "Length": 10,
+            "RoleRelevance": 10,
+            "section_weight": 0.2
+        })
+    Activities: Optional[Criteria]  = Field(
+        default = None,
+        example={
+            "Completeness": 10,
+            "ContentQuality": 10,
+            "Grammar": 10,
+            "Length": 10,
+            "RoleRelevance": 10,
+            "section_weight": 0.2
+        })
+    Skills: Optional[Criteria]  = Field(
+        default = None,
+        example={
+            "Completeness": 10,
+            "ContentQuality": 10,
+            "Grammar": 10,
+            "Length": 10,
+            "RoleRelevance": 10,
+            "section_weight": 0.2
+        })
+class WeightUpdatePayload(BaseModel):
+    version: Optional[str] = Field(default="weights_v1")
+    weights: Optional[ResumeParts]   = Field(default=None)
+# 15. Update weight
+@app.put("/config/weight",tags=['Admin'])
+def update_global_config(payload:WeightUpdatePayload):
+    updated = update_weight(payload.model_dump())
     return {
         "status":"updated",
         "config":updated

@@ -25,3 +25,7 @@ class Helper:
     @staticmethod
     def jsonstr(obj) -> str:
         return json.dumps(obj, indent=4, ensure_ascii=False)
+    
+    @staticmethod
+    def prettyjson(txt:str) -> str:
+        return str(json.dumps(txt,indent=4, ensure_ascii=False))
