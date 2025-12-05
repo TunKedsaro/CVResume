@@ -1,4 +1,12 @@
-version : "global_v1"
-
+version: global_v1
 setting:
-    GOOGLE_API_KEY : AIzaS...
+  GOOGLE_API_KEY: AIza-xxxx
+pricing:
+  gemini_2_5_flash:
+    input_per_million: 0.1
+    output_per_million: 0.4
+scoring:
+  final_score_max: 100
+  normalize: true
+  round_digits: 2
+  aggregation_method: weighted_sum

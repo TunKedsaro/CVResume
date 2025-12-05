@@ -1,5 +1,4 @@
 from core.helper import Helper
-import yaml
 def update_model(payload):
     config_file  = Helper.load_yaml("src/config/model.yaml")
     config_value = config_file["model"]
@@ -18,10 +17,6 @@ def update_model(payload):
     #     return yaml.dump(config_file,f,sort_keys=False)
 
     Helper.save_yaml(config_file,"src/config/model.yaml")
-
-
-
-
 
 # pl0 = {
 #     "provider":"google",
