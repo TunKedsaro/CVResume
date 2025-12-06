@@ -13,7 +13,7 @@ class AnalyseRequest(BaseModel):
 
 app = FastAPI(
     title="CV/Resume Evaluation API",
-    version="0.1.5",
+    version="0.1.0",
     description=(
         "Microservices for CV/Resume evaluation (In progress krub)"
         "<br>"
@@ -63,6 +63,26 @@ from core.promptbuilder import PromptBuilder
 from fastapi import Response
 
 ### Debug & Lab.API:04 ######################################################
+from core.helper import Helper
+mock_data = Helper.load_json("src/mock/resume1.json")
+@app.get("/evaluation/logexamplepayload",tags=["Debug & Lab"])
+def show_example_of_payload_json_body():
+    return {"response":mock_data}
+
+### Debug & Lab.API:05 ######################################################
+@app.get("/evaluation/callexamplepayload",tags=["Debug & Lab"])
+def call_example_payload_json_body():
+    test_payload = {"resume_json": mock_data}
+    p1 = PromptBuilder(
+        section  = "Profile",
+        criteria = ["Completeness", "ContentQuality"],
+        cvresume = test_payload["resume_json"]
+    )
+    prompt = p1.build()
+    res = caller.call(prompt)
+    return {"response": res}
+
+### Debug & Lab.API:06 ######################################################
 class PromptBuilderPayload(BaseModel):
         section  : str  | None = Field (default = "Summary")
         criteria : list | None = Field (default = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"])
@@ -78,34 +98,119 @@ def prompt_lab(payload:PromptBuilderPayload):
     prompt = pb.build()
     return Response(content=prompt, media_type="text/plain")
 
-### Debug & Lab.API:05 ######################################################
-from core.helper import Helper
-mock_data = Helper.load_json("src/mock/resume1.json")
-@app.get("/evaluation/logexamplepayload",tags=["Debug & Lab"])
-def show_example_of_payload_json_body():
-    return {"response":mock_data}
-
-### Debug & Lab.API:06 ######################################################
-@app.get("/evaluation/callexamplepayload",tags=["Debug & Lab"])
-def call_example_payload_json_body():
-    test_payload = {"resume_json": mock_data}
-    p1 = PromptBuilder(
-        section  = "Profile",
-        criteria = ["Completeness", "ContentQuality"],
-        cvresume = test_payload["resume_json"]
-    )
-    prompt = p1.build()
-    res = caller.call(prompt)
-    return {"response": res}
-
 ### Debug & Lab.API:07 ######################################################
+from core.promptupdate import update_prompt
+
+class PromptRole(BaseModel):
+    role1: Optional[str] = None
+class PromptObjective(BaseModel):
+    objective1: Optional[str] = None
+class PromptSectionName(BaseModel):
+    section1: Optional[str] = None
+class ExpectedContent(BaseModel):
+    Profile: Optional[str] = None
+    Summary: Optional[str] = None
+    Education: Optional[str] = None
+    Experience: Optional[str] = None
+    Activities: Optional[str] = None
+    Skills: Optional[str] = None
+class PromptScale(BaseModel):
+    score1: Optional[str] = None
+    score2: Optional[str] = None
+class OutputFormat(BaseModel):
+    format1: Optional[str] = None
+    format2: Optional[str] = None
+    format3: Optional[str] = None
+
+class PromptUpdatePayload(BaseModel):
+    version: Optional[str] = "prompt_v1"
+
+    role: Optional[PromptRole] = None
+    objective: Optional[PromptObjective] = None
+    section: Optional[PromptSectionName] = None
+    expected_content: Optional[ExpectedContent] = None
+    scale: Optional[PromptScale] = None
+    output: Optional[OutputFormat] = None
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "version": "prompt_v1",
+                "role": {
+                    "role1": "You are the expert HR evaluator"
+                },
+                "objective": {
+                    "objective1": "Evaluate the <section_name> section from the resume using the scoring criteria"
+                },
+                "section": {
+                    "section1": "You are evaluating the <section_name> section."
+                },
+                "expected_content": {
+                    "Profile": 
+                        "- Candidate's basic professional identity\n"
+                        "- Clear positioning (e.g., \"Data Analyst\", \"ML Engineer\")\n"
+                        "- Career direction or headline\n"
+                        "- Avoid unnecessary personal details\n"
+                        "- Feedback word 20 words",
+                    "Summary": 
+                        "- 2-4 sentence summary of experience\n"
+                        "- Technical & domain strengths\n"
+                        "- Career focus & value proposition\n"
+                        "- Avoid buzzwords\n"
+                        "- Feedback word 20 words",
+                    "Education":
+                        "- Institution name\n"
+                        "- Degree & field of study\n"
+                        "- Dates attended\n"
+                        "- GPA, honors (optional)\n"
+                        "- Relevance to data career\n"
+                        "- Feedback word 20 words",
+                    "Experience":
+                        "- Job title, employer, dates\n"
+                        "- Clear bullet points\n"
+                        "- Action then method then impact structure\n"
+                        "- Technical tools used\n"
+                        "- Quantifiable metrics\n"
+                        "- Feedback word 20 words",
+                    "Activities":
+                        "- Competitions, hackathons, club activities\n"
+                        "- Project descriptions with responsibilities\n"
+                        "- Mention of tools/tech if applicable\n"
+                        "- Feedback word 20 words",
+                    "Skills":
+                        "- Technical skills (Python, SQL, ML, Cloud)\n"
+                        "- Tools (Power BI, Git, TensorFlow)\n"
+                        "- Soft skills\n"
+                        "- Language proficiency\n"
+                        "- Clear grouping/categorization\n"
+                        "- Feedback word 20 words"
+                },
+                "scale": {
+                    "score1":
+                        "0 = missing\n"
+                        "1 = poor\n"
+                        "2 = weak\n"
+                        "3 = sufficient\n"
+                        "4 = strong\n"
+                        "5 = excellent"
+                }
+            }
+        }
+    }
 @app.put("/config/prompt", tags=["Debug & Lab"])
-def Xupdate_prompt():
-    return {"message": "prompt.yaml updated"}
+def update_prompt_config(payload:PromptUpdatePayload):
+    payload_dict = payload.model_dump(exclude_none=True)
+    updated_yaml = update_prompt(payload_dict)
+    return {
+        "message":"prompt.yaml updated !!!",
+        "updated_keys":list(payload_dict.keys()),
+        "config":updated_yaml
+    }
 #############################################################################
 #############################################################################
 
 ### Evaluation ##############################################################
+### Evaluation.API:08 #######################################################
 # class ResumeSection(BaseModel):
 #     text: str
 #     word_count: int
@@ -122,7 +227,6 @@ class EvaluationPayload(BaseModel):
     # resume_json: ResumeSchema
     resume_json: dict | None = Field (default="resume_json")
 
-### Evaluation.API:07 #######################################################
 @app.post("/evaluation/profile", tags=["Evaluation"])
 def evaluation_profile(payload: EvaluationPayload):
     resume_json = payload.resume_json
@@ -136,7 +240,7 @@ def evaluation_profile(payload: EvaluationPayload):
     s1 = agg.aggregate(op1)
     return {"response": s1}
 
-### Evaluation.API:08 #######################################################
+### Evaluation.API:09 #######################################################
 @app.post("/evaluation/summary", tags=["Evaluation"])
 def evaluate_summary(payload: EvaluationPayload):
     resume_json = payload.resume_json
@@ -150,7 +254,7 @@ def evaluate_summary(payload: EvaluationPayload):
     s2 = agg.aggregate(op2)
     return {"response": s2}
 
-### Evaluation.API:09 #######################################################
+### Evaluation.API:10 #######################################################
 @app.post("/evaluation/education", tags=["Evaluation"])
 def evaluate_education(payload: EvaluationPayload):
     resume_json = payload.resume_json
@@ -164,7 +268,7 @@ def evaluate_education(payload: EvaluationPayload):
     s3 = agg.aggregate(op3)
     return {"response": s3}
 
-### Evaluation.API:10 #######################################################
+### Evaluation.API:11 #######################################################
 @app.post("/evaluation/experience", tags=["Evaluation"])
 def evaluate_experience(payload: EvaluationPayload):
     resume_json = payload.resume_json
@@ -179,7 +283,7 @@ def evaluate_experience(payload: EvaluationPayload):
     return {"response": s4}
 
 
-### Evaluation.API:11 #######################################################
+### Evaluation.API:12 #######################################################
 @app.post("/evaluation/activities", tags=["Evaluation"])
 def evaluate_activities(payload: EvaluationPayload):
     resume_json = payload.resume_json
@@ -194,7 +298,7 @@ def evaluate_activities(payload: EvaluationPayload):
     return {"response": s5}
 
 
-### Evaluation.API:12 #######################################################
+### Evaluation.API:13 #######################################################
 @app.post("/evaluation/skills", tags=["Evaluation"])
 def evaluate_skills(payload: EvaluationPayload):
     resume_json = payload.resume_json
@@ -212,6 +316,7 @@ def evaluate_skills(payload: EvaluationPayload):
 #############################################################################
 
 ### Composite evaluation ####################################################
+### Composite evaluation.API:14 #############################################
 from core.globalaggregator import GlobalAggregator
 
 @ app.post("/evaluation/final-resume-score", tags=["Composite Evaluation"])
@@ -284,8 +389,7 @@ def evaluate_resume(payload: EvaluationPayload):
 
 
 ### Admin ####################################################################
-### Admin.API:13 #############################################################
-# 13. Update models x
+### Admin.API:15 #############################################################
 class test(BaseModel):
     provider         :str | None = Field (default="google")
     embedding_model  :str | None = Field (default="text-embedding-004")
@@ -299,7 +403,7 @@ def update_model_config(payload:test):
         "status":"updated",
         "payload":payload
     }
-### Admin.API14 ##############################################################
+### Admin.API16 ##############################################################
 # 14. Update global x
 class SettingConfig(BaseModel):
     GOOGLE_API_KEY: Optional[str] = Field(default=None, example="AIza-xxxx")
@@ -333,7 +437,7 @@ def update_global_config(payload:GlobalUpdatePayload):
         "config":updated
     }
 
-### Admin.API15 ##############################################################
+### Admin.API17 ##############################################################
 from core.weightupdate import update_weight
 class Criteria(BaseModel):
     Completeness: Optional[int]   = Field(default=10)
