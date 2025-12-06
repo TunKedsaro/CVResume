@@ -1,0 +1,73 @@
+s1 = {
+    'section': 'Experience',
+    'total_score': 78.0,
+    'scores': {
+        'RoleRelevance':  {'score': 30.0, 'feedback': 'xxx'},
+        'Length':         {'score': 8.0, 'feedback': 'yyy'},
+        'Grammar':        {'score': 10.0, 'feedback': 'zzz'},
+        'ContentQuality': {'score': 24.0, 'feedback': 'aaa'},
+        'Completeness':   {'score': 6.0, 'feedback': 'bbb'}
+            }
+        }
+s2 = {
+    'section': 'Profile',
+    'total_score': 90.0,
+    'scores': {
+        'RoleRelevance':  {'score': 20.0, 'feedback': 'xxx'},
+        'Length':         {'score': 10.0, 'feedback': 'yyy'},
+        'Grammar':        {'score': 25.0, 'feedback': 'zzz'},
+        'ContentQuality': {'score': 22.0, 'feedback': 'aaa'},
+        'Completeness':   {'score': 13.0, 'feedback': 'bbb'}
+            }
+        }
+
+
+Ss = {
+    "conclution":{
+        "final_resume_score": 82.4,
+        "section_contribution":{
+            "Profile":{
+                "section_total":78.0,
+                "section_weight":40,
+                "contribution":31.2
+            },
+            "Experience":{
+                "section_total":90.0,
+                "section_weight":10,
+                "contribution":9.0
+            }
+        }
+    },
+    "section_details":{
+        "Profile":{
+            "total_score":78.0,
+            "scores":{
+                    'RoleRelevance':  {'score': 30.0, 'feedback': 'xxx'},
+                    'Length':         {'score': 8.0, 'feedback': 'yyy'},
+                    'Grammar':        {'score': 10.0, 'feedback': 'zzz'},
+                    'ContentQuality': {'score': 24.0, 'feedback': 'aaa'},
+                    'Completeness':   {'score': 6.0, 'feedback': 'bbb'}
+            }
+        },
+        "Experience":{
+            "total_score":90.0,
+            "scores":{
+                    'RoleRelevance':  {'score': 20.0, 'feedback': 'xxx'},
+                    'Length':         {'score': 10.0, 'feedback': 'yyy'},
+                    'Grammar':        {'score': 25.0, 'feedback': 'zzz'},
+                    'ContentQuality': {'score': 22.0, 'feedback': 'aaa'},
+                    'Completeness':   {'score': 13.0, 'feedback': 'bbb'}
+            }      
+        }
+    },
+    "metadata":{
+        "model_name":"gemini-2.5-flash",
+        "timestamp": "2025-12-03T11:45:00+07:00",
+        # "processing_time_ms":1234,
+        # "input_tokens":1234,
+        # "output_tokens":435,
+        # "total_cost_usd":0.001234,
+        "weights_version":"weights_v1",
+        "prompt_version":"prompt_v1"
+    }
+}                                                                                       

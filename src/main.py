@@ -212,10 +212,72 @@ def evaluate_skills(payload: EvaluationPayload):
 #############################################################################
 
 ### Composite evaluation ####################################################
-@ app.post("/evaluation/final-resume-score", tags=["Composite Evaluation"])
-def Xevaluate_skills(payload: AnalyseRequest):
-    return {"message": "This is full CVResume evaluation"}
+from core.globalaggregator import GlobalAggregator
 
+@ app.post("/evaluation/final-resume-score", tags=["Composite Evaluation"])
+def evaluate_resume(payload: EvaluationPayload):
+    resume_json = payload.resume_json
+    p1 = PromptBuilder(
+        section  = "Profile",
+        criteria = ["Completeness", "ContentQuality"],
+        cvresume = resume_json
+    )
+    prompt1 = p1.build()
+    
+    p2 = PromptBuilder( 
+        section  = "Summary", 
+        criteria = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"],
+        cvresume = resume_json
+    )
+    prompt2 = p2.build()
+    
+    p3 = PromptBuilder( 
+        section  = "Education", 
+        criteria = ["Completeness","RoleRelevance"],
+        cvresume = resume_json
+    )
+    prompt3 = p3.build()
+
+    p4 = PromptBuilder( 
+        section  = "Experience", 
+        criteria = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"],
+        cvresume = resume_json
+    )
+    prompt4 = p4.build()
+    
+    p5 = PromptBuilder( 
+        section  = "Activities", 
+        criteria = ["Completeness", "ContentQuality","Grammar","Length"],
+        cvresume = resume_json
+    )
+    prompt5 = p5.build()
+    
+    p6 = PromptBuilder( 
+        section  = "Skills", 
+        criteria = ["Completeness","Length","RoleRelevance"],
+        cvresume = resume_json
+    )
+    prompt6 = p6.build()
+
+    op1 = caller.call(prompt1)
+    op2 = caller.call(prompt2)
+    op3 = caller.call(prompt3)
+    op4 = caller.call(prompt4)
+    op5 = caller.call(prompt5)
+    op6 = caller.call(prompt6)
+
+    s1 = agg.aggregate(op1)
+    s2 = agg.aggregate(op2)
+    s3 = agg.aggregate(op3)
+    s4 = agg.aggregate(op4)
+    s5 = agg.aggregate(op5)
+    s6 = agg.aggregate(op6)
+
+    x = GlobalAggregator(SectionScoreAggregator_output = [s1,s2,s3,s4,s5,s6])
+
+    output = x.fn0()
+
+    return {"response": output}
 
 #############################################################################
 #############################################################################
