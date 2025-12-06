@@ -55,11 +55,14 @@ def health_gemini():
 def metadata():
     return {"message":get_metadata()}
 
-### Prompt ##################################################################
+#############################################################################
+#############################################################################
+
+### Debug & Lab #############################################################
 from core.promptbuilder import PromptBuilder
 from fastapi import Response
 
-### Prompt.API:04 ###########################################################
+### Debug & Lab.API:04 ######################################################
 class PromptBuilderPayload(BaseModel):
         section  : str  | None = Field (default = "Summary")
         criteria : list | None = Field (default = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"])
@@ -75,16 +78,15 @@ def prompt_lab(payload:PromptBuilderPayload):
     prompt = pb.build()
     return Response(content=prompt, media_type="text/plain")
 
-### SectionEvaluator ##################################################################
-### SectionEvaluator.API:06 ###########################################################
-
+### Debug & Lab.API:05 ######################################################
 from core.helper import Helper
 mock_data = Helper.load_json("src/mock/resume1.json")
 @app.get("/evaluation/logexamplepayload",tags=["Debug & Lab"])
 def show_example_of_payload_json_body():
     return {"response":mock_data}
 
-@app.post("/evaluation/callexamplepayload",tags=["Debug & Lab"])
+### Debug & Lab.API:06 ######################################################
+@app.get("/evaluation/callexamplepayload",tags=["Debug & Lab"])
 def call_example_payload_json_body():
     test_payload = {"resume_json": mock_data}
     p1 = PromptBuilder(
@@ -96,7 +98,14 @@ def call_example_payload_json_body():
     res = caller.call(prompt)
     return {"response": res}
 
+### Debug & Lab.API:07 ######################################################
+@app.put("/config/prompt", tags=["Debug & Lab"])
+def Xupdate_prompt():
+    return {"message": "prompt.yaml updated"}
+#############################################################################
+#############################################################################
 
+### Evaluation ##############################################################
 # class ResumeSection(BaseModel):
 #     text: str
 #     word_count: int
@@ -113,6 +122,7 @@ class EvaluationPayload(BaseModel):
     # resume_json: ResumeSchema
     resume_json: dict | None = Field (default="resume_json")
 
+### Evaluation.API:07 #######################################################
 @app.post("/evaluation/profile", tags=["Evaluation"])
 def evaluation_profile(payload: EvaluationPayload):
     resume_json = payload.resume_json
@@ -126,27 +136,89 @@ def evaluation_profile(payload: EvaluationPayload):
     s1 = agg.aggregate(op1)
     return {"response": s1}
 
+### Evaluation.API:08 #######################################################
+@app.post("/evaluation/summary", tags=["Evaluation"])
+def evaluate_summary(payload: EvaluationPayload):
+    resume_json = payload.resume_json
+    p2 = PromptBuilder( 
+        section  = "Summary", 
+        criteria = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"],
+        cvresume = resume_json
+    )
+    prompt = p2.build()
+    op2 = caller.call(prompt)
+    s2 = agg.aggregate(op2)
+    return {"response": s2}
+
+### Evaluation.API:09 #######################################################
+@app.post("/evaluation/education", tags=["Evaluation"])
+def evaluate_education(payload: EvaluationPayload):
+    resume_json = payload.resume_json
+    p3 = PromptBuilder( 
+        section  = "Education", 
+        criteria = ["Completeness","RoleRelevance"],
+        cvresume = resume_json
+    )
+    prompt3 = p3.build()
+    op3 = caller.call(prompt3)
+    s3 = agg.aggregate(op3)
+    return {"response": s3}
+
+### Evaluation.API:10 #######################################################
+@app.post("/evaluation/experience", tags=["Evaluation"])
+def evaluate_experience(payload: EvaluationPayload):
+    resume_json = payload.resume_json
+    p4 = PromptBuilder( 
+        section  = "Experience", 
+        criteria = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"],
+        cvresume = resume_json
+    )
+    prompt4 = p4.build()
+    op4 = caller.call(prompt4)
+    s4 = agg.aggregate(op4)
+    return {"response": s4}
 
 
+### Evaluation.API:11 #######################################################
+@app.post("/evaluation/activities", tags=["Evaluation"])
+def evaluate_activities(payload: EvaluationPayload):
+    resume_json = payload.resume_json
+    p5 = PromptBuilder( 
+        section  = "Activities", 
+        criteria = ["Completeness", "ContentQuality","Grammar","Length"],
+        cvresume = resume_json
+    )
+    prompt5 = p5.build()
+    op5 = caller.call(prompt5)
+    s5 = agg.aggregate(op5)
+    return {"response": s5}
 
 
+### Evaluation.API:12 #######################################################
+@app.post("/evaluation/skills", tags=["Evaluation"])
+def evaluate_skills(payload: EvaluationPayload):
+    resume_json = payload.resume_json
+    p6 = PromptBuilder( 
+        section  = "Skills", 
+        criteria = ["Completeness","Length","RoleRelevance"],
+        cvresume = resume_json
+    )
+    prompt6 = p6.build()
+    op6 = caller.call(prompt6)
+    s6 = agg.aggregate(op6)
+    return {"response": s6}
+
+#############################################################################
+#############################################################################
+
+### Composite evaluation ####################################################
+@ app.post("/evaluation/final-resume-score", tags=["Composite Evaluation"])
+def Xevaluate_skills(payload: AnalyseRequest):
+    return {"message": "This is full CVResume evaluation"}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#############################################################################
+#############################################################################
 
 
 ### Admin ####################################################################
@@ -165,7 +237,6 @@ def update_model_config(payload:test):
         "status":"updated",
         "payload":payload
     }
-### Admin ####################################################################
 ### Admin.API14 ##############################################################
 # 14. Update global x
 class SettingConfig(BaseModel):
@@ -200,7 +271,6 @@ def update_global_config(payload:GlobalUpdatePayload):
         "config":updated
     }
 
-### Admin ####################################################################
 ### Admin.API15 ##############################################################
 from core.weightupdate import update_weight
 class Criteria(BaseModel):
@@ -274,7 +344,7 @@ class ResumeParts(BaseModel):
 class WeightUpdatePayload(BaseModel):
     version: Optional[str] = Field(default="weights_v1")
     weights: Optional[ResumeParts]   = Field(default=None)
-# 15. Update weight
+
 @app.put("/config/weight",tags=['Admin'])
 def update_global_config(payload:WeightUpdatePayload):
     updated = update_weight(payload.model_dump())
