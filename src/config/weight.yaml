@@ -4,8 +4,8 @@ weights:
         Completeness: 10
         ContentQuality: 10
         Grammar: 0
-        Length: 10
-        RoleRelevance: 10
+        Length: 0
+        RoleRelevance: 0
         section_weight: 0.1
     Summary:
         Completeness: 10
@@ -16,9 +16,9 @@ weights:
         section_weight: 0.1
     Education:
         Completeness: 10
-        ContentQuality: 10
-        Grammar: 10
-        Length: 10
+        ContentQuality: 0
+        Grammar: 0
+        Length: 0
         RoleRelevance: 10
         section_weight: 0.2
     Experience:
@@ -37,8 +37,8 @@ weights:
         section_weight: 0.2
     Skills:
         Completeness: 10
-        ContentQuality: 10
-        Grammar: 10
+        ContentQuality: 0
+        Grammar: 0
         Length: 10
         RoleRelevance: 10
         section_weight: 0.2

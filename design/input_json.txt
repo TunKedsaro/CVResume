@@ -1,0 +1,44 @@
+{
+  "job_id": "<string>",
+  "template_id": "<string>",
+  "language": "<string>",
+  "status": "<string>",
+  
+  "sections": {
+    "profile_summary": {
+      "text": "<string>",
+      "word_count": 0,
+      "matched_jd_skills": [],
+      "confidence_score": 1.0
+    },
+
+    "skills": {
+      "text": "<string>",
+      "word_count": 0,
+      "matched_jd_skills": [],
+      "confidence_score": 1.0
+    },
+
+    "education": {
+      "text": "<string>",
+      "word_count": 0,
+      "matched_jd_skills": [],
+      "confidence_score": 1.0
+    },
+
+    "experience": {
+      "text": "<string>",
+      "word_count": 0,
+      "matched_jd_skills": [],
+      "confidence_score": 1.0
+    }
+  },
+
+  "skills": [
+    {
+      "name": "<string>",
+      "level": "<string>",
+      "source": "<string>"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+    "job_id": "JOB-2025-EBRAHIM",
+    "template_id": "TPL-GENERIC-001",
+    "language": "en",
+    "status": "parsed",
+    "sections": {
+        "profile_summary": {
+            "text": "Ebrahim Jahanshiri is a highly experienced practitioner in predictive statistical modeling, machine learning, deep learning, LLM fine-tuning and RAG solutions, MLOps, data management, cloud computation, GIS, remote sensing, and geospatial analytics. With 15 years of experience, he has built large-scale data and AI systems, pioneered big-data analytics in agriculture, improved revenue through European projects, and communicated complex insights to influence business decisions.",
+            "word_count": 69,
+            "matched_jd_skills": [
+                "machine learning",
+                "deep learning",
+                "MLOps",
+                "geospatial analytics"
+            ],
+            "confidence_score": 0.96
+        },
+        "skills": {
+            "text": "Python, R, SQL, TensorFlow, PyTorch, scikit-learn, Spark, Hadoop, GIS, Remote Sensing, Google Earth Engine, AWS, GCP, Data Warehousing, DVC, MLflow, Airflow, Git, Tableau, Power BI.",
+            "word_count": 33,
+            "matched_jd_skills": [
+                "Python",
+                "TensorFlow",
+                "PyTorch",
+                "Spark"
+            ],
+            "confidence_score": 0.95
+        },
+        "education": {
+            "text": "MSc in Applied Data Science, University of Gothenburg & Chalmers University of Technology. PhD in GIS and Geomatics Engineering, Universiti Putra Malaysia. MSc in Precision Farming, Universiti Putra Malaysia. B.S. in Agricultural Engineering, Ferdowsi University of Mashhad.",
+            "word_count": 44,
+            "matched_jd_skills": [
+                "data science",
+                "geospatial engineering"
+            ],
+            "confidence_score": 0.94
+        },
+        "experience": {
+            "text": "Over 15 years of experience across roles such as Data Science Manager, Geospatial Data Scientist, Data Manager, and AI/ML Engineer. Led major European Commission AI and geospatial projects, developed cloud-based data portals (GCP, AWS), built predictive models, fine-tuned LLMs, managed teams up to 24 members, and contributed to high-impact agricultural, climate, sustainability, NLP, and medical AI projects.",
+            "word_count": 63,
+            "matched_jd_skills": [
+                "LLM fine-tuning",
+                "geospatial data science",
+                "MLOps",
+                "cloud data engineering"
+            ],
+            "confidence_score": 0.95
+        }
+    },
+    "skills": [
+    {"name": "Python", "level": "Advanced", "source": "resume"},
+    {"name": "R", "level": "Advanced", "source": "resume"},
+    {"name": "SQL", "level": "Advanced", "source": "resume"},
+    {"name": "TensorFlow", "level": "Advanced", "source": "resume"},
+    {"name": "PyTorch", "level": "Advanced", "source": "resume"},
+    {"name": "scikit-learn", "level": "Advanced", "source": "resume"},
+    {"name": "Spark", "level": "Intermediate", "source": "resume"},
+    {"name": "Hadoop", "level": "Intermediate", "source": "resume"},
+    {"name": "GIS", "level": "Advanced", "source": "resume"},
+    {"name": "Remote Sensing", "level": "Advanced", "source": "resume"},
+    {"name": "Google Earth Engine", "level": "Advanced", "source": "resume"},
+    {"name": "AWS", "level": "Intermediate", "source": "resume"},
+    {"name": "GCP", "level": "Intermediate", "source": "resume"},
+    {"name": "Airflow", "level": "Intermediate", "source": "resume"},
+    {"name": "DVC", "level": "Intermediate", "source": "resume"},
+    {"name": "MLflow", "level": "Intermediate", "source": "resume"},
+    {"name": "Tableau", "level": "Intermediate", "source": "resume"},
+    {"name": "Power BI", "level": "Intermediate", "source": "resume"},
+    {"name": "Git", "level": "Advanced", "source": "resume"},
+    {"name": "LLM Fine-Tuning", "level": "Advanced", "source": "resume"}
+  ]
+}

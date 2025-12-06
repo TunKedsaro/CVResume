@@ -7,7 +7,7 @@ from typing import Optional
 from core.llmcaller import LlmCaller
 from core.getmetadata import get_metadata      # 13
 from core.globalupdate import update_global    # 14
-
+from core.scoreaggregator import SectionScoreAggregator
 class AnalyseRequest(BaseModel):
     JSON: str | None = None
 
@@ -34,14 +34,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 ### Health & Metadata #######################################################
-# Health & Metadata
-# 01. Health x / 
+### Health & Metadata.API:01 ################################################
 @app.get("/", tags=["Health & Metadata"])
 def health_fastapi():
     return {"status": "ok", "service": "FastAPI"}
 
+### Health & Metadata.API:02 ################################################
 caller = LlmCaller()
-# 02. Gemini health x
+agg = SectionScoreAggregator()
+
 @app.get("/health/gemini", tags=["Health & Metadata"])
 def health_gemini():
     res = caller.call(
@@ -49,12 +50,107 @@ def health_gemini():
     )
     return {"response":res}
 
-# 03. Metadata
+### Health & Metadata.API:03 ################################################
 @app.get("/health/metadata", tags=["Health & Metadata"])
 def metadata():
     return {"message":get_metadata()}
 
+### Prompt ##################################################################
+from core.promptbuilder import PromptBuilder
+from fastapi import Response
+
+### Prompt.API:04 ###########################################################
+class PromptBuilderPayload(BaseModel):
+        section  : str  | None = Field (default = "Summary")
+        criteria : list | None = Field (default = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"])
+
+@app.post("/test/prompt", tags=["Debug & Lab"])
+def prompt_lab(payload:PromptBuilderPayload):
+    pl = payload.model_dump()
+    pb = PromptBuilder(
+        section  = pl["section"],
+        criteria = pl["criteria"],
+        cvresume = "resume_json"
+        )
+    prompt = pb.build()
+    return Response(content=prompt, media_type="text/plain")
+
+### SectionEvaluator ##################################################################
+### SectionEvaluator.API:06 ###########################################################
+
+from core.helper import Helper
+mock_data = Helper.load_json("src/mock/resume1.json")
+@app.get("/evaluation/logexamplepayload",tags=["Debug & Lab"])
+def show_example_of_payload_json_body():
+    return {"response":mock_data}
+
+@app.post("/evaluation/callexamplepayload",tags=["Debug & Lab"])
+def call_example_payload_json_body():
+    test_payload = {"resume_json": mock_data}
+    p1 = PromptBuilder(
+        section  = "Profile",
+        criteria = ["Completeness", "ContentQuality"],
+        cvresume = test_payload["resume_json"]
+    )
+    prompt = p1.build()
+    res = caller.call(prompt)
+    return {"response": res}
+
+
+# class ResumeSection(BaseModel):
+#     text: str
+#     word_count: int
+#     matched_jd_skills: list[str]
+#     confidence_score: float
+# class ResumeSchema(BaseModel):
+#     job_id: str
+#     template_id: str
+#     language: str
+#     status: str
+#     sections: dict[str, ResumeSection]
+#     skills: list[dict]
+class EvaluationPayload(BaseModel):
+    # resume_json: ResumeSchema
+    resume_json: dict | None = Field (default="resume_json")
+
+@app.post("/evaluation/profile", tags=["Evaluation"])
+def evaluation_profile(payload: EvaluationPayload):
+    resume_json = payload.resume_json
+    p1 = PromptBuilder(
+        section  = "Profile",
+        criteria = ["Completeness", "ContentQuality"],
+        cvresume = resume_json
+    )
+    prompt = p1.build()
+    op1 = caller.call(prompt)
+    s1 = agg.aggregate(op1)
+    return {"response": s1}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### Admin ####################################################################
+### Admin.API:13 #############################################################
 # 13. Update models x
 class test(BaseModel):
     provider         :str | None = Field (default="google")
@@ -69,7 +165,8 @@ def update_model_config(payload:test):
         "status":"updated",
         "payload":payload
     }
-
+### Admin ####################################################################
+### Admin.API14 ##############################################################
 # 14. Update global x
 class SettingConfig(BaseModel):
     GOOGLE_API_KEY: Optional[str] = Field(default=None, example="AIza-xxxx")
@@ -103,6 +200,8 @@ def update_global_config(payload:GlobalUpdatePayload):
         "config":updated
     }
 
+### Admin ####################################################################
+### Admin.API15 ##############################################################
 from core.weightupdate import update_weight
 class Criteria(BaseModel):
     Completeness: Optional[int]   = Field(default=10)
@@ -117,9 +216,9 @@ class ResumeParts(BaseModel):
         example={
             "Completeness": 10,
             "ContentQuality": 10,
-            "Grammar": 10,
-            "Length": 10,
-            "RoleRelevance": 10,
+            "Grammar": 0,
+            "Length": 0,
+            "RoleRelevance": 0,
             "section_weight": 0.1
         })
     Summary: Optional[Criteria]  = Field(
@@ -136,9 +235,9 @@ class ResumeParts(BaseModel):
         default = None,
         example={
             "Completeness": 10,
-            "ContentQuality": 10,
-            "Grammar": 10,
-            "Length": 10,
+            "ContentQuality": 0,
+            "Grammar": 0,
+            "Length": 0,
             "RoleRelevance": 10,
             "section_weight": 0.2
         })
@@ -166,8 +265,8 @@ class ResumeParts(BaseModel):
         default = None,
         example={
             "Completeness": 10,
-            "ContentQuality": 10,
-            "Grammar": 10,
+            "ContentQuality": 0,
+            "Grammar": 0,
             "Length": 10,
             "RoleRelevance": 10,
             "section_weight": 0.2
@@ -183,3 +282,6 @@ def update_global_config(payload:WeightUpdatePayload):
         "status":"updated",
         "config":updated
     }
+
+
+

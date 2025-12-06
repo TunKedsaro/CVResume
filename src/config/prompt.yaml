@@ -16,33 +16,39 @@ expected_content:
     - Clear positioning (e.g., "Data Analyst", "ML Engineer")
     - Career direction or headline
     - Avoid unnecessary personal details
+    - Feedback word 20 words
   Summary: |
     - 2-4 sentence summary of experience
     - Technical & domain strengths
     - Career focus & value proposition
     - Avoid buzzwords
+    - Feedback word 20 words
   Education: |
     - Institution name
     - Degree & field of study
     - Dates attended
     - GPA, honors (optional)
     - Relevance to data career
+    - Feedback word 20 words
   Experience: |
     - Job title, employer, dates
     - Clear bullet points
     - Action → method → impact structure
     - Technical tools used
     - Quantifiable metrics
+    - Feedback word 20 words
   Activities: |
     - Competitions, hackathons, club activities
     - Project descriptions with responsibilities
     - Mention of tools/tech if applicable
+    - Feedback word 20 words
   Skills: |
     - Technical skills (Python, SQL, ML, Cloud)
     - Tools (Power BI, Git, TensorFlow)
     - Soft skills
     - Language proficiency
     - Clear grouping/categorization
+    - Feedback word 20 words
 # Part7 :
 scale:
   score1: |

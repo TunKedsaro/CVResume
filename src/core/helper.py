@@ -12,6 +12,11 @@ class Helper:
     def load_yaml(filepath: str) -> dict:
         with open(filepath, "r", encoding="utf-8") as f:
             return yaml.safe_load(f)
+
+    @staticmethod
+    def load_json(filepath: str) -> dict:
+        with open(filepath, "r", encoding="utf-8") as f:
+            return json.load(f)
         
     @staticmethod
     def save_yaml(newconfig,filepath: str):
@@ -22,10 +27,6 @@ class Helper:
     def fop(num: float) -> float:
         return float(f"{num:.1f}")
 
-    @staticmethod
-    def jsonstr(obj) -> str:
-        return json.dumps(obj, indent=4, ensure_ascii=False)
-    
     @staticmethod
     def prettyjson(txt:str) -> str:
         return str(json.dumps(txt,indent=4, ensure_ascii=False))

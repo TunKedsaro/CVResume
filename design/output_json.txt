@@ -1,0 +1,25 @@
+{
+    'section': 'Experience',
+    'scores': {
+            'RoleRelevance': {
+                'score': 5,
+                'feedback': "xxx"
+                },
+            'Length': {
+                'score': 4,
+                'feedback': "yyy"
+                },
+            'Grammar': {
+                'score': 5,
+                'feedback': "zzz"
+                },
+            'ContentQuality': {
+                'score': 3,
+                'feedback': "aaa"
+                },
+            'Completeness': {
+                'score': 3,
+                'feedback': "bbb"
+                }
+        }
+}  

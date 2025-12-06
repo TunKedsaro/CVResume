@@ -1,0 +1,151 @@
+{
+    "job_id": "JOB-2025-00123",
+    "template_id": "TPL-DS-001",
+    "language": "en",
+    "status": "parsed",
+    "sections": {
+        "profile_summary": {
+            "text": "Passionate about data analysis and experiments focused on user behavior, experience, and engagement, with a solid background in data science and statistics, and extensive experience using data insights to drive business growth.",
+            "word_count": 32,
+            "matched_jd_skills": [
+                "data analysis",
+                "A/B testing",
+                "user behavior"
+            ],
+            "confidence_score": 0.97
+        },
+        "skills": {
+            "text": "Programming/Statistics: R, Python, SQL, SPSS, SAS, Matlab, EViews, Demetra+. Big Data: Hadoop, Hive, MrJob, Spark, Storm. Visualization: Tableau, D3.js, Gephi. Others: Git, AWS, Bash, Neo4j, QGIS.",
+            "word_count": 40,
+            "matched_jd_skills": [
+                "Python",
+                "SQL",
+                "Spark",
+                "Tableau"
+            ],
+            "confidence_score": 0.94
+        },
+        "education": {
+            "text": "UC Berkeley - Master of Information and Data Science (GPA 3.93). Universidad Politécnica de Madrid – M.S. Statistical & Computational Information Processing (GPA 3.69), M.S. Telecommunication Engineering (GPA 3.03).",
+            "word_count": 39,
+            "matched_jd_skills": [
+                "data science",
+                "machine learning"
+            ],
+            "confidence_score": 0.92
+        },
+        "experience": {
+            "text": "Data Scientist at Conento (2016): Designed ETL pipeline for traffic prediction model in Spain; automated R scripts for data extraction, cleaning, and MySQL loading. Data Scientist at Conento (2014): Designed an experiment for Google Spain to measure YouTube ad impact using matched-pair, cluster-randomized design. Head of Sales at Yokogawa (2009–2013): Led a team of 7; increased revenue, profit, operating income, and new customer ratio. Sales Engineer roles (2004–2009): Exceeded sales targets consistently. Tutor (2002–2004): Taught calculus, physics, and electronics; highest-rated professor; improved student pass rate by 25%.",
+            "word_count": 104,
+            "matched_jd_skills": [
+                "ETL",
+                "R programming",
+                "MySQL",
+                "experiment design"
+            ],
+            "confidence_score": 0.95
+        }
+    },
+    "skills": [
+        {
+            "name": "Python",
+            "level": "Advanced",
+            "source": "resume"
+        },
+        {
+            "name": "R",
+            "level": "Advanced",
+            "source": "resume"
+        },
+        {
+            "name": "SQL",
+            "level": "Advanced",
+            "source": "resume"
+        },
+        {
+            "name": "Hadoop",
+            "level": "Intermediate",
+            "source": "resume"
+        },
+        {
+            "name": "Hive",
+            "level": "Intermediate",
+            "source": "resume"
+        },
+        {
+            "name": "Spark",
+            "level": "Intermediate",
+            "source": "resume"
+        },
+        {
+            "name": "MrJob",
+            "level": "Intermediate",
+            "source": "resume"
+        },
+        {
+            "name": "Tableau",
+            "level": "Advanced",
+            "source": "resume"
+        },
+        {
+            "name": "AWS",
+            "level": "Intermediate",
+            "source": "resume"
+        },
+        {
+            "name": "Git",
+            "level": "Advanced",
+            "source": "resume"
+        },
+        {
+            "name": "Bash",
+            "level": "Intermediate",
+            "source": "resume"
+        },
+        {
+            "name": "SPSS",
+            "level": "Intermediate",
+            "source": "resume"
+        },
+        {
+            "name": "SAS",
+            "level": "Intermediate",
+            "source": "resume"
+        },
+        {
+            "name": "Matlab",
+            "level": "Intermediate",
+            "source": "resume"
+        },
+        {
+            "name": "EViews",
+            "level": "Basic",
+            "source": "resume"
+        },
+        {
+            "name": "Demetra+",
+            "level": "Basic",
+            "source": "resume"
+        },
+        {
+            "name": "D3.js",
+            "level": "Basic",
+            "source": "resume"
+        },
+        {
+            "name": "Gephi",
+            "level": "Basic",
+            "source": "resume"
+        },
+        {
+            "name": "Neo4j",
+            "level": "Basic",
+            "source": "resume"
+        },
+        {
+            "name": "QGIS",
+            "level": "Basic",
+            "source": "resume"
+        }
+    ]
+}
