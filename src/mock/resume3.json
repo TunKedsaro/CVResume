@@ -1,0 +1,143 @@
+{
+    "contact_information": {
+        "name": "Juan Jose Carin",
+        "email": "juanjose.carin@gmail.com",
+        "phone": "650-336-4590",
+        "linkedin": "linkedin.com/in/juanjosecarin",
+        "jobdb_link": "-",
+        "portfolio_link": "juanjocarin.github.io"
+    },
+    "professional_summary": {
+        "has_summary": "Yes",
+        "summary_points": [
+            "Passionate about data analysis and experiments, mainly focused on user behavior, experience, and engagement.",
+            "Solid background in data science and statistics, with extensive experience using data insights to drive business growth."
+        ]
+    },
+    "education": [
+        {
+            "institution": "University of California, Berkeley",
+            "degree": "Master of Information and Data Science",
+            "dates": "2016",
+            "gpa": "3.93",
+            "honors": "Relevant courses: Machine Learning; Machine Learning at Scale; Storing and Retrieving Data; Field Experiments; Applied Regression and Time Series Analysis; Exploring and Analyzing Data; Data Visualization and Communication; Research Design and Applications for Data Analysis."
+        },
+        {
+            "institution": "Universidad Politécnica de Madrid",
+            "degree": "M.S. in Statistical and Computational Information Processing",
+            "dates": "2014",
+            "gpa": "3.69",
+            "honors": "Relevant courses: Data Mining; Multivariate Analysis; Time Series; Neural Networks and Statistical Learning; Regression and Prediction Methods; Optimization Techniques; Monte Carlo Techniques; Numerical Methods in Finance; Stochastic Models in Finance; Bayesian Networks."
+        },
+        {
+            "institution": "Universidad Politécnica de Madrid",
+            "degree": "M.S. in Telecommunication Engineering",
+            "dates": "2005",
+            "gpa": "3.03",
+            "honors": "Focus Area: Radio communication systems (radar and mobile). Fellowship: First year at University, due to Honors obtained last year at high school."
+        }
+    ],
+    "experience": [
+        {
+            "title": "Data Scientist",
+            "company": "CONENTO (Madrid, Spain) — working remotely",
+            "dates": "Jan 2016 - Mar 2016",
+            "description": [
+                "Designed and implemented the ETL pipeline for a predictive model of traffic on the main roads in eastern Spain (project for the Spanish government).",
+                "Automated scripts in R to extract, transform, clean (including anomaly detection), and load into MySQL data from multiple sources (road traffic sensors, accidents, road works, weather)."
+            ]
+        },
+        {
+            "title": "Data Scientist",
+            "company": "CONENTO (Madrid, Spain)",
+            "dates": "Jun 2014 - Sep 2014",
+            "description": [
+                "Designed an experiment for Google Spain (conducted in Oct 2014) to measure the impact of YouTube ads on the sales of a car manufacturer's dealer network.",
+                "Used a matched-pair, cluster-randomized design selecting test/control groups from 50+ cities based on sales-wise similarity over time (using wavelets and R)."
+            ]
+        },
+        {
+            "title": "Head of Sales, Spain & Portugal - Test & Measurement dept.",
+            "company": "YOKOGAWA (Madrid, Spain)",
+            "dates": "Feb 2009 - Aug 2013",
+            "description": [
+                "Applied analysis of sales and market trends to decide the direction of the department.",
+                "Led a team of 7 people.",
+                "Increased revenue by 6.3%, gross profit by 4.2%, and operating income by 146%; achieved a 30% ratio of new customers (3x growth) by entering new markets and improving customer service and training."
+            ]
+        },
+        {
+            "title": "Sales Engineer - Test & Measurement dept.",
+            "company": "YOKOGAWA (Madrid, Spain)",
+            "dates": "Apr 2008 - Jan 2009",
+            "description": [
+                "Promoted to head of sales after 5 months leading the sales team."
+            ]
+        },
+        {
+            "title": "Sales & Application Engineer",
+            "company": "AYSCOM (Madrid, Spain)",
+            "dates": "Sep 2004 - Mar 2008",
+            "description": [
+                "Exceeded sales target every year from 2005 to 2007; achieved 60% of the target in the first 3 months of 2008."
+            ]
+        },
+        {
+            "title": "Tutor of Differential & Integral Calculus, Physics, and Digital Electronic Circuits",
+            "company": "ACADEMIA UNIVERSITARIA (Madrid, Spain)",
+            "dates": "Jul 2002 - Jun 2004",
+            "description": [
+                "Highest-rated professor in student surveys in 4 of the 6 terms.",
+                "Increased ratio of students passing the course by 25%."
+            ]
+        }
+    ],
+    "skills": {
+        "technical": [
+            "Data Analysis",
+            "Statistics",
+            "Experiment Design",
+            "ETL",
+            "Anomaly Detection",
+            "MySQL",
+            "Machine Learning",
+            "Data Visualization",
+            "Big Data"
+        ],
+        "soft_skills": [
+            "Team Leadership",
+            "Customer Service Improvement",
+            "Training & Mentoring"
+        ],
+        "tools_with_levels": [
+            {"tool": "Python","level": "proficient"},
+            {"tool": "R","level": "proficient"},
+            {"tool": "SQL","level": "proficient"},
+            {"tool": "Hadoop","level": "proficient"},
+            {"tool": "Hive","level": "proficient"},
+            {"tool": "MrJob","level": "proficient"},
+            {"tool": "Tableau","level": "proficient"},
+            {"tool": "Git","level": "proficient"},
+            {"tool": "AWS","level": "proficient"},
+            {"tool": "Spark","level": "intermediate"},
+            {"tool": "Storm","level": "intermediate"},
+            {"tool": "Bash","level": "intermediate"},
+            {"tool": "SPSS","level": "intermediate"},
+            {"tool": "SAS","level": "intermediate"},
+            {"tool": "Matlab","level": "intermediate"},
+            {"tool": "EViews","level": "basic"},
+            {"tool": "Demetra+","level": "basic"},
+            {"tool": "D3.js","level": "basic"},
+            {"tool": "Gephi","level": "basic"},
+            {"tool": "Neo4j","level": "basic"},
+            {"tool": "QGIS","level": "basic"}
+        ],
+        "languages": [
+            {"language": "Python","level": "proficient"},
+            {"language": "R","level": "proficient"},
+            {"language": "SQL","level": "proficient"},
+            {"language": "Bash","level": "intermediate"},
+            {"language": "Matlab","level": "intermediate"}
+        ]
+    }
+}

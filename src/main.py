@@ -99,113 +99,113 @@ def prompt_lab(payload:PromptBuilderPayload):
     return Response(content=prompt, media_type="text/plain")
 
 ### Debug & Lab.API:07 ######################################################
-from core.promptupdate import update_prompt
+# from core.promptupdate import update_prompt
 
-class PromptRole(BaseModel):
-    role1: Optional[str] = None
-class PromptObjective(BaseModel):
-    objective1: Optional[str] = None
-class PromptSectionName(BaseModel):
-    section1: Optional[str] = None
-class ExpectedContent(BaseModel):
-    Profile: Optional[str] = None
-    Summary: Optional[str] = None
-    Education: Optional[str] = None
-    Experience: Optional[str] = None
-    Activities: Optional[str] = None
-    Skills: Optional[str] = None
-class PromptScale(BaseModel):
-    score1: Optional[str] = None
-    score2: Optional[str] = None
-class OutputFormat(BaseModel):
-    format1: Optional[str] = None
-    format2: Optional[str] = None
-    format3: Optional[str] = None
+# class PromptRole(BaseModel):
+#     role1: Optional[str] = None
+# class PromptObjective(BaseModel):
+#     objective1: Optional[str] = None
+# class PromptSectionName(BaseModel):
+#     section1: Optional[str] = None
+# class ExpectedContent(BaseModel):
+#     Profile: Optional[str] = None
+#     Summary: Optional[str] = None
+#     Education: Optional[str] = None
+#     Experience: Optional[str] = None
+#     Activities: Optional[str] = None
+#     Skills: Optional[str] = None
+# class PromptScale(BaseModel):
+#     score1: Optional[str] = None
+#     score2: Optional[str] = None
+# class OutputFormat(BaseModel):
+#     format1: Optional[str] = None
+#     format2: Optional[str] = None
+#     format3: Optional[str] = None
 
-class PromptUpdatePayload(BaseModel):
-    version: Optional[str] = "prompt_v1"
+# class PromptUpdatePayload(BaseModel):
+#     version: Optional[str] = "prompt_v1"
 
-    role: Optional[PromptRole] = None
-    objective: Optional[PromptObjective] = None
-    section: Optional[PromptSectionName] = None
-    expected_content: Optional[ExpectedContent] = None
-    scale: Optional[PromptScale] = None
-    output: Optional[OutputFormat] = None
+#     role: Optional[PromptRole] = None
+#     objective: Optional[PromptObjective] = None
+#     section: Optional[PromptSectionName] = None
+#     expected_content: Optional[ExpectedContent] = None
+#     scale: Optional[PromptScale] = None
+#     output: Optional[OutputFormat] = None
 
-    model_config = {
-        "json_schema_extra": {
-            "example": {
-                "version": "prompt_v1",
-                "role": {
-                    "role1": "You are the expert HR evaluator"
-                },
-                "objective": {
-                    "objective1": "Evaluate the <section_name> section from the resume using the scoring criteria"
-                },
-                "section": {
-                    "section1": "You are evaluating the <section_name> section."
-                },
-                "expected_content": {
-                    "Profile": 
-                        "- Candidate's basic professional identity\n"
-                        "- Clear positioning (e.g., \"Data Analyst\", \"ML Engineer\")\n"
-                        "- Career direction or headline\n"
-                        "- Avoid unnecessary personal details\n"
-                        "- Feedback word 20 words",
-                    "Summary": 
-                        "- 2-4 sentence summary of experience\n"
-                        "- Technical & domain strengths\n"
-                        "- Career focus & value proposition\n"
-                        "- Avoid buzzwords\n"
-                        "- Feedback word 20 words",
-                    "Education":
-                        "- Institution name\n"
-                        "- Degree & field of study\n"
-                        "- Dates attended\n"
-                        "- GPA, honors (optional)\n"
-                        "- Relevance to data career\n"
-                        "- Feedback word 20 words",
-                    "Experience":
-                        "- Job title, employer, dates\n"
-                        "- Clear bullet points\n"
-                        "- Action then method then impact structure\n"
-                        "- Technical tools used\n"
-                        "- Quantifiable metrics\n"
-                        "- Feedback word 20 words",
-                    "Activities":
-                        "- Competitions, hackathons, club activities\n"
-                        "- Project descriptions with responsibilities\n"
-                        "- Mention of tools/tech if applicable\n"
-                        "- Feedback word 20 words",
-                    "Skills":
-                        "- Technical skills (Python, SQL, ML, Cloud)\n"
-                        "- Tools (Power BI, Git, TensorFlow)\n"
-                        "- Soft skills\n"
-                        "- Language proficiency\n"
-                        "- Clear grouping/categorization\n"
-                        "- Feedback word 20 words"
-                },
-                "scale": {
-                    "score1":
-                        "0 = missing\n"
-                        "1 = poor\n"
-                        "2 = weak\n"
-                        "3 = sufficient\n"
-                        "4 = strong\n"
-                        "5 = excellent"
-                }
-            }
-        }
-    }
-@app.put("/config/prompt", tags=["Debug & Lab"])
-def update_prompt_config(payload:PromptUpdatePayload):
-    payload_dict = payload.model_dump(exclude_none=True)
-    updated_yaml = update_prompt(payload_dict)
-    return {
-        "message":"prompt.yaml updated !!!",
-        "updated_keys":list(payload_dict.keys()),
-        "config":updated_yaml
-    }
+#     model_config = {
+#         "json_schema_extra": {
+#             "example": {
+#                 "version": "prompt_v1",
+#                 "role": {
+#                     "role1": "You are the expert HR evaluator"
+#                 },
+#                 "objective": {
+#                     "objective1": "Evaluate the <section_name> section from the resume using the scoring criteria"
+#                 },
+#                 "section": {
+#                     "section1": "You are evaluating the <section_name> section."
+#                 },
+#                 "expected_content": {
+#                     "Profile": 
+#                         "- Candidate's basic professional identity\n"
+#                         "- Clear positioning (e.g., \"Data Analyst\", \"ML Engineer\")\n"
+#                         "- Career direction or headline\n"
+#                         "- Avoid unnecessary personal details\n"
+#                         "- Feedback word 20 words",
+#                     "Summary": 
+#                         "- 2-4 sentence summary of experience\n"
+#                         "- Technical & domain strengths\n"
+#                         "- Career focus & value proposition\n"
+#                         "- Avoid buzzwords\n"
+#                         "- Feedback word 20 words",
+#                     "Education":
+#                         "- Institution name\n"
+#                         "- Degree & field of study\n"
+#                         "- Dates attended\n"
+#                         "- GPA, honors (optional)\n"
+#                         "- Relevance to data career\n"
+#                         "- Feedback word 20 words",
+#                     "Experience":
+#                         "- Job title, employer, dates\n"
+#                         "- Clear bullet points\n"
+#                         "- Action then method then impact structure\n"
+#                         "- Technical tools used\n"
+#                         "- Quantifiable metrics\n"
+#                         "- Feedback word 20 words",
+#                     "Activities":
+#                         "- Competitions, hackathons, club activities\n"
+#                         "- Project descriptions with responsibilities\n"
+#                         "- Mention of tools/tech if applicable\n"
+#                         "- Feedback word 20 words",
+#                     "Skills":
+#                         "- Technical skills (Python, SQL, ML, Cloud)\n"
+#                         "- Tools (Power BI, Git, TensorFlow)\n"
+#                         "- Soft skills\n"
+#                         "- Language proficiency\n"
+#                         "- Clear grouping/categorization\n"
+#                         "- Feedback word 20 words"
+#                 },
+#                 "scale": {
+#                     "score1":
+#                         "0 = missing\n"
+#                         "1 = poor\n"
+#                         "2 = weak\n"
+#                         "3 = sufficient\n"
+#                         "4 = strong\n"
+#                         "5 = excellent"
+#                 }
+#             }
+#         }
+#     }
+# @app.put("/config/prompt", tags=["Debug & Lab"])
+# def update_prompt_config(payload:PromptUpdatePayload):
+#     payload_dict = payload.model_dump(exclude_none=True)
+#     updated_yaml = update_prompt(payload_dict)
+#     return {
+#         "message":"prompt.yaml updated !!!",
+#         "updated_keys":list(payload_dict.keys()),
+#         "config":updated_yaml
+#     }
 #############################################################################
 #############################################################################
 
@@ -390,134 +390,134 @@ def evaluate_resume(payload: EvaluationPayload):
 
 ### Admin ####################################################################
 ### Admin.API:15 #############################################################
-class test(BaseModel):
-    provider         :str | None = Field (default="google")
-    embedding_model  :str | None = Field (default="text-embedding-004")
-    generation_model :str | None = Field (default="gemini-2.5-flash")
+# class test(BaseModel):
+#     provider         :str | None = Field (default="google")
+#     embedding_model  :str | None = Field (default="text-embedding-004")
+#     generation_model :str | None = Field (default="gemini-2.5-flash")
 
-from core.modelupdate import update_model
-@app.put("/config/model",tags=["Admin"])
-def update_model_config(payload:test):
-    update_model(payload.model_dump())
-    return {
-        "status":"updated",
-        "payload":payload
-    }
+# from core.modelupdate import update_model
+# @app.put("/config/model",tags=["Admin"])
+# def update_model_config(payload:test):
+#     update_model(payload.model_dump())
+#     return {
+#         "status":"updated",
+#         "payload":payload
+#     }
 ### Admin.API16 ##############################################################
 # 14. Update global x
-class SettingConfig(BaseModel):
-    GOOGLE_API_KEY: Optional[str] = Field(default=None, example="AIza-xxxx")
-class PricingModel(BaseModel):
-    input_per_million: Optional[float] = Field(default=None, example=0.10)
-    output_per_million: Optional[float] = Field(default=None, example=0.40)
-class PricingConfig(BaseModel):
-    gemini_2_5_flash: Optional[PricingModel] = Field(
-        default=None,
-        example={
-            "input_per_million": 0.10,
-            "output_per_million": 0.40
-        }
-    )
-class ScoringConfig(BaseModel):
-    final_score_max: Optional[int] = Field(default=None, example=100)
-    normalize: Optional[bool] = Field(default=None, example=True)
-    round_digits: Optional[int] = Field(default=None, example=2)
-    aggregation_method: Optional[str] = Field(default=None, example="weighted_sum")
-class GlobalUpdatePayload(BaseModel):
-    version: Optional[str] = Field(default="global_v1", example="global_v1")
-    setting: Optional[SettingConfig] = Field(default=None)
-    pricing: Optional[PricingConfig] = Field(default=None)
-    scoring: Optional[ScoringConfig] = Field(default=None)
+# class SettingConfig(BaseModel):
+#     GOOGLE_API_KEY: Optional[str] = Field(default=None, example="AIza-xxxx")
+# class PricingModel(BaseModel):
+#     input_per_million: Optional[float] = Field(default=None, example=0.10)
+#     output_per_million: Optional[float] = Field(default=None, example=0.40)
+# class PricingConfig(BaseModel):
+#     gemini_2_5_flash: Optional[PricingModel] = Field(
+#         default=None,
+#         example={
+#             "input_per_million": 0.10,
+#             "output_per_million": 0.40
+#         }
+#     )
+# class ScoringConfig(BaseModel):
+#     final_score_max: Optional[int] = Field(default=None, example=100)
+#     normalize: Optional[bool] = Field(default=None, example=True)
+#     round_digits: Optional[int] = Field(default=None, example=2)
+#     aggregation_method: Optional[str] = Field(default=None, example="weighted_sum")
+# class GlobalUpdatePayload(BaseModel):
+#     version: Optional[str] = Field(default="global_v1", example="global_v1")
+#     setting: Optional[SettingConfig] = Field(default=None)
+#     pricing: Optional[PricingConfig] = Field(default=None)
+#     scoring: Optional[ScoringConfig] = Field(default=None)
 
-@app.put("/config/global",tags=["Admin"])
-def update_global_config(payload:GlobalUpdatePayload):
-    updated = update_global(payload.model_dump())
-    return {
-        "status":"updated",
-        "config":updated
-    }
+# @app.put("/config/global",tags=["Admin"])
+# def update_global_config(payload:GlobalUpdatePayload):
+#     updated = update_global(payload.model_dump())
+#     return {
+#         "status":"updated",
+#         "config":updated
+#     }
 
 ### Admin.API17 ##############################################################
-from core.weightupdate import update_weight
-class Criteria(BaseModel):
-    Completeness: Optional[int]   = Field(default=10)
-    ContentQuality: Optional[int] = Field(default=10)
-    Grammar: Optional[int]        = Field(default=10)
-    Length: Optional[int]         = Field(default=10)
-    RoleRelevance: Optional[int]  = Field(default=10)
-    section_weight: Optional[float] = Field(default=0.1)
-class ResumeParts(BaseModel):
-    Profile: Optional[Criteria]  = Field(
-        default = None,
-        example={
-            "Completeness": 10,
-            "ContentQuality": 10,
-            "Grammar": 0,
-            "Length": 0,
-            "RoleRelevance": 0,
-            "section_weight": 0.1
-        })
-    Summary: Optional[Criteria]  = Field(
-        default = None,
-        example={
-            "Completeness": 10,
-            "ContentQuality": 10,
-            "Grammar": 10,
-            "Length": 10,
-            "RoleRelevance": 10,
-            "section_weight": 0.1
-        })
-    Education: Optional[Criteria]  = Field(
-        default = None,
-        example={
-            "Completeness": 10,
-            "ContentQuality": 0,
-            "Grammar": 0,
-            "Length": 0,
-            "RoleRelevance": 10,
-            "section_weight": 0.2
-        })
-    Experience: Optional[Criteria]  = Field(
-        default = None,
-        example={
-            "Completeness": 10,
-            "ContentQuality": 10,
-            "Grammar": 10,
-            "Length": 10,
-            "RoleRelevance": 10,
-            "section_weight": 0.2
-        })
-    Activities: Optional[Criteria]  = Field(
-        default = None,
-        example={
-            "Completeness": 10,
-            "ContentQuality": 10,
-            "Grammar": 10,
-            "Length": 10,
-            "RoleRelevance": 10,
-            "section_weight": 0.2
-        })
-    Skills: Optional[Criteria]  = Field(
-        default = None,
-        example={
-            "Completeness": 10,
-            "ContentQuality": 0,
-            "Grammar": 0,
-            "Length": 10,
-            "RoleRelevance": 10,
-            "section_weight": 0.2
-        })
-class WeightUpdatePayload(BaseModel):
-    version: Optional[str] = Field(default="weights_v1")
-    weights: Optional[ResumeParts]   = Field(default=None)
+# from core.weightupdate import update_weight
+# class Criteria(BaseModel):
+#     Completeness: Optional[int]   = Field(default=10)
+#     ContentQuality: Optional[int] = Field(default=10)
+#     Grammar: Optional[int]        = Field(default=10)
+#     Length: Optional[int]         = Field(default=10)
+#     RoleRelevance: Optional[int]  = Field(default=10)
+#     section_weight: Optional[float] = Field(default=0.1)
+# class ResumeParts(BaseModel):
+#     Profile: Optional[Criteria]  = Field(
+#         default = None,
+#         example={
+#             "Completeness": 10,
+#             "ContentQuality": 10,
+#             "Grammar": 0,
+#             "Length": 0,
+#             "RoleRelevance": 0,
+#             "section_weight": 0.1
+#         })
+#     Summary: Optional[Criteria]  = Field(
+#         default = None,
+#         example={
+#             "Completeness": 10,
+#             "ContentQuality": 10,
+#             "Grammar": 10,
+#             "Length": 10,
+#             "RoleRelevance": 10,
+#             "section_weight": 0.1
+#         })
+#     Education: Optional[Criteria]  = Field(
+#         default = None,
+#         example={
+#             "Completeness": 10,
+#             "ContentQuality": 0,
+#             "Grammar": 0,
+#             "Length": 0,
+#             "RoleRelevance": 10,
+#             "section_weight": 0.2
+#         })
+#     Experience: Optional[Criteria]  = Field(
+#         default = None,
+#         example={
+#             "Completeness": 10,
+#             "ContentQuality": 10,
+#             "Grammar": 10,
+#             "Length": 10,
+#             "RoleRelevance": 10,
+#             "section_weight": 0.2
+#         })
+#     Activities: Optional[Criteria]  = Field(
+#         default = None,
+#         example={
+#             "Completeness": 10,
+#             "ContentQuality": 10,
+#             "Grammar": 10,
+#             "Length": 10,
+#             "RoleRelevance": 10,
+#             "section_weight": 0.2
+#         })
+#     Skills: Optional[Criteria]  = Field(
+#         default = None,
+#         example={
+#             "Completeness": 10,
+#             "ContentQuality": 0,
+#             "Grammar": 0,
+#             "Length": 10,
+#             "RoleRelevance": 10,
+#             "section_weight": 0.2
+#         })
+# class WeightUpdatePayload(BaseModel):
+#     version: Optional[str] = Field(default="weights_v1")
+#     weights: Optional[ResumeParts]   = Field(default=None)
 
-@app.put("/config/weight",tags=['Admin'])
-def update_global_config(payload:WeightUpdatePayload):
-    updated = update_weight(payload.model_dump())
-    return {
-        "status":"updated",
-        "config":updated
-    }
+# @app.put("/config/weight",tags=['Admin'])
+# def update_global_config(payload:WeightUpdatePayload):
+#     updated = update_weight(payload.model_dump())
+#     return {
+#         "status":"updated",
+#         "config":updated
+#     }
 
 
 

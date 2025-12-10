@@ -1,0 +1,101 @@
+{
+    "user_id": "U-1002",
+    "language": "en",
+    "template_id": "T_EMPLOYER_STD_V3",
+    "sections": [
+        "profile_summary",
+        "skills",
+        "education",
+        "experience",
+        "projects"
+    ],
+    "student_profile": {
+        "personal_info": {
+            "name": "Dr. Natthaporn Takpho",
+            "email": "natthaporn.takpho@example.com",
+            "phone": "+66-81-234-5678",
+            "linkedin": "https://www.linkedin.com/in/natthaporntakpho/"
+        },
+        "education": [
+            {
+                "id": "edu#phd_naist",
+                "degree": "PhD in Biological Science",
+                "institution": "Nara Institute of Science and Technology (NAIST)",
+                "gpa": 3.8,
+                "start_date": "2011-04-01",
+                "graduation_date": "2016-03-31",
+                "major": "Biological Science"
+            },
+            {
+                "id": "edu#bsc_mahidol",
+                "degree": "BSc in Biochemistry",
+                "institution": "Mahidol University",
+                "gpa": 3.7,
+                "start_date": "2007-06-01",
+                "graduation_date": "2011-03-31",
+                "major": "Biochemistry"
+            }
+        ],
+        "experience": [
+            {
+                "id": "work_exp#mojia",
+                "title": "Associate Director, Synthetic Biology Research",
+                "company": "Mojia Biotech Pte. Ltd.",
+                "start_date": "2023-04-01",
+                "end_date": "2024-06-30",
+                "responsibilities": [
+                    "Led enzyme screening and pathway optimization projects for PDO production",
+                    "Secured government research grants and established cross-border collaborations"
+                ]
+            },
+            {
+                "id": "work_exp#mitsui_sg",
+                "title": "Assistant Manager, Research Division",
+                "company": "Mitsui Chemicals Singapore R&D Centre",
+                "start_date": "2017-11-01",
+                "end_date": "2023-03-31",
+                "responsibilities": [
+                    "Managed R&D projects and IP strategy for biotechnology applications",
+                    "Awarded 'Most Passionate Idea Award 2021' for healthcare innovation"
+                ]
+            }
+        ],
+        "skills": [
+            {
+                "id": "skill#molecular_biology",
+                "name": "Molecular Biology",
+                "description": "Expertise in molecular biology techniques and workflows.",
+                "level": "L4_Expert"
+            },
+            {
+                "id": "skill#analytical_thinking",
+                "name": "Analytical Thinking",
+                "description": "Ability to analyze data and derive insights.",
+                "level": "L3_Advanced"
+            },
+            {
+                "id": "skill#market_analysis",
+                "name": "Market Analysis",
+                "description": "Understand market dynamics and competitive landscape.",
+                "level": "L3_Advanced"
+            },
+            {
+                "id": "skill#strategic_planning",
+                "name": "Strategic Planning",
+                "description": "Capable of developing long-term strategic plans.",
+                "level": "L3_Advanced"
+            }
+        ],
+        "awards": [],
+        "extracurriculars": []
+    },
+    "target_role_taxonomy": {
+        "role_title": "Biotechnology R&D Scientist",
+        "role_description": "A biotechnology scientist developing and optimizing biological systems.",
+        "role_required_skills": [
+            "Molecular biology",
+            "Synthetic biology",
+            "Bioprocess optimization",
+            "Project management"
+        ]
+    },
