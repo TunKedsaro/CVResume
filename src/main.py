@@ -64,7 +64,7 @@ from fastapi import Response
 
 ### Debug & Lab.API:04 ######################################################
 from core.helper import Helper
-mock_data = Helper.load_json("src/mock/resume1.json")
+mock_data = Helper.load_json("src/mock/resume3.json")
 @app.get("/evaluation/logexamplepayload",tags=["Debug & Lab"])
 def show_example_of_payload_json_body():
     return {"response":mock_data}
@@ -84,16 +84,18 @@ def call_example_payload_json_body():
 
 ### Debug & Lab.API:06 ######################################################
 class PromptBuilderPayload(BaseModel):
-        section  : str  | None = Field (default = "Summary")
-        criteria : list | None = Field (default = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"])
+        section    : str  | None = Field (default = "Summary")
+        criteria   : list | None = Field (default = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"])
+        targetrole : str  | None = Field (default = "Data scientist")
 
 @app.post("/test/prompt", tags=["Debug & Lab"])
 def prompt_lab(payload:PromptBuilderPayload):
     pl = payload.model_dump()
     pb = PromptBuilder(
-        section  = pl["section"],
-        criteria = pl["criteria"],
-        cvresume = "resume_json"
+        section    = pl["section"],
+        criteria   = pl["criteria"],
+        targetrole = pl["targetrole"],
+        cvresume   = "resume_json"
         )
     prompt = pb.build()
     return Response(content=prompt, media_type="text/plain")
@@ -233,6 +235,7 @@ def evaluation_profile(payload: EvaluationPayload):
     p1 = PromptBuilder(
         section  = "Profile",
         criteria = ["Completeness", "ContentQuality"],
+        targetrole = "Data science",
         cvresume = resume_json
     )
     prompt = p1.build()
@@ -247,6 +250,7 @@ def evaluate_summary(payload: EvaluationPayload):
     p2 = PromptBuilder( 
         section  = "Summary", 
         criteria = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"],
+        targetrole = "Data science",
         cvresume = resume_json
     )
     prompt = p2.build()
@@ -261,6 +265,7 @@ def evaluate_education(payload: EvaluationPayload):
     p3 = PromptBuilder( 
         section  = "Education", 
         criteria = ["Completeness","RoleRelevance"],
+        targetrole = "Data science",
         cvresume = resume_json
     )
     prompt3 = p3.build()
@@ -275,6 +280,7 @@ def evaluate_experience(payload: EvaluationPayload):
     p4 = PromptBuilder( 
         section  = "Experience", 
         criteria = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"],
+        targetrole = "Data science",
         cvresume = resume_json
     )
     prompt4 = p4.build()
@@ -290,6 +296,7 @@ def evaluate_activities(payload: EvaluationPayload):
     p5 = PromptBuilder( 
         section  = "Activities", 
         criteria = ["Completeness", "ContentQuality","Grammar","Length"],
+        targetrole = "Data science",
         cvresume = resume_json
     )
     prompt5 = p5.build()
@@ -305,6 +312,7 @@ def evaluate_skills(payload: EvaluationPayload):
     p6 = PromptBuilder( 
         section  = "Skills", 
         criteria = ["Completeness","Length","RoleRelevance"],
+        targetrole = "Data science",
         cvresume = resume_json
     )
     prompt6 = p6.build()
@@ -325,6 +333,7 @@ def evaluate_resume(payload: EvaluationPayload):
     p1 = PromptBuilder(
         section  = "Profile",
         criteria = ["Completeness", "ContentQuality"],
+        targetrole = "Data science",
         cvresume = resume_json
     )
     prompt1 = p1.build()
@@ -332,6 +341,7 @@ def evaluate_resume(payload: EvaluationPayload):
     p2 = PromptBuilder( 
         section  = "Summary", 
         criteria = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"],
+        targetrole = "Data science",
         cvresume = resume_json
     )
     prompt2 = p2.build()
@@ -339,6 +349,7 @@ def evaluate_resume(payload: EvaluationPayload):
     p3 = PromptBuilder( 
         section  = "Education", 
         criteria = ["Completeness","RoleRelevance"],
+        targetrole = "Data science",
         cvresume = resume_json
     )
     prompt3 = p3.build()
@@ -346,6 +357,7 @@ def evaluate_resume(payload: EvaluationPayload):
     p4 = PromptBuilder( 
         section  = "Experience", 
         criteria = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"],
+        targetrole = "Data science",
         cvresume = resume_json
     )
     prompt4 = p4.build()
@@ -353,6 +365,7 @@ def evaluate_resume(payload: EvaluationPayload):
     p5 = PromptBuilder( 
         section  = "Activities", 
         criteria = ["Completeness", "ContentQuality","Grammar","Length"],
+        targetrole = "Data science",
         cvresume = resume_json
     )
     prompt5 = p5.build()
@@ -360,6 +373,7 @@ def evaluate_resume(payload: EvaluationPayload):
     p6 = PromptBuilder( 
         section  = "Skills", 
         criteria = ["Completeness","Length","RoleRelevance"],
+        targetrole = "Data science",
         cvresume = resume_json
     )
     prompt6 = p6.build()

@@ -43,8 +43,7 @@
             "company": "CONENTO (Madrid, Spain) — working remotely",
             "dates": "Jan 2016 - Mar 2016",
             "description": [
-                "Designed and implemented the ETL pipeline for a predictive model of traffic on the main roads in eastern Spain (project for the Spanish government).",
-                "Automated scripts in R to extract, transform, clean (including anomaly detection), and load into MySQL data from multiple sources (road traffic sensors, accidents, road works, weather)."
+                "Designed and implemented the ETL pipeline for a predictive model of traffic on the main roads in eastern Spain (project for the Spanish government).","Automated scripts in R to extract, transform, clean (including anomaly detection), and load into MySQL data from multiple sources (road traffic sensors, accidents, road works, weather)."
             ]
         },
         {
@@ -52,8 +51,7 @@
             "company": "CONENTO (Madrid, Spain)",
             "dates": "Jun 2014 - Sep 2014",
             "description": [
-                "Designed an experiment for Google Spain (conducted in Oct 2014) to measure the impact of YouTube ads on the sales of a car manufacturer's dealer network.",
-                "Used a matched-pair, cluster-randomized design selecting test/control groups from 50+ cities based on sales-wise similarity over time (using wavelets and R)."
+                "Designed an experiment for Google Spain (conducted in Oct 2014) to measure the impact of YouTube ads on the sales of a car manufacturer's dealer network.","Used a matched-pair, cluster-randomized design selecting test/control groups from 50+ cities based on sales-wise similarity over time (using wavelets and R)."
             ]
         },
         {
@@ -61,9 +59,7 @@
             "company": "YOKOGAWA (Madrid, Spain)",
             "dates": "Feb 2009 - Aug 2013",
             "description": [
-                "Applied analysis of sales and market trends to decide the direction of the department.",
-                "Led a team of 7 people.",
-                "Increased revenue by 6.3%, gross profit by 4.2%, and operating income by 146%; achieved a 30% ratio of new customers (3x growth) by entering new markets and improving customer service and training."
+                "Applied analysis of sales and market trends to decide the direction of the department.","Led a team of 7 people.","Increased revenue by 6.3%, gross profit by 4.2%, and operating income by 146%; achieved a 30% ratio of new customers (3x growth) by entering new markets and improving customer service and training."
             ]
         },
         {
@@ -78,9 +74,7 @@
             "title": "Sales & Application Engineer",
             "company": "AYSCOM (Madrid, Spain)",
             "dates": "Sep 2004 - Mar 2008",
-            "description": [
-                "Exceeded sales target every year from 2005 to 2007; achieved 60% of the target in the first 3 months of 2008."
-            ]
+            "description": ["Exceeded sales target every year from 2005 to 2007; achieved 60% of the target in the first 3 months of 2008."]
         },
         {
             "title": "Tutor of Differential & Integral Calculus, Physics, and Digital Electronic Circuits",
@@ -94,20 +88,10 @@
     ],
     "skills": {
         "technical": [
-            "Data Analysis",
-            "Statistics",
-            "Experiment Design",
-            "ETL",
-            "Anomaly Detection",
-            "MySQL",
-            "Machine Learning",
-            "Data Visualization",
-            "Big Data"
+            "Data Analysis","Statistics","Experiment Design","ETL","Anomaly Detection","MySQL","Machine Learning","Data Visualization","Big Data"
         ],
         "soft_skills": [
-            "Team Leadership",
-            "Customer Service Improvement",
-            "Training & Mentoring"
+            "Team Leadership","Customer Service Improvement","Training & Mentoring"
         ],
         "tools_with_levels": [
             {"tool": "Python","level": "proficient"},

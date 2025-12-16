@@ -1,8 +1,12 @@
-version: "prompt_v1"
+version: "prompt_v2"
 role:
   role1: You are the expert HR evaluator
 objective:
-  objective1: Evaluate the <section_name> section from the resume using the scoring criteria
+  objective1: |
+    Evaluate the <section_name> section from the resume using the scoring criteria
+    Measure how well the candidate matches the <targetrole> role.
+    Consider: degree relevance, experience alignment, skills/tools, and seniority evidence.
+    Score 0-5 using the scale above.
 section:
   section1: You are evaluating the <section_name> section.
 expected_content:
@@ -52,3 +56,43 @@ scale:
     3 = sufficient
     4 = strong
     5 = excellent
+criteria:
+  Completeness:
+    score5: |
+      Section contains all key elements from expected_content for this section with enoughdetail to understand the candidate's background and context. No major information gaps.    
+    score4: |
+      Section contains all key elements from expected_content for this section with enoughdetail to understand the candidate's background and context. No major information gaps.    
+    score3: |
+      Section contains all key elements from expected_content for this section with enoughdetail to understand the candidate's background and context. No major information gaps.
+    score2: |
+      Section contains some of the key elements but is missing 1-2 important parts or providesthem only in shallow detail. Overall usable but not fully complete.
+    score1: |
+      Section is very sparse or missing most key elements; important information is absentor only hinted at. Hard to understand the candidate from this section alone.
+  ContentQuality:
+    score5: |
+      Follows clear Action → Method → Impact with quantifiable results; very specific; includestools, methods, or techniques; shows strong, measurable improvement.Examples: social media with +35% engagement; Random Forest churn model (72%→88%, churn -20%);stakeholder management reducing escalations by 60%.
+    score3: |
+      Partially follows Action → Method → Impact; has some specifics but lacks clear, quantifiedresults; reasonable but not strong.Examples: using Meta Business Suite to plan/publish content; churn model mentioned but no metrics;weekly stakeholder meetings to keep schedule.
+    score1: |
+      Very generic; only action with no method or impact; no tools, no metrics, low clarity.Examples: "Managed social media", "Built a prediction model", "Worked with stakeholders".
+  Grammar:
+    score5: |
+      Grammar, spelling, and sentence structure are correct and natural; bullets are easy to read;verb tenses are consistent; only very minor or rare typos, if any.
+    score3: |
+      Some grammar or spelling issues, but the text remains understandable; occasional awkward phrasingor tense inconsistency, yet overall readability is acceptable.
+    score1: |
+      Frequent grammar and spelling mistakes; sentences are confusing or broken; tense usage isinconsistent; the reader must work hard to interpret the meaning.
+  Length:
+    score5: |
+      Length is appropriate for the section: not too short, not overly long; information is denseand relevant; each sentence or bullet adds value without obvious redundancy.
+    score3: |
+      Length is somewhat suboptimal: either a bit short (missing some detail) or somewhat long withmild repetition or low-value bullets, but still usable.
+    score1: |
+      Length is clearly inappropriate: either extremely short (1-2 vague lines) or very long andrepetitive with many low-information bullets or sentences.
+  RoleRelevance:
+    score5: |
+      Content is strongly aligned with the target role: tasks, tools, domain, and responsibilitiesclearly match what is expected for the <targetrole> role; shows appropriate seniority and impact.
+    score3: |
+      Content has partial alignment with the target role: some relevant skills or responsibilities,but mixed with less relevant tasks or not yet at the depth/seniority typically expected for<targetrole>.
+    score1: |
+      Content is mostly unrelated to the target role: focuses on other domains or generic duties;very little evidence that directly supports readiness for <targetrole>.
