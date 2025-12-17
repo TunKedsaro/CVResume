@@ -1,4 +1,4 @@
-# CVResume API
+# CVResume evaluation API
 ## Overview
 The CV/Resume Evaluation API is a microservice that evaluates resume sections using an LLM scoring pipeline.
 
@@ -13,13 +13,14 @@ It exposes
     - Build and inspect raw prompts
 3. Section Evaluation endpoints
     - Evaluate individual resume section (Profile, Summary, Education, Experience, Activity, Skills)
-    - Return criteria-level scores + aggregated section score
+    - Return criteria-level scores + feedback
 4. Composite Evaluation endpoint
-    - Run all sections (Profile, Summary, Education, Experience, Activities, Skills) in one go
+    - Run all sections (Profile + Summary + Education + Experience + Activities + Skills) in one go
     - Return a final composite resume score plus section-level details
 
 The Evaluation API hides internal complexity related to prompt building, LLM interaction, section weight aggregation, and scoring normalization.
-<hr>
+
+---
 
 ## Interactive API Docs (Swagger UI)
 The service exposes Swagger UI for exploration and testing:
@@ -27,157 +28,242 @@ The service exposes Swagger UI for exploration and testing:
     https://cvresume-service-du7yhkyaqq-as.a.run.app/docs
 - OpenAPI JSON (for tools/codegen):
     https://cvresume-service-du7yhkyaqq-as.a.run.app/openapi.json (if exposed)
-<hr>
+
+---
 
 ## Architecture Role
 
 ```text
 Client / UI / Other Backend
     |
-    |  POST /evaluation/*                 (section evaluation)
+    |  POST /evaluation/*                  (section evaluation)
     |  POST /evaluation/final-resume-score (composite)
     v
     CV/Resume Evaluation API
-    ├─ Build prompts from resume_json + YAML config
-    ├─ Call Gemini LLM (LlmCaller)
+    ├─ Build prompts from resume_json + prompt.yaml config
+    ├─ Call Gemini LLM (LlmCaller) + model.yaml config
     ├─ Aggregate scores (SectionScoreAggregator)
-    ├─ Compute final resume score (GlobalAggregator)
+    ├─ Compute final resume score (GlobalAggregator) + score.yaml config
     └─ Return clean JSON response + response_time (seconds)
 ```
 
-Upstream data source
-- resume_json is typically produced by upstream systems
-(e.g. CV Generation Service, E-Portfolio Service)
+##### Upstream data source
+- resume_json is typically produced by upstream systems (e.g. CV Generation Service, E-Portfolio Service)
 
-Downstream dependency
+##### Downstream dependency
 - Google Gemini LLM (via internal LlmCaller wrapper)
 
-Internal configuration
+##### Internal configuration
 - YAML-based configuration: 
-    - Prompt templates 
-    - Scoring weights 
-    - Aggregation rules 
+    - prompt.yaml : Prompt templates 
+    - weight.yaml  : Scoring weights 
+    - model.yaml : model config 
+    - global.yaml : global thing (e.g. version, cost)
 
 Configuration is not exposed via public endpoints in this version
 
-<hr>
+---
 
 ## Base URL (Production)
-```text
-    https://cvresume-service-du7yhkyaqq-as.a.run.app
-```
-<hr>
+
+[`https://cvresume-service-du7yhkyaqq-as.a.run.app`](https://cvresume-service-du7yhkyaqq-as.a.run.app)
+
+---
 
 
 ## Common concepts
 
-Request Body : EvaluationPayload
+#### `Request` : Body → **EvaluationPayload**  
+#### `Used by` : all `/evaluation/` POST endpoints.
 
-Used by all /evaluation/ POST endpoints.
+### Example payload
 
-Example payload:
-
-```text
+```json
 {
   "resume_json": { "..." : "..." }
 }
 ```
 
 resume_json
-- Type : object
-- Required : yes (for all evaluation endpoints)
-- Description :
-  Structured resume payload.
+#### Type : object
+#### Required : yes (for all evaluation endpoints)
+#### Description : Structured resume payload.
 
   Typical fields (example only, not enforced by this service):
 
-  - job_id : string
-  - template_id : string
-  - language : string ("en" / "th")
-  - status : string
-  - sections : object
-      - key   : section names (Profile, Summary, Education, Experience, Activities, Skills)
-      - value : section text & metadata
-  - skills : list of skill objects
+  - `job_id` : string
+  - `template_id` : string
+  - `language` : string ("en" / "th")
+  - `status` : string
+  - `sections` : object
+      - `key`   : section names (Profile, Summary, Education, Experience, Activities, Skills)
+      - `value` : section text & metadata
+  - `skills` : list of skill objects
 
 Note:
 The Evaluation API does not enforce a strict schema on resume_json.
 It expects a valid JSON object compatible with the internal PromptBuilder logic.
 
-
-<hr>
-## Common Response Shape
-Most endpoints returns
-
-```text
-{
-  "response": { ... },          // domain-specific payload (scores, metadata, etc.)
-  "response_time": "0.12345 s"  // processing latency in seconds (string)
-}
-```
-<hr>
-
-## Section Score Schema (from SectionScoreAggregator)
-
-For all **section evaluation endpoints**, the response follows the same standardized structure.
-
-### Response Example
+### Real resume json example:
 
 ```json
 {
-  "section": "Summary",
-  "total_score": 78.0,
-  "scores": {
-    "RoleRelevance":  { "score": 30.0, "feedback": "..." },
-    "Length":         { "score": 8.0,  "feedback": "..." },
-    "Grammar":        { "score": 10.0, "feedback": "..." },
-    "ContentQuality": { "score": 24.0, "feedback": "..." },
-    "Completeness":   { "score": 6.0,  "feedback": "..." }
+  "response": {
+    "contact_information": {
+      "name": "Juan Jose Carin",
+      "email": "juanjose.carin@gmail.com",
+      "phone": "650-336-4590",
+      "linkedin": "linkedin.com/in/juanjosecarin",
+      "jobdb_link": "-",
+      "portfolio_link": "juanjocarin.github.io"
+    },
+    "professional_summary": {
+      "has_summary": "Yes",
+      "summary_points": [
+        "Passionate about data analysis and experiments, mainly focused on user behavior, experience, and engagement.",
+        "Solid background in data science and statistics, with extensive experience using data insights to drive business growth."
+      ]
+    },
+    "education": [
+      {
+        "institution": "University of California, Berkeley",
+        "degree": "Master of Information and Data Science",
+        "dates": "2016",
+        "gpa": "3.93",
+        "honors": "Relevant courses: Machine Learning; Machine Learning at Scale; ..."
+      },
+      {
+        "institution": "Universidad Politécnica de Madrid",
+        "degree": "M.S. in Statistical and Computational Information Processing",
+        "dates": "2014",
+        "gpa": "3.69",
+        "honors": "Relevant courses: Data Mining; Multivariate Analysis; ..."
+      }
+    ],
+    "experience": [
+      {
+        "title": "Data Scientist",
+        "company": "CONENTO (Madrid, Spain)",
+        "dates": "Jan 2016 - Mar 2016",
+        "description": [
+          "Designed and implemented the ETL pipeline for a predictive model of traffic.",
+          "Automated scripts in R to extract, transform, clean, and load into MySQL."
+        ]
+      }
+    ],
+    "skills": {
+      "technical": [
+        "Data Analysis",
+        "Statistics",
+        "Experiment Design",
+        "ETL"
+      ],
+      "soft_skills": [
+        "Team Leadership",
+        "Customer Service Improvement"
+      ],
+      "tools_with_levels": [
+        {
+          "tool": "Python",
+          "level": "proficient"
+        }
+      ]
+    }
   }
 }
 ```
+---
 
-#### `section`
-- **Type**: string  
-- **Description** :  Name of the evaluated section.
-    - Profile
-    - Summary
-    - Education
-    - Experience
-    - Activities
-    - Skills
+## SectionAggregator Output Format
+- Used by all /evaluation/<section> endpoints
+```json
+{
+  "response": {
+    "section": "Experience",
+    "scores": {
+      "RoleRelevance": { "score": 5, "feedback": "xxx" },
+      "Length":        { "score": 4, "feedback": "yyy" },
+      "Grammar":       { "score": 5, "feedback": "zzz" },
+      "ContentQuality":{ "score": 3, "feedback": "aaa" },
+      "Completeness":  { "score": 3, "feedback": "bbb" }
+    }
+  },
+  "response_time": "0.12345 s"
+}
+```
+#### Notes
 
-#### `total_score`
-- **Type**: number  
-- **Description**:  Aggregated score for the section after applying configured weights.
+No total_score here → because SectionAggregator returns raw (unweighted) criteria scores before global normalization.
 
-#### `scores`
-- **Type**: object  
-- **Description**:  Per-criteria score breakdown for the section.
-    - Completeness
-    - ContentQuality
-    - Grammar
-    - Length
-    - RoleRelevance
-Each criterion returns an object with the following fields:
+Used directly in your section endpoints.
 
-###### `score`
-- **Type**: number  
-- **Description**:  
-  Weighted numeric score for the criterion.
+## GlobalAggregator Output Format
+- Used by /evaluation/final-resume-score
+```json
+{
+  "conclusion": {
+    "final_resume_score": 82.4,
+    "section_contribution": {
+      "Profile": {
+        "section_total": 78.0,
+        "section_weight": 40,
+        "contribution": 31.2
+      },
+      "Experience": {
+        "section_total": 90.0,
+        "section_weight": 10,
+        "contribution": 9.0
+      }
+    }
+  },
+  "section_details": {
+    "Profile": {
+      "total_score": 78.0,
+      "scores": {
+        "RoleRelevance":  { "score": 30.0, "feedback": "xxx" },
+        "Length":         { "score": 8.0,  "feedback": "yyy" },
+        "Grammar":        { "score": 10.0, "feedback": "zzz" },
+        "ContentQuality": { "score": 24.0, "feedback": "aaa" },
+        "Completeness":   { "score": 6.0,  "feedback": "bbb" }
+      }
+    },
+    "Experience": {
+      "total_score": 90.0,
+      "scores": {
+        "RoleRelevance":  { "score": 20.0, "feedback": "xxx" },
+        "Length":         { "score": 10.0, "feedback": "yyy" },
+        "Grammar":        { "score": 25.0, "feedback": "zzz" },
+        "ContentQuality": { "score": 22.0, "feedback": "aaa" },
+        "Completeness":   { "score": 13.0, "feedback": "bbb" }
+      }
+    }
+  },
+  "metadata": {
+    "model_name": "gemini-2.5-flash",
+    "timestamp": "2025-12-03T11:45:00+07:00",
+    "weights_version": "weights_v1",
+    "prompt_version": "prompt_v1"
+  }
+}
+```
+### Field Explanation
+`conclusion.final_resume_score`
+Final composite score after applying:
+→ Section weights
+→ Normalization
+→ Aggregation formula
 
-###### `feedback`
-- **Type**: string  
-- **Description**:  
-  Short natural-language explanation generated by the LLM.
+`conclusion.section_contribution`
+Shows how much each section contributes to the final score.
 
-### Notes
-- Not all criteria are mandatory for every section.
-- The active criteria depend on section type and configuration in `weight.yaml`.
-- Scores are already weighted and normalized at the section level.
+`section_details`
+Contains each full SectionAggregator result but with total_score added.
 
-<hr>
+`metadata`
+Audit + debugging info (model, timestamp, versions, etc.)
 
+---
+*** 
 
 ## Endpoints
 
@@ -208,7 +294,7 @@ No body.
 #### `service` : static identifier for this service.
 #### `response_time` : local processing time (no external calls).
 
-<hr>
+---
 
 ### 1.2 Gemini Health Check
 
@@ -234,7 +320,7 @@ No body.
 #### `response` : Parsed JSON returned by Gemini.
 #### `response_time` : Total time from sending the prompt to receiving the response.
 
-<hr>
+---
 
 ### 1.3 Metadata Health Check
 
@@ -258,12 +344,11 @@ No body.
 #### `message` : Arbitrary metadata object returned from get_metadata() (e.g. config version, environment information).
 #### `response_time` : Processing time for metadata retrieval.
 
-<hr>
+---
 
 ## 2. Debug & Lab
 
-**Note**: These endpoints are for debugging and internal testing.  
-They should be restricted or disabled in production if needed.
+**Note**: These endpoints are for debugging and internal testing. (They should be restricted or disabled in production if needed.)
 
 ### 2.1 Get Example Resume Payload
 
@@ -339,8 +424,8 @@ Useful for debugging prompt design and criteria selection.
 ```
 
 #### Request Fields
-##### `section` (string, optional) Default: "Summary"
-##### `criteria` (array[string], optional)
+##### `section` (string, optional) : "Profile", "Summary", "Education", "Experience", "Activities", "Skills"
+##### `criteria` (array[string], optional) : ["Completeness", "ContentQuality", "Grammar", "Length", "RoleRelevance"]
 ##### `targetrole` (string, optional) Default: "Data scientist"
 
 #### Response
@@ -351,14 +436,87 @@ Useful for debugging prompt design and criteria selection.
 
 ### Example (truncated)
 ```text
-[ROLE] You are the expert HR evaluator...
-[OBJECTIVE] Evaluate the Summary section...
-[SECTION TEXT] ...
-[CRITERIA] Completeness, ContentQuality, Grammar, Length, RoleRelevance...
-...
-````
+Role :
+You are the expert HR evaluator
 
-<hr>
+objectvie :
+Evaluate the Summary section from the resume using the scoring criteria
+Measure how well the candidate matches the Data science role.
+Consider: degree relevance, experience alignment, skills/tools, and seniority evidence.
+Score 0-5 using the scale above.
+
+section :
+You are evaluating the Summary section.
+
+expected :
+- 2-4 sentence summary of experience
+- Technical & domain strengths
+- Career focus & value proposition
+- Avoid buzzwords
+- Feedback word 20 words
+
+Criteria :
+- RoleRelevance
+    score 5: Content is strongly aligned with the target role: tasks, tools, domain, and responsibilitiesclearly match what is expected for the Data science role; shows appropriate seniority and impact.
+    score 3: Content has partial alignment with the target role: some relevant skills or responsibilities,but mixed with less relevant tasks or not yet at the depth/seniority typically expected forData science.
+    score 1: Content is mostly unrelated to the target role: focuses on other domains or generic duties;very little evidence that directly supports readiness for Data science.
+- Length
+    score 5: Length is appropriate for the section: not too short, not overly long; information is denseand relevant; each sentence or bullet adds value without obvious redundancy.
+    score 3: Length is somewhat suboptimal: either a bit short (missing some detail) or somewhat long withmild repetition or low-value bullets, but still usable.
+    score 1: Length is clearly inappropriate: either extremely short (1-2 vague lines) or very long andrepetitive with many low-information bullets or sentences.
+- Grammar
+    score 5: Grammar, spelling, and sentence structure are correct and natural; bullets are easy to read;verb tenses are consistent; only very minor or rare typos, if any.
+    score 3: Some grammar or spelling issues, but the text remains understandable; occasional awkward phrasingor tense inconsistency, yet overall readability is acceptable.
+    score 1: Frequent grammar and spelling mistakes; sentences are confusing or broken; tense usage isinconsistent; the reader must work hard to interpret the meaning.
+- ContentQuality
+    score 5: Follows clear Action → Method → Impact with quantifiable results; very specific; includestools, methods, or techniques; shows strong, measurable improvement.Examples: social media with +35% engagement; Random Forest churn model (72%→88%, churn -20%);stakeholder management reducing escalations by 60%.
+    score 3: Partially follows Action → Method → Impact; has some specifics but lacks clear, quantifiedresults; reasonable but not strong.Examples: using Meta Business Suite to plan/publish content; churn model mentioned but no metrics;weekly stakeholder meetings to keep schedule.
+    score 1: Very generic; only action with no method or impact; no tools, no metrics, low clarity.Examples: "Managed social media", "Built a prediction model", "Worked with stakeholders".
+- Completeness
+    score 5: Section contains all key elements from expected_content for this section with enoughdetail to understand the candidate's background and context. No major information gaps.
+    score 3: Section contains all key elements from expected_content for this section with enoughdetail to understand the candidate's background and context. No major information gaps.
+    score 1: Section is very sparse or missing most key elements; important information is absentor only hinted at. Hard to understand the candidate from this section alone.
+
+Scale :
+0 = missing
+1 = poor
+2 = weak
+3 = sufficient
+4 = strong
+5 = excellent
+
+output :
+{
+  "section": "Summary",
+  "scores": {
+    "RoleRelevance": {
+      "score": 0,
+      "feedback": ""
+    },
+    "Length": {
+      "score": 0,
+      "feedback": ""
+    },
+    "Grammar": {
+      "score": 0,
+      "feedback": ""
+    },
+    "ContentQuality": {
+      "score": 0,
+      "feedback": ""
+    },
+    "Completeness": {
+      "score": 0,
+      "feedback": ""
+    }
+  }
+}
+
+CV/Resume: 
+resume_json
+```
+
+---
 
 ## 3. Section Evaluation
 
@@ -368,7 +526,6 @@ All section evaluation endpoints share the following characteristics:
 - **Body**: `EvaluationPayload`  
 - **Response**: Section score schema + `response_time`
 
----
 
 ### 3.1 Evaluate Profile
 
@@ -376,17 +533,280 @@ All section evaluation endpoints share the following characteristics:
 
 Evaluates the **Profile** section of the resume.
 
+### Criteria Used
+- Completeness
+- ContentQuality
+
 ### Request
 
 ```json
 {
+  "output_lang": "en",
+  "resume_json": "resume_json"
+}
+```
+#### Request Fields
+##### `output_lang` (string, optional) : "en", "th"
+##### `resume_json` (object, required) : Structured resume payload. Must follow the resume schema.
+
+### Request example
+```json
+{
+  "output_lang": "en",
   "resume_json": {
-    "...": "resume content"
+  "response": {
+    "contact_information": {
+      "name": "Juan Jose Carin",
+      "email": "juanjose.carin@gmail.com",
+      "phone": "650-336-4590",
+      "linkedin": "linkedin.com/in/juanjosecarin",
+      "jobdb_link": "-",
+      "portfolio_link": "juanjocarin.github.io"
+    },
+    "professional_summary": {
+      "has_summary": "Yes",
+      "summary_points": [
+        "Passionate about data analysis and experiments, mainly focused on user behavior, experience, and engagement.",
+        "Solid background in data science and statistics, with extensive experience using data insights to drive business growth."
+      ]
+    },
+    "education": [
+      {
+        "institution": "University of California, Berkeley",
+        "degree": "Master of Information and Data Science",
+        "dates": "2016",
+        "gpa": "3.93",
+        "honors": "Relevant courses: Machine Learning; Machine Learning at Scale; Storing and Retrieving Data; Field Experiments; Applied Regression and Time Series Analysis; Exploring and Analyzing Data; Data Visualization and Communication; Research Design and Applications for Data Analysis."
+      },
+      {
+        "institution": "Universidad Politécnica de Madrid",
+        "degree": "M.S. in Statistical and Computational Information Processing",
+        "dates": "2014",
+        "gpa": "3.69",
+        "honors": "Relevant courses: Data Mining; Multivariate Analysis; Time Series; Neural Networks and Statistical Learning; Regression and Prediction Methods; Optimization Techniques; Monte Carlo Techniques; Numerical Methods in Finance; Stochastic Models in Finance; Bayesian Networks."
+      },
+      {
+        "institution": "Universidad Politécnica de Madrid",
+        "degree": "M.S. in Telecommunication Engineering",
+        "dates": "2005",
+        "gpa": "3.03",
+        "honors": "Focus Area: Radio communication systems (radar and mobile). Fellowship: First year at University, due to Honors obtained last year at high school."
+      }
+    ],
+    "experience": [
+      {
+        "title": "Data Scientist",
+        "company": "CONENTO (Madrid, Spain) — working remotely",
+        "dates": "Jan 2016 - Mar 2016",
+        "description": [
+          "Designed and implemented the ETL pipeline for a predictive model of traffic on the main roads in eastern Spain (project for the Spanish government).",
+          "Automated scripts in R to extract, transform, clean (including anomaly detection), and load into MySQL data from multiple sources (road traffic sensors, accidents, road works, weather)."
+        ]
+      },
+      {
+        "title": "Data Scientist",
+        "company": "CONENTO (Madrid, Spain)",
+        "dates": "Jun 2014 - Sep 2014",
+        "description": [
+          "Designed an experiment for Google Spain (conducted in Oct 2014) to measure the impact of YouTube ads on the sales of a car manufacturer's dealer network.",
+          "Used a matched-pair, cluster-randomized design selecting test/control groups from 50+ cities based on sales-wise similarity over time (using wavelets and R)."
+        ]
+      },
+      {
+        "title": "Head of Sales, Spain & Portugal - Test & Measurement dept.",
+        "company": "YOKOGAWA (Madrid, Spain)",
+        "dates": "Feb 2009 - Aug 2013",
+        "description": [
+          "Applied analysis of sales and market trends to decide the direction of the department.",
+          "Led a team of 7 people.",
+          "Increased revenue by 6.3%, gross profit by 4.2%, and operating income by 146%; achieved a 30% ratio of new customers (3x growth) by entering new markets and improving customer service and training."
+        ]
+      },
+      {
+        "title": "Sales Engineer - Test & Measurement dept.",
+        "company": "YOKOGAWA (Madrid, Spain)",
+        "dates": "Apr 2008 - Jan 2009",
+        "description": [
+          "Promoted to head of sales after 5 months leading the sales team."
+        ]
+      },
+      {
+        "title": "Sales & Application Engineer",
+        "company": "AYSCOM (Madrid, Spain)",
+        "dates": "Sep 2004 - Mar 2008",
+        "description": [
+          "Exceeded sales target every year from 2005 to 2007; achieved 60% of the target in the first 3 months of 2008."
+        ]
+      },
+      {
+        "title": "Tutor of Differential & Integral Calculus, Physics, and Digital Electronic Circuits",
+        "company": "ACADEMIA UNIVERSITARIA (Madrid, Spain)",
+        "dates": "Jul 2002 - Jun 2004",
+        "description": [
+          "Highest-rated professor in student surveys in 4 of the 6 terms.",
+          "Increased ratio of students passing the course by 25%."
+        ]
+      }
+    ],
+    "skills": {
+      "technical": [
+        "Data Analysis",
+        "Statistics",
+        "Experiment Design",
+        "ETL",
+        "Anomaly Detection",
+        "MySQL",
+        "Machine Learning",
+        "Data Visualization",
+        "Big Data"
+      ],
+      "soft_skills": [
+        "Team Leadership",
+        "Customer Service Improvement",
+        "Training & Mentoring"
+      ],
+      "tools_with_levels": [
+        {
+          "tool": "Python",
+          "level": "proficient"
+        },
+        {
+          "tool": "R",
+          "level": "proficient"
+        },
+        {
+          "tool": "SQL",
+          "level": "proficient"
+        },
+        {
+          "tool": "Hadoop",
+          "level": "proficient"
+        },
+        {
+          "tool": "Hive",
+          "level": "proficient"
+        },
+        {
+          "tool": "MrJob",
+          "level": "proficient"
+        },
+        {
+          "tool": "Tableau",
+          "level": "proficient"
+        },
+        {
+          "tool": "Git",
+          "level": "proficient"
+        },
+        {
+          "tool": "AWS",
+          "level": "proficient"
+        },
+        {
+          "tool": "Spark",
+          "level": "intermediate"
+        },
+        {
+          "tool": "Storm",
+          "level": "intermediate"
+        },
+        {
+          "tool": "Bash",
+          "level": "intermediate"
+        },
+        {
+          "tool": "SPSS",
+          "level": "intermediate"
+        },
+        {
+          "tool": "SAS",
+          "level": "intermediate"
+        },
+        {
+          "tool": "Matlab",
+          "level": "intermediate"
+        },
+        {
+          "tool": "EViews",
+          "level": "basic"
+        },
+        {
+          "tool": "Demetra+",
+          "level": "basic"
+        },
+        {
+          "tool": "D3.js",
+          "level": "basic"
+        },
+        {
+          "tool": "Gephi",
+          "level": "basic"
+        },
+        {
+          "tool": "Neo4j",
+          "level": "basic"
+        },
+        {
+          "tool": "QGIS",
+          "level": "basic"
+        }
+      ],
+      "languages": [
+        {
+          "language": "Python",
+          "level": "proficient"
+        },
+        {
+          "language": "R",
+          "level": "proficient"
+        },
+        {
+          "language": "SQL",
+          "level": "proficient"
+        },
+        {
+          "language": "Bash",
+          "level": "intermediate"
+        },
+        {
+          "language": "Matlab",
+          "level": "intermediate"
+        }
+      ]
+    }
   }
+}
 }
 ```
 
-<hr>
+#### Response
+
+##### Content-Type: text/plain
+
+##### Body: Raw prompt text that would be sent to the LLM.
+
+### Example (output)
+```json
+{
+  "response": {
+    "section": "Profile",
+    "total_score": 16,
+    "scores": {
+      "ContentQuality": {
+        "score": 6,
+        "feedback": "The summary clearly outlines the candidate's passion and background in data science, focusing on user behavior and business growth, but lacks quantifiable achievements."
+      },
+      "Completeness": {
+        "score": 10,
+        "feedback": "The profile section effectively establishes the candidate's professional identity, clear positioning in data science, and career direction with no missing elements."
+      }
+    }
+  },
+  "response_time": "6.15841 s"
+}
+```
+
+---
 
 ### 3.2 Evaluate Summary
 
@@ -405,25 +825,14 @@ Evaluates the **Summary** section of the resume.
 
 ```json
 {
+  "output_lang": "en",
   "resume_json": { "...": "..." }
 }
-
-```json
-{
-  "response": {
-    "section": "Summary",
-    "total_score": 78.0,
-    "scores": {
-      "Completeness":   { "score": 16.0, "feedback": "..." },
-      "ContentQuality": { "score": 24.0, "feedback": "..." },
-      "Grammar":        { "score": 10.0, "feedback": "..." },
-      "Length":         { "score": 8.0,  "feedback": "..." },
-      "RoleRelevance":  { "score": 20.0, "feedback": "..." }
-    }
-  },
-  "response_time": "3.12345 s"
-}
 ```
+#### Request Fields
+##### `output_lang` (string, optional) : Allowed values: "en", "th" Specifies the language of the evaluation feedback.
+##### `resume_json` (object, required) : Structured resume payload. Must follow the resume schema.
+
 
 ### 3.3 Evaluate Education
 
@@ -439,23 +848,14 @@ Evaluates the **Education** section of the resume.
 
 ```json
 {
+  "output_lang": "en",
   "resume_json": { "...": "..." }
 }
 ```
-### Response
-```json
-{
-  "response": {
-    "section": "Education",
-    "total_score": 82.0,
-    "scores": {
-      "Completeness":  { "score": 40.0, "feedback": "..." },
-      "RoleRelevance": { "score": 42.0, "feedback": "..." }
-    }
-  },
-  "response_time": "2.56789 s"
-}
-```
+#### Request Fields
+##### `output_lang` (string, optional) : Allowed values: "en", "th" Specifies the language of the evaluation feedback.
+##### `resume_json` (object, required) : Structured resume payload. Must follow the resume schema.
+
 
 ### 3.4 Evaluate Experience
 
@@ -474,27 +874,15 @@ Evaluates the **Experience** section of the resume.
 
 ```json
 {
+  "output_lang": "en",
   "resume_json": { "...": "..." }
 }
 ```
+#### Request Fields
+##### `output_lang` (string, optional) : Allowed values: "en", "th" Specifies the language of the evaluation feedback.
+##### `resume_json` (object, required) : Structured resume payload. Must follow the resume schema.
 
-### Response
-```json
-{
-  "response": {
-    "section": "Experience",
-    "total_score": 85.0,
-    "scores": {
-      "Completeness":   { "score": 20.0, "feedback": "..." },
-      "ContentQuality": { "score": 25.0, "feedback": "..." },
-      "Grammar":        { "score": 15.0, "feedback": "..." },
-      "Length":         { "score": 10.0, "feedback": "..." },
-      "RoleRelevance":  { "score": 15.0, "feedback": "..." }
-    }
-  },
-  "response_time": "3.45678 s"
-}
-```
+
 
 
 ### 3.5 Evaluate Activities
@@ -514,25 +902,15 @@ Evaluates the **Activities** section of the resume
 
 ```json
 {
+  "output_lang": "en",
   "resume_json": { "...": "..." }
 }
 ```
+#### Request Fields
+##### `output_lang` (string, optional) : Allowed values: "en", "th" Specifies the language of the evaluation feedback.
+##### `resume_json` (object, required) : Structured resume payload. Must follow the resume schema.
 
-```json
-{
-  "response": {
-    "section": "Activities",
-    "total_score": 75.0,
-    "scores": {
-      "Completeness":   { "score": 18.0, "feedback": "..." },
-      "ContentQuality": { "score": 22.0, "feedback": "..." },
-      "Grammar":        { "score": 20.0, "feedback": "..." },
-      "Length":         { "score": 15.0, "feedback": "..." }
-    }
-  },
-  "response_time": "2.78901 s"
-}
-```
+
 
 
 ### 3.6 Evaluate Skills
@@ -550,25 +928,15 @@ Evaluates the **Skills** section of the resume.
 
 ```json
 {
+  "output_lang": "en",
   "resume_json": { "...": "..." }
 }
 ```
+#### Request Fields
+##### `output_lang` (string, optional) : Allowed values: "en", "th" Specifies the language of the evaluation feedback.
+##### `resume_json` (object, required) : Structured resume payload. Must follow the resume schema.
 
-```json
-{
-  "response": {
-    "section": "Skills",
-    "total_score": 80.0,
-    "scores": {
-      "Completeness":   { "score": 30.0, "feedback": "..." },
-      "Length":         { "score": 20.0, "feedback": "..." },
-      "RoleRelevance":  { "score": 30.0, "feedback": "..." }
-    }
-  },
-  "response_time": "2.11111 s"
-}
-```
-
+---
 
 ## 4. Composite Evaluation
 
@@ -593,55 +961,293 @@ Runs the full evaluation pipeline:
 
 ```json
 {
+  "output_lang": "en",
   "resume_json": { "...": "..." }
 }
 ```
+#### Request Fields
+##### `output_lang` (string, optional) : Allowed values: "en", "th" Specifies the language of the evaluation feedback.
+##### `resume_json` (object, required) : Structured resume payload. Must follow the resume schema.
+
+### Request example
+```json
+{
+  "output_lang": "en",
+  "resume_json": {
+  "response": {
+    "contact_information": {
+      "name": "Juan Jose Carin",
+      "email": "juanjose.carin@gmail.com",
+      "phone": "650-336-4590",
+      "linkedin": "linkedin.com/in/juanjosecarin",
+      "jobdb_link": "-",
+      "portfolio_link": "juanjocarin.github.io"
+    },
+    "professional_summary": {
+      "has_summary": "Yes",
+      "summary_points": [
+        "Passionate about data analysis and experiments, mainly focused on user behavior, experience, and engagement.",
+        "Solid background in data science and statistics, with extensive experience using data insights to drive business growth."
+      ]
+    },
+    "education": [
+      {
+        "institution": "University of California, Berkeley",
+        "degree": "Master of Information and Data Science",
+        "dates": "2016",
+        "gpa": "3.93",
+        "honors": "Relevant courses: Machine Learning; Machine Learning at Scale; Storing and Retrieving Data; Field Experiments; Applied Regression and Time Series Analysis; Exploring and Analyzing Data; Data Visualization and Communication; Research Design and Applications for Data Analysis."
+      },
+      {
+        "institution": "Universidad Politécnica de Madrid",
+        "degree": "M.S. in Statistical and Computational Information Processing",
+        "dates": "2014",
+        "gpa": "3.69",
+        "honors": "Relevant courses: Data Mining; Multivariate Analysis; Time Series; Neural Networks and Statistical Learning; Regression and Prediction Methods; Optimization Techniques; Monte Carlo Techniques; Numerical Methods in Finance; Stochastic Models in Finance; Bayesian Networks."
+      },
+      {
+        "institution": "Universidad Politécnica de Madrid",
+        "degree": "M.S. in Telecommunication Engineering",
+        "dates": "2005",
+        "gpa": "3.03",
+        "honors": "Focus Area: Radio communication systems (radar and mobile). Fellowship: First year at University, due to Honors obtained last year at high school."
+      }
+    ],
+    "experience": [
+      {
+        "title": "Data Scientist",
+        "company": "CONENTO (Madrid, Spain) — working remotely",
+        "dates": "Jan 2016 - Mar 2016",
+        "description": [
+          "Designed and implemented the ETL pipeline for a predictive model of traffic on the main roads in eastern Spain (project for the Spanish government).",
+          "Automated scripts in R to extract, transform, clean (including anomaly detection), and load into MySQL data from multiple sources (road traffic sensors, accidents, road works, weather)."
+        ]
+      },
+      {
+        "title": "Data Scientist",
+        "company": "CONENTO (Madrid, Spain)",
+        "dates": "Jun 2014 - Sep 2014",
+        "description": [
+          "Designed an experiment for Google Spain (conducted in Oct 2014) to measure the impact of YouTube ads on the sales of a car manufacturer's dealer network.",
+          "Used a matched-pair, cluster-randomized design selecting test/control groups from 50+ cities based on sales-wise similarity over time (using wavelets and R)."
+        ]
+      },
+      {
+        "title": "Head of Sales, Spain & Portugal - Test & Measurement dept.",
+        "company": "YOKOGAWA (Madrid, Spain)",
+        "dates": "Feb 2009 - Aug 2013",
+        "description": [
+          "Applied analysis of sales and market trends to decide the direction of the department.",
+          "Led a team of 7 people.",
+          "Increased revenue by 6.3%, gross profit by 4.2%, and operating income by 146%; achieved a 30% ratio of new customers (3x growth) by entering new markets and improving customer service and training."
+        ]
+      },
+      {
+        "title": "Sales Engineer - Test & Measurement dept.",
+        "company": "YOKOGAWA (Madrid, Spain)",
+        "dates": "Apr 2008 - Jan 2009",
+        "description": [
+          "Promoted to head of sales after 5 months leading the sales team."
+        ]
+      },
+      {
+        "title": "Sales & Application Engineer",
+        "company": "AYSCOM (Madrid, Spain)",
+        "dates": "Sep 2004 - Mar 2008",
+        "description": [
+          "Exceeded sales target every year from 2005 to 2007; achieved 60% of the target in the first 3 months of 2008."
+        ]
+      },
+      {
+        "title": "Tutor of Differential & Integral Calculus, Physics, and Digital Electronic Circuits",
+        "company": "ACADEMIA UNIVERSITARIA (Madrid, Spain)",
+        "dates": "Jul 2002 - Jun 2004",
+        "description": [
+          "Highest-rated professor in student surveys in 4 of the 6 terms.",
+          "Increased ratio of students passing the course by 25%."
+        ]
+      }
+    ],
+    "skills": {
+      "technical": [
+        "Data Analysis",
+        "Statistics",
+        "Experiment Design",
+        "ETL",
+        "Anomaly Detection",
+        "MySQL",
+        "Machine Learning",
+        "Data Visualization",
+        "Big Data"
+      ],
+      "soft_skills": [
+        "Team Leadership",
+        "Customer Service Improvement",
+        "Training & Mentoring"
+      ],
+      "tools_with_levels": [
+        {
+          "tool": "Python",
+          "level": "proficient"
+        },
+        {
+          "tool": "R",
+          "level": "proficient"
+        },
+        {
+          "tool": "SQL",
+          "level": "proficient"
+        },
+        {
+          "tool": "Hadoop",
+          "level": "proficient"
+        },
+        {
+          "tool": "Hive",
+          "level": "proficient"
+        },
+        {
+          "tool": "MrJob",
+          "level": "proficient"
+        },
+        {
+          "tool": "Tableau",
+          "level": "proficient"
+        },
+        {
+          "tool": "Git",
+          "level": "proficient"
+        },
+        {
+          "tool": "AWS",
+          "level": "proficient"
+        },
+        {
+          "tool": "Spark",
+          "level": "intermediate"
+        },
+        {
+          "tool": "Storm",
+          "level": "intermediate"
+        },
+        {
+          "tool": "Bash",
+          "level": "intermediate"
+        },
+        {
+          "tool": "SPSS",
+          "level": "intermediate"
+        },
+        {
+          "tool": "SAS",
+          "level": "intermediate"
+        },
+        {
+          "tool": "Matlab",
+          "level": "intermediate"
+        },
+        {
+          "tool": "EViews",
+          "level": "basic"
+        },
+        {
+          "tool": "Demetra+",
+          "level": "basic"
+        },
+        {
+          "tool": "D3.js",
+          "level": "basic"
+        },
+        {
+          "tool": "Gephi",
+          "level": "basic"
+        },
+        {
+          "tool": "Neo4j",
+          "level": "basic"
+        },
+        {
+          "tool": "QGIS",
+          "level": "basic"
+        }
+      ],
+      "languages": [
+        {
+          "language": "Python",
+          "level": "proficient"
+        },
+        {
+          "language": "R",
+          "level": "proficient"
+        },
+        {
+          "language": "SQL",
+          "level": "proficient"
+        },
+        {
+          "language": "Bash",
+          "level": "intermediate"
+        },
+        {
+          "language": "Matlab",
+          "level": "intermediate"
+        }
+      ]
+    }
+  }
+}
+}
+```
+
 ### Response
 ```json
 {
-  "response": {
-    "final_score": 86.5,
-    "sections": [
-      {
-        "section": "Profile",
-        "total_score": 90.0,
-        "scores": { ... }
-      },
-      {
-        "section": "Summary",
-        "total_score": 78.0,
-        "scores": { ... }
-      },
-      {
-        "section": "Education",
-        "total_score": 82.0,
-        "scores": { ... }
-      },
-      {
-        "section": "Experience",
-        "total_score": 85.0,
-        "scores": { ... }
-      },
-      {
-        "section": "Activities",
-        "total_score": 75.0,
-        "scores": { ... }
-      },
-      {
-        "section": "Skills",
-        "total_score": 80.0,
-        "scores": { ... }
-      }
-    ],
-    "metadata": {
-      "aggregation_method": "weighted_sum",
-      "normalize": true,
-      "final_score_max": 100,
-      "round_digits": 2
-    }
-  },
-  "response_time": "10.12345 s"
-}
+    "conclution":{
+        "final_resume_score": 82.4,
+        "section_contribution":{
+            "Profile":{
+                "section_total":78.0,
+                "section_weight":40,
+                "contribution":31.2
+            },
+            "Experience":{
+                "section_total":90.0,
+                "section_weight":10,
+                "contribution":9.0
+            }
+        }
+    },
+    "section_details":{
+        "Profile":{
+            "total_score":78.0,
+            "scores":{
+                    'RoleRelevance':  {'score': 30.0, 'feedback': 'xxx'},
+                    'Length':         {'score': 8.0, 'feedback': 'yyy'},
+                    'Grammar':        {'score': 10.0, 'feedback': 'zzz'},
+                    'ContentQuality': {'score': 24.0, 'feedback': 'aaa'},
+                    'Completeness':   {'score': 6.0, 'feedback': 'bbb'}
+            }
+        },
+        "Experience":{
+            "total_score":90.0,
+            "scores":{
+                    'RoleRelevance':  {'score': 20.0, 'feedback': 'xxx'},
+                    'Length':         {'score': 10.0, 'feedback': 'yyy'},
+                    'Grammar':        {'score': 25.0, 'feedback': 'zzz'},
+                    'ContentQuality': {'score': 22.0, 'feedback': 'aaa'},
+                    'Completeness':   {'score': 13.0, 'feedback': 'bbb'}
+            }      
+        }
+    },
+    "metadata":{
+        "model_name":"gemini-2.5-flash",
+        "timestamp": "2025-12-03T11:45:00+07:00",
+        "weights_version":"weights_v1",
+        "prompt_version":"prompt_v1"
+    },
+  "response_time": "58.82124 s"
+}      
+
 ```
 
 ### Notes

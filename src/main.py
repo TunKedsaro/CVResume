@@ -15,7 +15,7 @@ class AnalyseRequest(BaseModel):
 
 app = FastAPI(
     title="CV/Resume Evaluation API",
-    version="0.1.1",
+    version="0.1.2",
     description=(
         "Microservices for CV/Resume evaluation (In progress krub)"
         "<br>"
