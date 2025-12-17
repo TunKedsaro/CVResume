@@ -37,7 +37,9 @@ app.add_middleware(
 )
 ### Health & Metadata #######################################################
 ### Health & Metadata.API:01 ################################################
-@app.get("/", tags=["Health & Metadata"])
+@app.get("/", tags=["Health & Metadata"],
+            description="Basic health check endpoint for uptime monitoring."
+)
 def health_fastapi():
     start_time = time()
     # for i in range(100000):
@@ -54,7 +56,9 @@ def health_fastapi():
 caller = LlmCaller()
 agg = SectionScoreAggregator()
 
-@app.get("/health/gemini", tags=["Health & Metadata"])
+@app.get("/health/gemini", tags=["Health & Metadata"],
+                description="Connectivity health check for Gemini LLM service. Verifies API availability and measures round-trip response latency."
+)
 def health_gemini():
     start_time = time()
     res = caller.call(
@@ -68,7 +72,12 @@ def health_gemini():
         }
 
 ### Health & Metadata.API:03 ################################################
-@app.get("/health/metadata", tags=["Health & Metadata"])
+@app.get(
+    "/health/metadata",
+    tags=["Health & Metadata"],
+    description="Metadata health check endpoint. Verifies metadata retrieval functionality and measures response latency."
+)
+
 def metadata():
     start_time = time()
     res = get_metadata()
@@ -92,12 +101,22 @@ from fastapi import Response
 ### Debug & Lab.API:04 ######################################################
 from core.helper import Helper
 mock_data = Helper.load_json("src/mock/resume3.json")
-@app.get("/evaluation/logexamplepayload",tags=["Debug & Lab"])
+@app.get(
+    "/evaluation/logexamplepayload",
+    tags=["Debug & Lab"],
+    description="Debug endpoint that returns a mock resume JSON payload as an example request body for evaluation APIs."
+)
+
 def show_example_of_payload_json_body():
     return {"response":mock_data}
 
 ### Debug & Lab.API:05 ######################################################
-@app.get("/evaluation/callexamplepayload",tags=["Debug & Lab"])
+@app.get(
+    "/evaluation/callexamplepayload",
+    tags=["Debug & Lab"],
+    description="Debug endpoint that builds a sample prompt from mock resume data and invokes the LLM to demonstrate an end-to-end evaluation flow with response latency."
+)
+
 def call_example_payload_json_body():
     test_payload = {"resume_json": mock_data}
     start_time = time()
@@ -121,7 +140,12 @@ class PromptBuilderPayload(BaseModel):
         criteria   : list | None = Field (default = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"])
         targetrole : str  | None = Field (default = "Data scientist")
 
-@app.post("/test/prompt", tags=["Debug & Lab"])
+@app.post(
+    "/test/prompt",
+    tags=["Debug & Lab"],
+    description="Debug endpoint for generating and inspecting a prompt using provided section, criteria, and target role parameters without invoking the LLM."
+)
+
 def prompt_lab(payload:PromptBuilderPayload):
     pl = payload.model_dump()
     pb = PromptBuilder(
@@ -262,7 +286,11 @@ class EvaluationPayload(BaseModel):
     # resume_json: ResumeSchema
     resume_json: dict | None = Field (default="resume_json")
 
-@app.post("/evaluation/profile", tags=["Evaluation"])
+@app.post(
+    "/evaluation/profile",
+    tags=["Evaluation"],
+    description="Evaluates the Profile section of a resume using predefined criteria and role context, returning aggregated LLM-based scores with processing latency."
+)
 def evaluation_profile(payload: EvaluationPayload):
     start_time = time()
     resume_json = payload.resume_json
@@ -283,7 +311,12 @@ def evaluation_profile(payload: EvaluationPayload):
         }
 
 ### Evaluation.API:09 #######################################################
-@app.post("/evaluation/summary", tags=["Evaluation"])
+@app.post(
+    "/evaluation/summary",
+    tags=["Evaluation"],
+    description="Evaluates the Summary section of a resume against multiple quality and relevance criteria, returning aggregated LLM-based scores with processing latency."
+)
+
 def evaluate_summary(payload: EvaluationPayload):
     start_time = time()
     resume_json = payload.resume_json
@@ -303,7 +336,12 @@ def evaluate_summary(payload: EvaluationPayload):
         }
 
 ### Evaluation.API:10 #######################################################
-@app.post("/evaluation/education", tags=["Evaluation"])
+@app.post(
+    "/evaluation/education",
+    tags=["Evaluation"],
+    description="Evaluates the Education section of a resume for completeness and role relevance, returning aggregated LLM-based scores with processing latency."
+)
+
 def evaluate_education(payload: EvaluationPayload):
     start_time = time()
     resume_json = payload.resume_json
@@ -323,7 +361,12 @@ def evaluate_education(payload: EvaluationPayload):
         }
 
 ### Evaluation.API:11 #######################################################
-@app.post("/evaluation/experience", tags=["Evaluation"])
+@app.post(
+    "/evaluation/experience",
+    tags=["Evaluation"],
+    description="Evaluates the Experience section of a resume using content quality, completeness, grammar, length, and role relevance criteria, returning aggregated LLM-based scores with processing latency."
+)
+
 def evaluate_experience(payload: EvaluationPayload):
     start_time = time()
     resume_json = payload.resume_json
@@ -344,7 +387,12 @@ def evaluate_experience(payload: EvaluationPayload):
 
 
 ### Evaluation.API:12 #######################################################
-@app.post("/evaluation/activities", tags=["Evaluation"])
+@app.post(
+    "/evaluation/activities",
+    tags=["Evaluation"],
+    description="Evaluates the Activities section of a resume based on completeness, content quality, grammar, and length criteria, returning aggregated LLM-based scores with processing latency."
+)
+
 def evaluate_activities(payload: EvaluationPayload):
     start_time = time()
     resume_json = payload.resume_json
@@ -365,7 +413,12 @@ def evaluate_activities(payload: EvaluationPayload):
 
 
 ### Evaluation.API:13 #######################################################
-@app.post("/evaluation/skills", tags=["Evaluation"])
+@app.post(
+    "/evaluation/skills",
+    tags=["Evaluation"],
+    description="Evaluates the Skills section of a resume based on completeness, length, and role relevance criteria, returning aggregated LLM-based scores with processing latency."
+)
+
 def evaluate_skills(payload: EvaluationPayload):
     start_time = time()
     resume_json = payload.resume_json
@@ -391,7 +444,12 @@ def evaluate_skills(payload: EvaluationPayload):
 ### Composite evaluation.API:14 #############################################
 from core.globalaggregator import GlobalAggregator
 
-@ app.post("/evaluation/final-resume-score", tags=["Composite Evaluation"])
+@app.post(
+    "/evaluation/final-resume-score",
+    tags=["Composite Evaluation"],
+    description="Performs a full resume evaluation by scoring all major sections and aggregating them into a final composite resume score with overall processing latency."
+)
+
 def evaluate_resume(payload: EvaluationPayload):
     start_time = time()
     resume_json = payload.resume_json
