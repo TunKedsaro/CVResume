@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from datetime import datetime, timezone, timedelta
-from typing import Optional
+from typing import Optional,Literal
 
 from core.llmcaller import LlmCaller
 from core.getmetadata import get_metadata      # 13
@@ -283,7 +283,10 @@ def prompt_lab(payload:PromptBuilderPayload):
 #     sections: dict[str, ResumeSection]
 #     skills: list[dict]
 class EvaluationPayload(BaseModel):
-    # resume_json: ResumeSchema
+    output_lang: Literal["en","th"] = Field(
+        default = "en",
+        description = "Output language for feedback text"
+    )
     resume_json: dict | None = Field (default="resume_json")
 
 @app.post(
@@ -293,22 +296,21 @@ class EvaluationPayload(BaseModel):
 )
 def evaluation_profile(payload: EvaluationPayload):
     start_time = time()
-    resume_json = payload.resume_json
     p1 = PromptBuilder(
-        section  = "Profile",
-        criteria = ["Completeness", "ContentQuality"],
-        targetrole = "Data science",
-        cvresume = resume_json
+        section      = "Profile",
+        criteria     = ["Completeness", "ContentQuality"],
+        targetrole   = "Data science",
+        cvresume     = payload.resume_json,
+        output_lang  = payload.output_lang 
     )
     prompt = p1.build()
     op1 = caller.call(prompt)
     s1 = agg.aggregate(op1)
-    finish_time   = time()
-
+    finish_time = time()
     return {
         "response": s1,
-        "response_time" : f"{finish_time - start_time:.5f} s"
-        }
+        "response_time": f"{finish_time - start_time:.5f} s"
+    }
 
 ### Evaluation.API:09 #######################################################
 @app.post(
@@ -324,7 +326,8 @@ def evaluate_summary(payload: EvaluationPayload):
         section  = "Summary", 
         criteria = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"],
         targetrole = "Data science",
-        cvresume = resume_json
+        cvresume = resume_json,
+        output_lang  = payload.output_lang 
     )
     prompt = p2.build()
     op2 = caller.call(prompt)
@@ -349,7 +352,8 @@ def evaluate_education(payload: EvaluationPayload):
         section  = "Education", 
         criteria = ["Completeness","RoleRelevance"],
         targetrole = "Data science",
-        cvresume = resume_json
+        cvresume = resume_json,
+        output_lang  = payload.output_lang 
     )
     prompt3 = p3.build()
     op3 = caller.call(prompt3)
@@ -374,7 +378,8 @@ def evaluate_experience(payload: EvaluationPayload):
         section  = "Experience", 
         criteria = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"],
         targetrole = "Data science",
-        cvresume = resume_json
+        cvresume = resume_json,
+        output_lang  = payload.output_lang 
     )
     prompt4 = p4.build()
     op4 = caller.call(prompt4)
@@ -400,7 +405,8 @@ def evaluate_activities(payload: EvaluationPayload):
         section  = "Activities", 
         criteria = ["Completeness", "ContentQuality","Grammar","Length"],
         targetrole = "Data science",
-        cvresume = resume_json
+        cvresume = resume_json,
+        output_lang  = payload.output_lang 
     )
     prompt5 = p5.build()
     op5 = caller.call(prompt5)
@@ -426,7 +432,8 @@ def evaluate_skills(payload: EvaluationPayload):
         section  = "Skills", 
         criteria = ["Completeness","Length","RoleRelevance"],
         targetrole = "Data science",
-        cvresume = resume_json
+        cvresume = resume_json,
+        output_lang  = payload.output_lang 
     )
     prompt6 = p6.build()
     op6 = caller.call(prompt6)
@@ -457,7 +464,8 @@ def evaluate_resume(payload: EvaluationPayload):
         section  = "Profile",
         criteria = ["Completeness", "ContentQuality"],
         targetrole = "Data science",
-        cvresume = resume_json
+        cvresume = resume_json,
+        output_lang  = payload.output_lang 
     )
     prompt1 = p1.build()
     
@@ -465,7 +473,8 @@ def evaluate_resume(payload: EvaluationPayload):
         section  = "Summary", 
         criteria = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"],
         targetrole = "Data science",
-        cvresume = resume_json
+        cvresume = resume_json,
+        output_lang  = payload.output_lang 
     )
     prompt2 = p2.build()
     
@@ -473,7 +482,8 @@ def evaluate_resume(payload: EvaluationPayload):
         section  = "Education", 
         criteria = ["Completeness","RoleRelevance"],
         targetrole = "Data science",
-        cvresume = resume_json
+        cvresume = resume_json,
+        output_lang  = payload.output_lang 
     )
     prompt3 = p3.build()
 
@@ -481,7 +491,8 @@ def evaluate_resume(payload: EvaluationPayload):
         section  = "Experience", 
         criteria = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"],
         targetrole = "Data science",
-        cvresume = resume_json
+        cvresume = resume_json,
+        output_lang  = payload.output_lang 
     )
     prompt4 = p4.build()
     
@@ -489,7 +500,8 @@ def evaluate_resume(payload: EvaluationPayload):
         section  = "Activities", 
         criteria = ["Completeness", "ContentQuality","Grammar","Length"],
         targetrole = "Data science",
-        cvresume = resume_json
+        cvresume = resume_json,
+        output_lang  = payload.output_lang 
     )
     prompt5 = p5.build()
     
@@ -497,7 +509,8 @@ def evaluate_resume(payload: EvaluationPayload):
         section  = "Skills", 
         criteria = ["Completeness","Length","RoleRelevance"],
         targetrole = "Data science",
-        cvresume = resume_json
+        cvresume = resume_json,
+        output_lang  = payload.output_lang 
     )
     prompt6 = p6.build()
 

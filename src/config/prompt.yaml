@@ -56,6 +56,16 @@ scale:
     3 = sufficient
     4 = strong
     5 = excellent
+Language_output_style:
+  en: |
+    - All feedback text MUST be written in English.
+    - Scores MUST remain numeric.
+    - JSON keys MUST remain in English exactly as defined
+  th: |
+    - All feedback text MUST be written in Thai.
+    - Scores MUST remain numeric.
+    - JSON keys MUST remain in English exactly as defined.
+    - Do NOT translate field names or schema keys.
 criteria:
   Completeness:
     score5: |
