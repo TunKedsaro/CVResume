@@ -8,12 +8,14 @@ from core.llmcaller import LlmCaller
 from core.getmetadata import get_metadata      # 13
 from core.globalupdate import update_global    # 14
 from core.scoreaggregator import SectionScoreAggregator
+
+from time import time
 class AnalyseRequest(BaseModel):
     JSON: str | None = None
 
 app = FastAPI(
     title="CV/Resume Evaluation API",
-    version="0.1.0",
+    version="0.1.1",
     description=(
         "Microservices for CV/Resume evaluation (In progress krub)"
         "<br>"
@@ -37,7 +39,16 @@ app.add_middleware(
 ### Health & Metadata.API:01 ################################################
 @app.get("/", tags=["Health & Metadata"])
 def health_fastapi():
-    return {"status": "ok", "service": "FastAPI"}
+    start_time = time()
+    # for i in range(100000):
+    #     print(i)
+    finish_time   = time()
+    process_time = finish_time - start_time
+    return {
+        "status": "ok", 
+        "service": "FastAPI",
+        "response_time" : f"{process_time:.5f} s"
+        }
 
 ### Health & Metadata.API:02 ################################################
 caller = LlmCaller()
@@ -45,19 +56,35 @@ agg = SectionScoreAggregator()
 
 @app.get("/health/gemini", tags=["Health & Metadata"])
 def health_gemini():
+    start_time = time()
     res = caller.call(
         "Return this as JSON: {'status': 'connected'}"
     )
-    return {"response":res}
+    finish_time   = time()
+    process_time = finish_time - start_time
+    return {
+        "response":res,
+        "response_time" : f"{process_time:.5f} s"
+        }
 
 ### Health & Metadata.API:03 ################################################
 @app.get("/health/metadata", tags=["Health & Metadata"])
 def metadata():
-    return {"message":get_metadata()}
+    start_time = time()
+    res = get_metadata()
+    finish_time   = time()
+    process_time = finish_time - start_time
+    return {
+        "message":get_metadata(),
+        "response_time" : f"{process_time:.5f} s"
+        }
+
 
 #############################################################################
 #############################################################################
-
+    # start_time = time()
+    # finish_time   = time()
+    # "response_time" : f"{process_time:.5f} s"
 ### Debug & Lab #############################################################
 from core.promptbuilder import PromptBuilder
 from fastapi import Response
@@ -73,14 +100,20 @@ def show_example_of_payload_json_body():
 @app.get("/evaluation/callexamplepayload",tags=["Debug & Lab"])
 def call_example_payload_json_body():
     test_payload = {"resume_json": mock_data}
+    start_time = time()
     p1 = PromptBuilder(
         section  = "Profile",
         criteria = ["Completeness", "ContentQuality"],
+        targetrole = "data scientist",
         cvresume = test_payload["resume_json"]
     )
     prompt = p1.build()
     res = caller.call(prompt)
-    return {"response": res}
+    finish_time   = time()
+    return {
+        "response": res,
+        "response_time" : f"{finish_time - start_time:.5f} s"
+        }
 
 ### Debug & Lab.API:06 ######################################################
 class PromptBuilderPayload(BaseModel):
@@ -231,6 +264,7 @@ class EvaluationPayload(BaseModel):
 
 @app.post("/evaluation/profile", tags=["Evaluation"])
 def evaluation_profile(payload: EvaluationPayload):
+    start_time = time()
     resume_json = payload.resume_json
     p1 = PromptBuilder(
         section  = "Profile",
@@ -241,11 +275,17 @@ def evaluation_profile(payload: EvaluationPayload):
     prompt = p1.build()
     op1 = caller.call(prompt)
     s1 = agg.aggregate(op1)
-    return {"response": s1}
+    finish_time   = time()
+
+    return {
+        "response": s1,
+        "response_time" : f"{finish_time - start_time:.5f} s"
+        }
 
 ### Evaluation.API:09 #######################################################
 @app.post("/evaluation/summary", tags=["Evaluation"])
 def evaluate_summary(payload: EvaluationPayload):
+    start_time = time()
     resume_json = payload.resume_json
     p2 = PromptBuilder( 
         section  = "Summary", 
@@ -256,11 +296,16 @@ def evaluate_summary(payload: EvaluationPayload):
     prompt = p2.build()
     op2 = caller.call(prompt)
     s2 = agg.aggregate(op2)
-    return {"response": s2}
+    finish_time   = time()
+    return {
+        "response": s2,
+        "response_time" : f"{finish_time - start_time:.5f} s"
+        }
 
 ### Evaluation.API:10 #######################################################
 @app.post("/evaluation/education", tags=["Evaluation"])
 def evaluate_education(payload: EvaluationPayload):
+    start_time = time()
     resume_json = payload.resume_json
     p3 = PromptBuilder( 
         section  = "Education", 
@@ -271,11 +316,16 @@ def evaluate_education(payload: EvaluationPayload):
     prompt3 = p3.build()
     op3 = caller.call(prompt3)
     s3 = agg.aggregate(op3)
-    return {"response": s3}
+    finish_time   = time()
+    return {
+        "response": s3,
+        "response_time" : f"{finish_time - start_time:.5f} s"
+        }
 
 ### Evaluation.API:11 #######################################################
 @app.post("/evaluation/experience", tags=["Evaluation"])
 def evaluate_experience(payload: EvaluationPayload):
+    start_time = time()
     resume_json = payload.resume_json
     p4 = PromptBuilder( 
         section  = "Experience", 
@@ -286,12 +336,17 @@ def evaluate_experience(payload: EvaluationPayload):
     prompt4 = p4.build()
     op4 = caller.call(prompt4)
     s4 = agg.aggregate(op4)
-    return {"response": s4}
+    finish_time   = time()
+    return {
+        "response": s4,
+        "response_time" : f"{finish_time - start_time:.5f} s"
+        }
 
 
 ### Evaluation.API:12 #######################################################
 @app.post("/evaluation/activities", tags=["Evaluation"])
 def evaluate_activities(payload: EvaluationPayload):
+    start_time = time()
     resume_json = payload.resume_json
     p5 = PromptBuilder( 
         section  = "Activities", 
@@ -302,12 +357,17 @@ def evaluate_activities(payload: EvaluationPayload):
     prompt5 = p5.build()
     op5 = caller.call(prompt5)
     s5 = agg.aggregate(op5)
-    return {"response": s5}
+    finish_time   = time()
+    return {
+        "response": s5,
+        "response_time" : f"{finish_time - start_time:.5f} s"
+        }
 
 
 ### Evaluation.API:13 #######################################################
 @app.post("/evaluation/skills", tags=["Evaluation"])
 def evaluate_skills(payload: EvaluationPayload):
+    start_time = time()
     resume_json = payload.resume_json
     p6 = PromptBuilder( 
         section  = "Skills", 
@@ -318,7 +378,11 @@ def evaluate_skills(payload: EvaluationPayload):
     prompt6 = p6.build()
     op6 = caller.call(prompt6)
     s6 = agg.aggregate(op6)
-    return {"response": s6}
+    finish_time   = time()
+    return {
+        "response": s6,
+        "response_time" : f"{finish_time - start_time:.5f} s"
+        }
 
 #############################################################################
 #############################################################################
@@ -329,6 +393,7 @@ from core.globalaggregator import GlobalAggregator
 
 @ app.post("/evaluation/final-resume-score", tags=["Composite Evaluation"])
 def evaluate_resume(payload: EvaluationPayload):
+    start_time = time()
     resume_json = payload.resume_json
     p1 = PromptBuilder(
         section  = "Profile",
@@ -396,7 +461,11 @@ def evaluate_resume(payload: EvaluationPayload):
 
     output = x.fn0()
 
-    return {"response": output}
+    finish_time   = time()
+    return {
+        "response": output,
+        "response_time" : f"{finish_time - start_time:.5f} s"
+    }
 
 #############################################################################
 #############################################################################
