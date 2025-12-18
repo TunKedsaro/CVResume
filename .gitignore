@@ -1,2 +1,5 @@
-src/__pycache__
-src/core/__pycache__
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
