@@ -80,7 +80,8 @@ Configuration is not exposed via public endpoints in this version
 
 ```json
 {
-  "resume_json": { "..." : "..." }
+  "output_lang": "en",
+  "resume_json": { "...": "..." }
 }
 ```
 
