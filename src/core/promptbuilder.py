@@ -10,7 +10,7 @@ class PromptBuilder(Helper):
         self.criteria       = criteria[::-1]
         self.cvresume       = cvresume
         self.targetrole     = targetrole
-        self.include_fewshot = include_fewshot
+        self.include_fewshot= include_fewshot
         self.output_lang    = output_lang
         
         self.config = self.load_yaml("src/config/prompt.yaml")

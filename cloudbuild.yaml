@@ -12,3 +12,5 @@ steps:
       "push",
       "asia-southeast1-docker.pkg.dev/poc-piloturl-nonprod/cvresume/cvresume:latest"
     ]
+
+
