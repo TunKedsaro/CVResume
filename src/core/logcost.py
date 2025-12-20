@@ -1,0 +1,34 @@
+def estimate_gemini_cost(api_response):
+    print(f"src/core/geminicost->def estimate_gimini_cost ...")
+    # Pricing
+    # source : https://ai.google.dev/gemini-api/docs/pricing
+
+    input_cost_per_m  = 0.30    # Gemini 2.5 Flash Input  tokens cost $0.30 per 1 million tokens
+    output_cost_per_m = 2.50    # Gemini 2.5 Flash Output tokens cost $2.52 per 1 million tokens
+
+    tokens        = api_response.usage_metadata
+    prompt_tokens = tokens.prompt_token_count
+    output_tokens = tokens.candidates_token_count
+
+    input_cost    = (prompt_tokens/1000000) * input_cost_per_m
+    output_cost   = (output_tokens/1000000) * output_cost_per_m
+    
+    return {
+        "prompt_tokens": prompt_tokens,
+        "output_tokens": output_tokens,
+        "input_cost": round(input_cost, 6),
+        "output_cost": round(output_cost, 6),
+        "total_cost": round(input_cost + output_cost, 6),
+    }
+
+    # print(returnx)
+
+# caller = LlmCaller()
+# agg = SectionScoreAggregator()
+
+# caller = LlmCaller()
+# parsed, raw_resp = caller.call(
+#     "Return this as JSON: {'status':'connected'}"
+# )
+# print(parsed)
+# estimate_gemini_cost(raw_resp)

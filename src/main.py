@@ -112,12 +112,13 @@ def show_example_of_payload_json_body():
     return {
         "response":mock_data
         }
-
+from core.logcost import estimate_gemini_cost
+from core.llm_excel_logger import log_llm_usage
 ### Debug & Lab.API:05 ######################################################
 @app.get(
     "/evaluation/callexamplepayload",
     tags=["Debug & Lab"],
-    description="Debug endpoint that builds a sample prompt from mock resume data and invokes the LLM to demonstrate an end-to-end evaluation flow with response latency."
+    description="API:05 Debug endpoint that builds a sample prompt from mock resume data and invokes the LLM to demonstrate an end-to-end evaluation flow with response latency."
 )
 def call_example_payload_json_body():
     test_payload = {"resume_json": mock_data}
@@ -129,11 +130,29 @@ def call_example_payload_json_body():
         cvresume   = test_payload["resume_json"]
     )
     prompt = p1.build()
-    res = caller.call(prompt)
+    res,raw = caller.call(prompt)
     finish_time = time()
+
+    usage_time = finish_time - start_time
+    cost = estimate_gemini_cost(raw)
+    ip = {
+            "id":"API05",
+            "output_lange":"-",
+            "prompt_length_chars":len(prompt),
+            "input_tokens":cost['prompt_tokens'],
+            "output_tokens":cost['output_tokens'],
+            "total_tokens":cost['prompt_tokens']+cost['output_tokens'],
+            "input_cost":cost['input_cost'],
+            "output_cost":cost['output_cost'],
+            "estimated_cost_usd":cost['total_cost'],
+            "estimated_cost_thd":cost['total_cost']*35,
+            "response_time_sec": round(usage_time, 5)
+        }
+    log_llm_usage(ip)
+
     return {
         "response": res,
-        "response_time" : f"{finish_time - start_time:.5f} s"
+        "response_time" : f"{usage_time:.5f} s"
         }
 
 ### Debug & Lab.API:06 ######################################################
@@ -190,19 +209,37 @@ def evaluation_profile(payload: EvaluationPayload):
         output_lang = payload.output_lang 
     )
     prompt = p1.build()
-    op1 = caller.call(prompt)
+    op1,raw = caller.call(prompt)
     s1 = agg.aggregate(op1)
     finish_time = time()
+
+    usage_time = finish_time - start_time
+    cost = estimate_gemini_cost(raw)
+    ip = {
+            "id":"API08",
+            "output_lange":payload.output_lang,
+            "prompt_length_chars":len(prompt),
+            "input_tokens" :cost['prompt_tokens'],
+            "output_tokens":cost['output_tokens'],
+            "total_tokens" :cost['prompt_tokens']+cost['output_tokens'],
+            "input_cost"  :cost['input_cost'],
+            "output_cost" :cost['output_cost'],
+            "estimated_cost_usd":cost['total_cost'],
+            "estimated_cost_thd":cost['total_cost']*35,
+            "response_time_sec": round(usage_time, 5)
+        }
+    log_llm_usage(ip)    
+
     return {
         "response": s1,
-        "response_time": f"{finish_time - start_time:.5f} s"
+        "response_time": f"{usage_time:.5f} s"
     }
 
 ### Evaluation.API:09 #######################################################
 @app.post(
     "/evaluation/summary",
     tags=["Evaluation"],   
-    description="Evaluates the Summary section of a resume against multiple quality and relevance criteria, returning aggregated LLM-based scores with processing latency."
+    description="API:09 Evaluates the Summary section of a resume against multiple quality and relevance criteria, returning aggregated LLM-based scores with processing latency."
 )
 
 def evaluate_summary(payload: EvaluationPayload):
@@ -215,19 +252,38 @@ def evaluate_summary(payload: EvaluationPayload):
         output_lang = payload.output_lang 
     )
     prompt = p2.build()
-    op2 = caller.call(prompt)
+    op2,raw = caller.call(prompt)
     s2 = agg.aggregate(op2)
     finish_time   = time()
+
+    usage_time = finish_time - start_time
+    cost = estimate_gemini_cost(raw)
+
+    ip = {
+            "id":"API09",
+            "output_lange":payload.output_lang,
+            "prompt_length_chars":len(prompt),
+            "input_tokens" :cost['prompt_tokens'],
+            "output_tokens":cost['output_tokens'],
+            "total_tokens" :cost['prompt_tokens']+cost['output_tokens'],
+            "input_cost"  :cost['input_cost'],
+            "output_cost" :cost['output_cost'],
+            "estimated_cost_usd":cost['total_cost'],
+            "estimated_cost_thd":cost['total_cost']*35,
+            "response_time_sec": round(usage_time, 5)
+        }
+    log_llm_usage(ip)    
+
     return {
         "response": s2,
-        "response_time" : f"{finish_time - start_time:.5f} s"
+        "response_time" : f"{usage_time:.5f} s"
         }
 
 ### Evaluation.API:10 #######################################################
 @app.post(
     "/evaluation/education",
     tags=["Evaluation"],
-    description="Evaluates the Education section of a resume for completeness and role relevance, returning aggregated LLM-based scores with processing latency."
+    description="API:10 Evaluates the Education section of a resume for completeness and role relevance, returning aggregated LLM-based scores with processing latency."
 )
    
 def evaluate_education(payload: EvaluationPayload):
@@ -240,19 +296,37 @@ def evaluate_education(payload: EvaluationPayload):
         output_lang = payload.output_lang 
     )
     prompt3 = p3.build()
-    op3 = caller.call(prompt3)
+    op3,raw = caller.call(prompt3)
     s3 = agg.aggregate(op3)
     finish_time   = time()
+
+    usage_time = finish_time - start_time
+    cost = estimate_gemini_cost(raw)
+    ip = {
+            "id":"API10",
+            "output_lange":payload.output_lang,
+            "prompt_length_chars":len(prompt3),
+            "input_tokens" :cost['prompt_tokens'],
+            "output_tokens":cost['output_tokens'],
+            "total_tokens" :cost['prompt_tokens']+cost['output_tokens'],
+            "input_cost"  :cost['input_cost'],
+            "output_cost" :cost['output_cost'],
+            "estimated_cost_usd":cost['total_cost'],
+            "estimated_cost_thd":cost['total_cost']*35,
+            "response_time_sec": round(usage_time, 5)
+        }
+    log_llm_usage(ip)    
+
     return {
         "response": s3,
-        "response_time" : f"{finish_time - start_time:.5f} s"
+        "response_time" : f"{usage_time:.5f} s"
         }
 
 ### Evaluation.API:11 #######################################################
 @app.post(
     "/evaluation/experience",
     tags=["Evaluation"],
-    description="Evaluates the Experience section of a resume using content quality, completeness, grammar, length, and role relevance criteria, returning aggregated LLM-based scores with processing latency."
+    description="API:11 Evaluates the Experience section of a resume using content quality, completeness, grammar, length, and role relevance criteria, returning aggregated LLM-based scores with processing latency."
 )
 
 def evaluate_experience(payload: EvaluationPayload):
@@ -265,12 +339,30 @@ def evaluate_experience(payload: EvaluationPayload):
         output_lang = payload.output_lang 
     )   
     prompt4 = p4.build()
-    op4 = caller.call(prompt4)
+    op4,raw = caller.call(prompt4)
     s4 = agg.aggregate(op4)
     finish_time   = time()
+
+    usage_time = finish_time - start_time
+    cost = estimate_gemini_cost(raw)
+    ip = {
+            "id":"API11",
+            "output_lange":payload.output_lang,
+            "prompt_length_chars":len(prompt4),
+            "input_tokens" :cost['prompt_tokens'],
+            "output_tokens":cost['output_tokens'],
+            "total_tokens" :cost['prompt_tokens']+cost['output_tokens'],
+            "input_cost"  :cost['input_cost'],
+            "output_cost" :cost['output_cost'],
+            "estimated_cost_usd":cost['total_cost'],
+            "estimated_cost_thd":cost['total_cost']*35,
+            "response_time_sec": round(usage_time, 5)
+        }
+    log_llm_usage(ip)    
+
     return {
         "response": s4,
-        "response_time" : f"{finish_time - start_time:.5f} s"
+        "response_time" : f"{usage_time:.5f} s"
         }
 
 
@@ -278,7 +370,7 @@ def evaluate_experience(payload: EvaluationPayload):
 @app.post(
     "/evaluation/activities",
     tags=["Evaluation"],
-    description="Evaluates the Activities section of a resume based on completeness, content quality, grammar, and length criteria, returning aggregated LLM-based scores with processing latency."
+    description="API:12 Evaluates the Activities section of a resume based on completeness, content quality, grammar, and length criteria, returning aggregated LLM-based scores with processing latency."
 )
 
 def evaluate_activities(payload: EvaluationPayload):
@@ -291,12 +383,30 @@ def evaluate_activities(payload: EvaluationPayload):
         output_lang = payload.output_lang 
     )
     prompt5 = p5.build()
-    op5 = caller.call(prompt5)
+    op5,raw = caller.call(prompt5)
     s5 = agg.aggregate(op5)
     finish_time   = time()
+
+    usage_time = finish_time - start_time
+    cost = estimate_gemini_cost(raw)
+    ip = {
+            "id":"API12",
+            "output_lange":payload.output_lang,
+            "prompt_length_chars":len(prompt5),
+            "input_tokens" :cost['prompt_tokens'],
+            "output_tokens":cost['output_tokens'],
+            "total_tokens" :cost['prompt_tokens']+cost['output_tokens'],
+            "input_cost"  :cost['input_cost'],
+            "output_cost" :cost['output_cost'],
+            "estimated_cost_usd":cost['total_cost'],
+            "estimated_cost_thd":cost['total_cost']*35,
+            "response_time_sec": round(usage_time, 5)
+        }
+    log_llm_usage(ip)    
+
     return {
         "response": s5,
-        "response_time" : f"{finish_time - start_time:.5f} s"
+        "response_time" : f"{usage_time:.5f} s"
         }
 
 
@@ -304,7 +414,7 @@ def evaluate_activities(payload: EvaluationPayload):
 @app.post(
     "/evaluation/skills",
     tags=["Evaluation"],
-    description="Evaluates the Skills section of a resume based on completeness, length, and role relevance criteria, returning aggregated LLM-based scores with processing latency."
+    description="API:13 Evaluates the Skills section of a resume based on completeness, length, and role relevance criteria, returning aggregated LLM-based scores with processing latency."
 )
 
 def evaluate_skills(payload: EvaluationPayload):
@@ -317,12 +427,30 @@ def evaluate_skills(payload: EvaluationPayload):
         output_lang = payload.output_lang 
     )
     prompt6 = p6.build()
-    op6 = caller.call(prompt6)
+    op6,raw = caller.call(prompt6)
     s6 = agg.aggregate(op6)
     finish_time   = time()
+
+    usage_time = finish_time - start_time
+    cost = estimate_gemini_cost(raw)
+    ip = {
+            "id":"API13",
+            "output_lange":payload.output_lang,
+            "prompt_length_chars":len(prompt6),
+            "input_tokens" :cost['prompt_tokens'],
+            "output_tokens":cost['output_tokens'],
+            "total_tokens" :cost['prompt_tokens']+cost['output_tokens'],
+            "input_cost"  :cost['input_cost'],
+            "output_cost" :cost['output_cost'],
+            "estimated_cost_usd":cost['total_cost'],
+            "estimated_cost_thd":cost['total_cost']*35,
+            "response_time_sec": round(usage_time, 5)
+        }
+    log_llm_usage(ip)    
+
     return {
         "response": s6,
-        "response_time" : f"{finish_time - start_time:.5f} s"
+        "response_time" : f"{usage_time:.5f} s"
         }
 
 #############################################################################
@@ -333,7 +461,7 @@ def evaluate_skills(payload: EvaluationPayload):
 @app.post(
     "/evaluation/final-resume-score",
     tags=["Composite Evaluation"],
-    description="Performs a full resume evaluation by scoring all major sections and aggregating them into a final composite resume score with overall processing latency."
+    description="API:14 Performs a full resume evaluation by scoring all major sections and aggregating them into a final composite resume score with overall processing latency."
 )
 
 def evaluate_resume(payload: EvaluationPayload):
@@ -396,12 +524,12 @@ def evaluate_resume(payload: EvaluationPayload):
     )
     prompt6 = p6.build()
 
-    op1 = caller.call(prompt1)
-    op2 = caller.call(prompt2)
-    op3 = caller.call(prompt3)
-    op4 = caller.call(prompt4)
-    op5 = caller.call(prompt5)
-    op6 = caller.call(prompt6)
+    op1,raw1 = caller.call(prompt1)
+    op2,raw2 = caller.call(prompt2)
+    op3,raw3 = caller.call(prompt3)
+    op4,raw4 = caller.call(prompt4)
+    op5,raw5 = caller.call(prompt5)
+    op6,raw6 = caller.call(prompt6)
 
     s1 = agg.aggregate(op1)
     s2 = agg.aggregate(op2)
@@ -415,9 +543,31 @@ def evaluate_resume(payload: EvaluationPayload):
     output = x.fn0()
 
     finish_time   = time()
+    usage_time = finish_time - start_time
+    cost1 = estimate_gemini_cost(raw1)
+    cost2 = estimate_gemini_cost(raw2)
+    cost3 = estimate_gemini_cost(raw3)
+    cost4 = estimate_gemini_cost(raw4)
+    cost5 = estimate_gemini_cost(raw5)
+    cost6 = estimate_gemini_cost(raw6)
+    ip = {
+            "id":"API14",
+            "output_lange":payload.output_lang,
+            "prompt_length_chars":len(prompt1)+len(prompt2)+len(prompt3)+len(prompt4)+len(prompt5)+len(prompt6),
+            "input_tokens" :cost1['prompt_tokens']+cost2['prompt_tokens']+cost3['prompt_tokens']+cost4['prompt_tokens']+cost5['prompt_tokens']+cost6['prompt_tokens'],
+            "output_tokens":cost1['output_tokens']+cost2['output_tokens']+cost3['output_tokens']+cost4['output_tokens']+cost5['output_tokens']+cost6['output_tokens'],
+            "total_tokens" :cost1['prompt_tokens']+cost2['prompt_tokens']+cost3['prompt_tokens']+cost4['prompt_tokens']+cost5['prompt_tokens']+cost6['prompt_tokens']+cost1['output_tokens']+cost2['output_tokens']+cost3['output_tokens']+cost4['output_tokens']+cost5['output_tokens']+cost6['output_tokens'],
+            "input_cost" :cost1['input_cost']+cost2['input_cost']+cost3['input_cost']+cost4['input_cost']+cost5['input_cost']+cost6['input_cost'],
+            "output_cost":cost1['output_cost']+cost2['output_cost']+cost3['output_cost']+cost4['output_cost']+cost5['output_cost']+cost6['output_cost'],
+            "estimated_cost_usd":cost1['total_cost']+cost2['total_cost']+cost3['total_cost']+cost4['total_cost']+cost5['total_cost']+cost6['total_cost'],
+            "estimated_cost_thd":(cost1['total_cost']+cost2['total_cost']+cost3['total_cost']+cost4['total_cost']+cost5['total_cost']+cost6['total_cost'])*35,
+            "response_time_sec": round(usage_time, 5)
+        }
+    log_llm_usage(ip)    
+
     return {
         "response": output,
-        "response_time" : f"{finish_time - start_time:.5f} s"
+        "response_time" : f"{usage_time:.5f} s"
     }
 
 #############################################################################
