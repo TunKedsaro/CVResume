@@ -70,12 +70,8 @@ criteria:
   Completeness:
     score5: |
       Section contains all key elements from expected_content for this section with enoughdetail to understand the candidate's background and context. No major information gaps.    
-    score4: |
-      Section contains all key elements from expected_content for this section with enoughdetail to understand the candidate's background and context. No major information gaps.    
     score3: |
       Section contains all key elements from expected_content for this section with enoughdetail to understand the candidate's background and context. No major information gaps.
-    score2: |
-      Section contains some of the key elements but is missing 1-2 important parts or providesthem only in shallow detail. Overall usable but not fully complete.
     score1: |
       Section is very sparse or missing most key elements; important information is absentor only hinted at. Hard to understand the candidate from this section alone.
   ContentQuality:
