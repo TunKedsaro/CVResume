@@ -1,4 +1,4 @@
-version: v1
+version: model_v1
 model:
   provider: google
   embedding_model: text-embedding-004

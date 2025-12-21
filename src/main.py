@@ -7,15 +7,11 @@ import asyncio
 from core.helper import Helper
 from core.llmcaller import LlmCaller
 from core.getmetadata import get_metadata
-from core.globalupdate import update_global
-from core.scoreaggregator import SectionScoreAggregator
 from core.promptbuilder import PromptBuilder
-from core.promptupdate import update_prompt
-from core.globalaggregator import GlobalAggregator
-from core.modelupdate import update_model
-from core.weightupdate import update_weight
+from core.aggregator import SectionScoreAggregator, GlobalAggregator
 from core.logcost import estimate_gemini_cost
 from core.llm_excel_logger import log_llm_usage
+from core.configupdate import update_global,update_model,update_weight,update_prompt
 
 from schema.lab_schema import PromptBuilderPayload,PromptUpdatePayload,PROMPT_V2_EXAMPLE
 from schema.evaluation_schema import EvaluationPayload
@@ -694,7 +690,7 @@ def update_global_config(payload:GlobalUpdatePayload):
     tags=['Admin'],
     description="Update the prompt configuration (weight.yaml) used by the CV Evaluation service"
 )
-def update_global_config(payload:WeightUpdatePayload):
+def update_weight_config(payload:WeightUpdatePayload):
     updated = update_weight(payload.model_dump())
     return {
         "status":"updated",

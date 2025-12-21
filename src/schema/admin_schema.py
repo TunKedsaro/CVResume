@@ -1,15 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional,Literal,Dict
 
-class ModelUpdatePayload(BaseModel):
-    provider         :str | None = Field (default="google")
-    embedding_model  :str | None = Field (default="text-embedding-004")
-    generation_model :str | None = Field (default="gemini-2.5-flash")
-
-
-
-
-
+### global.yaml #############################################################
 class SettingConfig(BaseModel):
     GOOGLE_API_KEY: Optional[str] = Field(default=None, example="AIza-xxxx")
 class PricingModel(BaseModel):
@@ -28,16 +20,37 @@ class ScoringConfig(BaseModel):
     normalize: Optional[bool] = Field(default=None, example=True)
     round_digits: Optional[int] = Field(default=None, example=2)
     aggregation_method: Optional[str] = Field(default=None, example="weighted_sum")
+class CurrencyConfig(BaseModel):
+    USD_to_THB:Optional[float] = Field(default=None, example = 31.42)
+class LoggingConfig(BaseModel):
+    logging_round_digit:Optional[int] = Field(default=None,example=5)
 class GlobalUpdatePayload(BaseModel):
-    version: Optional[str] = Field(default="global_v1", example="global_v1")
-    setting: Optional[SettingConfig] = Field(default=None)
-    pricing: Optional[PricingConfig] = Field(default=None)
-    scoring: Optional[ScoringConfig] = Field(default=None)
+    version:  Optional[str] = Field(default="global_v1", example="global_v1")
+    setting:  Optional[SettingConfig] = Field(default=None)
+    pricing:  Optional[PricingConfig] = Field(default=None)
+    scoring:  Optional[ScoringConfig] = Field(default=None)
+    currency: Optional[CurrencyConfig] = Field(default=None)
+    logging : Optional[LoggingConfig] = Field(default=None)
 
 
+#############################################################################
+#############################################################################
+
+### Model.yaml #############################################################
+
+class ModelConfig(BaseModel):
+    provider : Optional[str] = Field(default=None, example = "google")
+    embedding_model : Optional[str] = Field(default=None, example = "text-embedding-004")
+    generation_model : Optional[str] = Field(default=None, example = "gemini-2.5-flash")
+class ModelUpdatePayload(BaseModel):
+    version       :Optional[str] = Field(default="model_v1", example="model_v1")
+    model         :Optional[ModelConfig] | None = Field (default=None)
 
 
+#############################################################################
+#############################################################################
 
+### weight.yaml #############################################################
 class Criteria(BaseModel):
     Completeness: Optional[int]   = Field(default=10)
     ContentQuality: Optional[int] = Field(default=10)
@@ -109,3 +122,6 @@ class ResumeParts(BaseModel):
 class WeightUpdatePayload(BaseModel):
     version: Optional[str] = Field(default="weights_v1")
     weights: Optional[ResumeParts]   = Field(default=None)
+
+#############################################################################
+#############################################################################

@@ -1,4 +1,4 @@
-version: "prompt_v2"
+version: prompt_v2
 role:
   role1: You are the expert HR evaluator
 objective:
