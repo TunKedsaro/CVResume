@@ -1,10 +1,15 @@
+from core.helper import Helper
+
+ip_token_price = Helper.load_yaml("src/config/global.yaml")['pricing']['gemini_2_5_flash']['input_per_million']
+op_token_price = Helper.load_yaml("src/config/global.yaml")['pricing']['gemini_2_5_flash']['output_per_million']
+
 def estimate_gemini_cost(api_response):
     print(f"src/core/geminicost->def estimate_gimini_cost ...")
     # Pricing
     # source : https://ai.google.dev/gemini-api/docs/pricing
 
-    input_cost_per_m  = 0.30    # Gemini 2.5 Flash Input  tokens cost $0.30 per 1 million tokens
-    output_cost_per_m = 2.50    # Gemini 2.5 Flash Output tokens cost $2.52 per 1 million tokens
+    input_cost_per_m  = ip_token_price    # Gemini 2.5 Flash Input  tokens cost $0.30 per 1 million tokens
+    output_cost_per_m = op_token_price    # Gemini 2.5 Flash Output tokens cost $2.52 per 1 million tokens
 
     tokens        = api_response.usage_metadata
     prompt_tokens = tokens.prompt_token_count
