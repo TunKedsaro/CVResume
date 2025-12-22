@@ -25,6 +25,13 @@ COLUMNS = [
 ]
 
 def log_llm_usage(row: dict):
+    """
+    Load a YAML file and return its contents as a dictionary.
+    Args:
+        filepath (str): Path to the YAML file.
+    Returns:
+        dict: Parsed YAML content.
+    """
     LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
 
     row["timestamp"] = datetime.now(

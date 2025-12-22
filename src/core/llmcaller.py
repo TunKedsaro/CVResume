@@ -132,15 +132,35 @@ from pydantic import BaseModel, Field, ValidationError
 from typing import Dict
 
 class CriterionScore(BaseModel):
+    """
+    Represents a single evaluation score for one criterion.
+    Attributes:
+        score (int): Integer score between 0 and 5.
+        feedback (str): Textual feedback explaining the score.
+    """
     score: int = Field(ge=0, le=5)
     feedback: str
 
 class SectionEvaluation(BaseModel):
+    """
+    Validated LLM evaluation output for a resume section.
+    Attributes:
+        section (str): Name of the resume section.
+        scores (Dict[str, CriterionScore]): Mapping of criteria to scores.
+    """
     section: str
     scores: Dict[str, CriterionScore]
 
 class LlmCaller(Helper):
     def __init__(self):
+        """
+        Handles interaction with the LLM for section-level resume evaluation.
+        Responsibilities:
+        - Send prompts to the LLM
+        - Parse and validate structured JSON responses
+        - Retry with a repair prompt if validation fails
+        - Return validated output along with raw LLM response
+        """
         api_key        = os.getenv("GOOGLE_API_KEY")
         self.model_cfg = self.load_yaml("src/config/model.yaml")
         self.client    = genai.Client(api_key=api_key)
@@ -149,11 +169,28 @@ class LlmCaller(Helper):
         self.log_digit = Helper.load_yaml("src/config/global.yaml")['logging']['logging_round_digit']
 
     def _parse(self, resp):
+        """
+        Parse raw LLM response text into a JSON object.
+        Removes markdown code fences and converts the result to a dictionary.
+        Args:
+            resp: Raw response object from the LLM client.
+        Returns:
+            dict: Parsed JSON output.
+        """
         text = resp.text.strip()
         text = re.sub(r"^```json|```$", "", text).strip()
         return json.loads(text)
     
     def _call_raw(self, prompt: str):
+        """
+        Send a prompt to the LLM without validation.
+        Args:
+            prompt (str): Prompt text to send.
+        Returns:
+            tuple:
+                - Parsed JSON output (dict)
+                - Raw LLM response object
+        """
         resp = self.client.models.generate_content(
             model=self.model,
             contents=prompt
@@ -162,9 +199,26 @@ class LlmCaller(Helper):
         return parsed, resp
     
     def _validate(self, raw_output:dict)->SectionEvaluation:
+        """
+        Validate LLM output against the expected schema.
+        Args:
+            raw_output (dict): Parsed LLM output.
+        Returns:
+            SectionEvaluation: Validated evaluation object.
+        Raises:
+            ValidationError: If the output does not match the schema.
+        """
         return SectionEvaluation.model_validate(raw_output)
     
     def _repair_prompt(self, error_msg: str) -> str:
+        """
+        Generate a corrective prompt when LLM output validation fails.
+        Instructs the LLM to strictly follow the expected JSON schema.
+        Args:
+            error_msg (str): Validation error message.
+        Returns:
+            str: Repair prompt to prepend to the original prompt.
+        """
         return f"""
                 Your previous response was INVALID.
                 Validation error:
@@ -185,6 +239,18 @@ class LlmCaller(Helper):
         """
     
     def call(self,prompt:str, max_retry:int = 3):
+        """
+        Call the LLM with validation and automatic retry.
+        Attempts to validate the LLM response. If validation fails,
+        retries using a repair prompt up to the specified limit.
+        Args:
+            prompt (str): Prompt text to send.
+            max_retry (int): Maximum number of retry attempts.
+        Returns:
+            tuple:
+                - Validated evaluation result (dict)
+                - Raw LLM response object
+        """
         last_error = None
         repair_prompt = "\n"
         for attemp in range(max_retry):
@@ -208,4 +274,14 @@ class LlmCaller(Helper):
         },raw
 
     async def call_async(self, prompt: str):
+        """
+        Asynchronous wrapper for `call`.
+        Executes the blocking LLM call in a background thread.
+        Args:
+            prompt (str): Prompt text to send.
+        Returns:
+            tuple:
+                - Validated evaluation result (dict)
+                - Raw LLM response object
+        """
         return await asyncio.to_thread(self.call, prompt)

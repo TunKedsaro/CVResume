@@ -5,7 +5,24 @@ import yaml
 from core.helper import Helper
 
 class PromptBuilder(Helper):
+    """
+    Builds a structured evaluation prompt for a specific resume section.
+    Uses YAML-driven configuration to assemble role instructions,
+    evaluation criteria, scoring scale, expected content, and
+    the candidate resume into a single LLM-ready prompt.
+    """
+
     def __init__(self, section, criteria, targetrole, cvresume, include_fewshot: bool = True, output_lang = "en"):
+        """
+        Initialize the prompt builder for a resume section.
+        Args:
+            section (str): Resume section to evaluate (e.g. "Education").
+            criteria (list): Evaluation criteria for the section.
+            targetrole (str): Target role used for role relevance.
+            cvresume (str): Resume content to be evaluated.
+            include_fewshot (bool): Whether to include example scores.
+            output_lang (str): Output language code (e.g. "en", "th").
+        """
         self.section        = section
         self.criteria       = criteria[::-1]
         self.cvresume       = cvresume
@@ -17,6 +34,11 @@ class PromptBuilder(Helper):
         self.criteria_cfg = self.config.get("criteria", {})
 
     def build_response_template(self):
+        """
+        Build an empty JSON response template for the LLM.
+        Returns:
+            dict: Response skeleton with section name and criteria scores.
+        """
         return {
             "section": self.section,
             "scores": {
@@ -25,6 +47,13 @@ class PromptBuilder(Helper):
         }
     
     def _build_criteria_block(self) -> str:
+        """
+        Construct the criteria description block for the prompt.
+        Includes few-shot score examples if enabled and available
+        in the prompt configuration.
+        Returns:
+            str: Formatted criteria block text.
+        """
         blocks = []
         for crit in self.criteria:
             block = f"- {crit}\n"
@@ -39,6 +68,14 @@ class PromptBuilder(Helper):
         return "".join(blocks)
     
     def build(self):
+        """
+        Assemble the full evaluation prompt.
+        Combines role instructions, evaluation objectives, section context,
+        criteria definitions, scoring scale, expected output format,
+        and resume content into a single prompt string.
+        Returns:
+            str: Final prompt ready to be sent to the LLM.
+        """
         config_role      = self.config['role']['role1']
         config_objective = self.config['objective']['objective1']
         config_section   = self.config['section']['section1']

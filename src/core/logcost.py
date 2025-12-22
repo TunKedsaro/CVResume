@@ -4,6 +4,25 @@ ip_token_price = Helper.load_yaml("src/config/global.yaml")['pricing']['gemini_2
 op_token_price = Helper.load_yaml("src/config/global.yaml")['pricing']['gemini_2_5_flash']['output_per_million']
 
 def estimate_gemini_cost(api_response):
+    """
+    Estimate token usage cost for a Gemini API response.
+    Calculates input and output token costs based on pricing
+    defined in `global.yaml` and usage metadata returned by
+    the Gemini API.
+    Args:
+        api_response:
+            Raw response object returned by the Gemini client,
+            expected to contain `usage_metadata`.
+    Returns:
+        dict:
+            {
+                "prompt_tokens": int,
+                "output_tokens": int,
+                "input_cost": float,
+                "output_cost": float,
+                "total_cost": float
+            }
+    """
     print(f"src/core/geminicost->def estimate_gimini_cost ...")
     # Pricing
     # source : https://ai.google.dev/gemini-api/docs/pricing

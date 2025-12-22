@@ -20,7 +20,7 @@ from schema.admin_schema import ModelUpdatePayload, GlobalUpdatePayload, WeightU
 
 app = FastAPI(
     title="CV/Resume Evaluation API",
-    version="0.1.4",
+    version="0.1.5",
     description=(
         "Microservices for CV/Resume evaluation (In progress krub)"
         "<br>"

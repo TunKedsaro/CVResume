@@ -3,6 +3,19 @@ import os
 from datetime import datetime,timezone,timedelta
 
 def get_metadata():
+    """
+    Collect runtime, configuration, and system metadata for the service.
+    Loads current configuration files (global, model, prompt, weights)
+    and returns a consolidated metadata object used for health checks,
+    debugging, and service introspection.
+    Includes:
+    - Configuration versions and summaries
+    - Model and prompt metadata
+    - Section weight information
+    - System environment details and timestamp
+    Returns:
+        dict: Service metadata snapshot.
+    """
     global_cfg  = Helper.load_yaml("src/config/global.yaml")
     model_cfg   = Helper.load_yaml("src/config/model.yaml")
     prompt_cfg  = Helper.load_yaml("src/config/prompt.yaml")
