@@ -76,7 +76,20 @@ def health_fastapi():
 def health_gemini():
     start_time = time()
     res,_ = caller.call(
-        "Return this as JSON: {'status': 'connected'} only"
+        '''This is just test connect to Gemini model 
+        just Return this as JSON: 
+        {
+            "response": {
+                "section": "ConnectionStatus",
+                "scores": {
+                "GeminiModelStatus": {
+                    "score": 5,
+                    "feedback": "Status: connected."
+                    }
+                }
+            }
+        }
+        only'''
     )
     finish_time = time()
     return {
@@ -243,6 +256,26 @@ def evaluation_profile(payload: EvaluationPayload):
 
     }
 
+# def evaluation_profile(payload: EvaluationPayload):
+#     Inlang = payload.output_lang
+#     p1 = PromptBuilder(
+#         section     = "Profile",
+#         criteria    = ["Completeness", "ContentQuality"],
+#         targetrole  = payload.target_role,
+#         cvresume    = payload.resume_json,
+#         output_lang = Inlang 
+#     )
+#     prompt = p1.build()
+#     s1,meta = caller.run_llm(
+#         prompt = prompt,
+#         api_id = 'API08',
+#         Oplang = Inlang
+#         )
+#     return {
+#         "response": s1,
+#         "response_time": f"{meta['usage_time']:.5f} s",
+#         "estimated_cost_thd": f"{meta['total_cost']:.5f} ฿"
+#     }
 ### Evaluation.API:09 #######################################################
 @app.post(
     "/evaluation/summary",
@@ -651,7 +684,8 @@ async def evaluate_resume(payload: EvaluationPayload):
 
     return {
         "response": final,
-        "response_time": f"{usage_time:.5f} s"
+        "response_time": f"{usage_time:.5f} s",
+        "estimated_cost_thd": f"{sum(c["total_cost"] for c in costs) * usd2bath:.5f} ฿",
     }
 
 #############################################################################

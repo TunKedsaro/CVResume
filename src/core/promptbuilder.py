@@ -59,8 +59,9 @@ class PromptBuilder(Helper):
         prompt = (
             prompt_role + prompt_objective + prompt_section + promnt_lang
             + prompt_expected + prompt_criteria + prompt_scale
-            + prompt_output + prompt_cvresume
+            + prompt_output + prompt_cvresume 
         )
+        # print(f"prompt -> \n{prompt}")
         prompt = prompt.replace("<section_name>", self.section)
         prompt = prompt.replace("<targetrole>", self.targetrole)
         return prompt
