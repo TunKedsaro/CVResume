@@ -253,7 +253,6 @@ def evaluation_profile(payload: EvaluationPayload):
         "response": s1,
         "response_time": f"{usage_time:.5f} s",
         "estimated_cost_thd": f"{(cost['total_cost']*usd2bath):.5f} ฿"
-
     }
 
 # def evaluation_profile(payload: EvaluationPayload):

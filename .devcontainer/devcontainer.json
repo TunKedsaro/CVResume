@@ -22,13 +22,3 @@
     "workspaceFolder": "/code",
     "runArgs": []
 }
-
-gcloud run deploy cv-orchestrator-service \
-  --image="asia-southeast1-docker.pkg.dev/poc-piloturl-nonprod/cv-orchestrator/cv-orchestrator:latest" \
-  --region="asia-southeast1" \
-  --port=4000 \
-  --memory=2Gi \
-  --cpu=2 \
-  --max-instances=5 \
-  --set-env-vars="APP_ENV=prod,GOOGLE_API_KEY=AIzaSyARNuGDJnMhJEl2ItKgL2b-3dHAWb5urRk" \
-  --allow-unauthenticated
