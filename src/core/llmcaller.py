@@ -169,6 +169,17 @@ class LlmCaller(Helper):
         self.usd2bath  = Helper.load_yaml("src/config/global.yaml")['currency']['USD_to_THB']
         self.log_digit = Helper.load_yaml("src/config/global.yaml")['logging']['logging_round_digit']
 
+    def extract_json(text: str) -> dict:
+        """
+        Extract the first valid JSON object from a text blob.
+        Useful when LLM adds explanation before/after JSON.
+        """
+        match = re.search(r"\{.*\}", text, re.DOTALL)
+        if not match:
+            raise ValueError("NO_JSON_OBJECT_FOUND")
+
+        return json.loads(match.group())
+    
     def _parse(self, resp):
         """
         Parse raw LLM response text into a JSON object.
@@ -180,7 +191,15 @@ class LlmCaller(Helper):
         """
         text = resp.text.strip()
         text = re.sub(r"^```json|```$", "", text).strip()
-        return json.loads(text)
+
+        try:
+            return json.loads(text)
+        except json.JSONDecodeError as e:
+            pass        
+        try:
+           return self.extract_json(text)
+        except Exception as e:
+            raise ValueError(f"INVALID_JSON::{text}") from e
     
     def _call_raw(self, prompt: str):
         """
@@ -233,10 +252,14 @@ class LlmCaller(Helper):
                 - Section name must start with a capital letters (e.g. "Education")
                 Expected format:
                 {{
-                    "section": "<section_name>",
+                    "section": "<Section_name>",
                     "scores": {{
-                        "<criterion>": {{ "score": 0-5, "feedback": "string" }}
-                    }}
+                        "<criterion>": {{ 
+                            "score": 0-5, 
+                            "feedback": "string" 
+                        }}
+                    }},
+                    "session_feedback":"string"
                 }}
         """
     
@@ -258,13 +281,13 @@ class LlmCaller(Helper):
         for attemp in range(max_retry):
             final_prompt = repair_prompt + prompt
             # print(f"final_prompt attemp : {attemp} -> \n {final_prompt}")
-            output, raw = self._call_raw(final_prompt)
             # print(f"Output -> \n{output}")
             try:
-                validated = self._validate(output)
+                output, raw = self._call_raw(final_prompt)
+                validated   = self._validate(output)
                 # print('Status : 1')
                 return validated.model_dump(),raw
-            except ValidationError as e:
+            except (ValidationError, ValueError) as e:
                 last_error = str(e)
                 repair_prompt = self._repair_prompt(last_error)
                 # print('Status : 0')

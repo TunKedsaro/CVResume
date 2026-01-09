@@ -85,6 +85,7 @@ class PromptBuilder(Helper):
         config_scale     = self.config['scale']['score1']
         criteria_block   = self._build_criteria_block()
         config_lang      = self.config['Language_output_style'][self.output_lang]
+        config_feedback  = self.config['feedback']['globalfeedback']
 
         prompt_role      = f"Role :\n{config_role}\n\n"
         prompt_objective = f"Objectvie :\n{config_objective}\n"
@@ -93,28 +94,19 @@ class PromptBuilder(Helper):
         prompt_expected  = f"Expected :\n{config_expected}\n"
         prompt_criteria  = f"Criteria :\n{criteria_block}\n"
         prompt_scale     = f"Scale :\n{config_scale}\n"
-        prompt_extra     = '''
-Session feedback :
-After scoring all criteria, analyze all criterion-level feedback together.
-Then generate a concise overall evaluation for this section ("session_feedback") that:
-- Synthesizes strengths and weaknesses across all criteria
-- Explains what the section does well and what limits its effectiveness
-- Avoids repeating individual criterion feedback verbatim
-- Reflects how this section impacts the candidate's positioning for the target role
-- Limit the session_feedback to one short paragraph with <session_feedback-word> words.\n
-'''
+        prompt_feedback  = f'Session feedback :\n{config_feedback}\n'
         prompt_output    = f"Output :\n{json.dumps(self.build_response_template(), indent=2)}\n\n"
         prompt_cvresume  = f"CV/Resume: \n{self.cvresume}\n"
         prompt = (
             prompt_role + prompt_objective + prompt_section + promnt_lang
-            + prompt_expected + prompt_criteria + prompt_scale + prompt_extra
+            + prompt_expected + prompt_criteria + prompt_scale + prompt_feedback
             + prompt_output  + prompt_cvresume
         )
 
         prompt = prompt.replace("<section_name>", self.section)
         prompt = prompt.replace("<targetrole>", self.targetrole)
         prompt = prompt.replace("<session_feedback-word>", str(self.config_global['feedback']['session_feedback_word']))
-        # print(f"prompt -> \n{prompt}")
+        # print(f"prompt -> \n{prompt}
         return prompt
 
 

@@ -102,3 +102,13 @@ criteria:
       Content has partial alignment with the target role: some relevant skills or responsibilities,but mixed with less relevant tasks or not yet at the depth/seniority typically expected for<targetrole>.
     score1: |
       Content is mostly unrelated to the target role: focuses on other domains or generic duties;very little evidence that directly supports readiness for <targetrole>.
+
+feedback:
+  globalfeedback: |
+    After scoring all criteria, analyze all criterion-level feedback together.
+    Then generate a concise overall evaluation for this section ("session_feedback") that:
+    - Synthesizes strengths and weaknesses across all criteria
+    - Explains what the section does well and what limits its effectiveness
+    - Avoids repeating individual criterion feedback verbatim
+    - Reflects how this section impacts the candidate's positioning for the target role
+    - Limit the session_feedback to one short paragraph with <session_feedback-word> words.
