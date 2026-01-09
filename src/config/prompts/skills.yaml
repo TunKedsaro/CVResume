@@ -1,0 +1,68 @@
+version: skills_prompt_v1
+
+task:
+  task1: |
+    Evaluate <section_name> section with <targetrole> role
+
+expected_content:
+  Skills: |
+    - point A
+    - point B
+    - point C
+    
+criteria:
+  Completeness:
+    score5: |
+      - Skills.Completeness.score5
+      - Example
+        - Skills.Completeness.example      
+    score3: |
+      - Skills.Completeness.score3
+      - Example
+        - Skills.Completeness.example
+    score1: |
+      - Skills.Completeness.score1
+      - Example
+        - Skills.Completeness.example
+  Length:
+    score5: |
+      - Skills.Length.score5
+      - Example
+        - Skills.Length.example      
+    score3: |
+      - Skills.Length.score3
+      - Example
+        - Skills.Length.example
+    score1: |
+      - Skills.Length.score1
+      - Example
+        - Skills.Length.example
+  RoleRelevance:
+    score5: |
+      - Skills.RoleRelevance.score5
+      - Example
+        - Skills.RoleRelevance.example      
+    score3: |
+      - Skills.RoleRelevance.score3
+      - Example
+        - Skills.RoleRelevance.example
+    score1: |
+      - Skills.RoleRelevance.score1
+      - Example
+        - Skills.RoleRelevance.example
+
+
+output_guidelines:
+  Skills: |
+    - Completeness:
+      - score_5 : output_guidelines.Summary.Completeness.guideline
+      - score_3 : output_guidelines.Summary.Completeness.guideline
+      - score_1 : output_guidelines.Summary.Completeness.guideline
+    - RoleRelevance:
+      - score_5 : output_guidelines.Summary.Completeness.guideline
+      - score_3 : output_guidelines.Summary.Completeness.guideline
+      - score_1 : output_guidelines.Summary.Completeness.guideline
+    - Length:
+      - score_5 : output_guidelines.Summary.Completeness.guideline
+      - score_3 : output_guidelines.Summary.Completeness.guideline
+      - score_1 : output_guidelines.Summary.Completeness.guideline

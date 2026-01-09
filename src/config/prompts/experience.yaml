@@ -1,0 +1,162 @@
+version: experience_prompt_v1
+
+task:
+  task1: |
+    Evaluate the <section_name> section of the resume using the scoring criteria
+    and assess how well the candidate matches the <targetrole> role.
+    Consider relevance, technical depth, clarity of actions, and measurable impact.
+    
+expected_content:
+  Experience: |
+    - Job title (position)
+    - Employer or organization name
+    - Employment dates (start-end)
+    - Bullet-point descriptions of responsibilities and achievements
+    - Use of action verbs
+    - Evidence of impact (metrics, outcomes, improvements) where possible
+    
+criteria:
+  Completeness:
+    score5: |
+      - Includes job title, employer, dates, and well-structured bullet points
+      - Responsibilities and outcomes are clearly described
+      - No critical information is missing
+      - Example:
+        - Data Scientist, ABC Corp (2022-2024): Built and deployed ML models with measurable business impact
+    score3: |
+      - Includes most key elements but one or more details are unclear or missing
+      - Dates, role scope, or outcomes may lack clarity
+      - Example:
+        - Data Scientist, ABC Corp: Worked on machine learning projects for the team
+    score1: |
+      - Missing multiple required elements such as dates, role, or clear responsibilities
+      - Experience description is sparse or fragmented
+      - Example:
+        - Worked on data projects
+  ContentQuality:
+    score5: |
+      - Follows Actions -> Method -> Impact (quantifiable)
+      - Specific, clean
+      - Shows measurable results or improvement
+      - Uses tools, methods, or techniques
+      - Example 
+        - Build a Random Forest prediction model using Python (scikit-learn) on 50,000 customer
+          records, improving churn prediction accuracy from 72% to 88% and enabling more
+          accurate customer retention strategies that reduced churn by 20%
+    score3: |
+      - Partially follows the structure
+      - Has Action + Method OR Action + vague impact
+      - Missing quantifiable results
+      - Somewhat specific but not complete
+      - Example
+        - Build a prediction model to predict customer churn for use in customer retention strategies
+    score1: |
+      - Does not follow the structure
+      - Only action with no method or impact
+      - Very vague/generic
+      - No tools, no metrics, no clarity
+      - Example 
+        - Built a prediction model
+  Grammar:
+    score5: |
+      - Writing is clear, professional, and grammatically correct
+      - Bullet points are easy to read with consistent tense and structure
+      - Example:
+        - Developed and deployed predictive models to support business decisions
+    score3: |
+      - Minor grammatical or wording issues that slightly reduce clarity
+      - Overall meaning is still understandable
+      - Example:
+        - Develop predictive model for helping business decision
+    score1: |
+      - Frequent grammar or spelling errors
+      - Sentences are confusing or difficult to interpret
+      - Example:
+        - Develop model help business decision
+  Length:
+    score5: |
+      - Bullet points are concise yet sufficiently detailed
+      - Information density is high with no unnecessary repetition
+      - Example:
+        - 4-6 well-written bullets for recent role, each adding new information
+    score3: |
+      - Length is acceptable but slightly too brief or somewhat repetitive
+      - Some bullets add limited value
+      - Example:
+        - Multiple bullets describing similar tasks with little variation
+    score1: |
+      - Extremely short or overly verbose with low informational value
+      - Difficult to understand the role or contributions
+      - Example:
+        - One vague bullet or a long paragraph with repeated ideas
+  RoleRelevance:
+    score5: |
+      - Experience strongly aligns with the target role
+      - Tasks, tools, and responsibilities match expected skills and seniority
+      - Example:
+        - Data Scientist experience involving ML modeling, experimentation, and analytics
+    score3: |
+      - Partial alignment with the target role
+      - Some relevant skills, but mixed with unrelated or shallow tasks
+      - Example:
+        - Data-related tasks combined with mostly operational responsibilities
+    score1: |
+      - Experience is largely unrelated to the target role
+      - Little evidence of relevant skills or domain knowledge
+      - Example:
+        - Administrative duties with no connection to the target role
+
+output_guidelines:
+  Experience: |
+    - Completeness:
+      - score_5:
+        Clearly explains that all key elements are present, including role,
+        company, duration, responsibilities, and outcomes, making the
+        experience easy to understand and evaluate.
+      - score_3:
+        Explains that most key elements are present but points out missing
+        or unclear details such as outcomes, dates, or role scope.
+      - score_1:
+        Highlights that core elements such as role, duration, or structured
+        responsibilities are missing, making the experience hard to assess.
+    - ContentQuality:
+      - score_5:
+        Emphasizes a strong action-method-impact structure with specific
+        tools, techniques, and measurable results that demonstrate
+        meaningful contributions.
+      - score_3:
+        Notes some concrete actions or methods but explains the lack of
+        depth, technical detail, or quantified impact.
+      - score_1:
+        Points out that the content is generic, vague, and lacks clear
+        methods, tools, or measurable outcomes.
+    - RoleRelevance:
+      - score_5:
+        Clearly explains that the experience strongly aligns with the target
+        role, reflecting relevant responsibilities, skills, and domain focus.
+      - score_3:
+        Indicates partial alignment with the target role but notes gaps in
+        relevance, depth, or consistency with expected responsibilities.
+      - score_1:
+        Explains that the experience shows little or no relevance to the
+        target role, with responsibilities unrelated to expected tasks.
+    - Grammar:
+      - score_5:
+        States that the writing is clear, professional, and free of
+        grammatical or spelling errors, ensuring strong readability.
+      - score_3:
+        Notes minor grammatical or wording issues that do not block
+        understanding but reduce overall polish.
+      - score_1:
+        Highlights frequent grammatical or spelling errors that negatively
+        affect clarity and professionalism.
+    - Length:
+      - score_5:
+        Explains that the descriptions are concise yet sufficiently detailed,
+        providing clear information without unnecessary repetition.
+      - score_3:
+        Notes that the length is acceptable but either slightly verbose or
+        slightly brief, reducing clarity or impact.
+      - score_1:
+        Explains that the content is either too short to convey meaningful
+        information or overly verbose with low informational value.

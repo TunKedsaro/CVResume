@@ -1,0 +1,101 @@
+version: summary_prompt_v1
+
+task:
+  task1: |
+    Evaluate <section_name> section with <targetrole> role
+
+expected_content:
+  Summary: |
+    - point A
+    - point B
+    - point C
+    
+criteria:
+  Completeness:
+    score5: |
+      - Summary.Completeness.score5
+      - Example
+        - Summary.Completeness.example      
+    score3: |
+      - Summary.Completeness.score3
+      - Example
+        - Summary.Completeness.example
+    score1: |
+      - Summary.Completeness.score1
+      - Example
+        - Summary.Completeness.example
+  ContentQuality:
+    score5: |
+      - Summary.ContentQuality.score5
+      - Example
+        - Summary.ContentQuality.example      
+    score3: |
+      - Summary.ContentQuality.score3
+      - Example
+        - Summary.ContentQuality.example
+    score1: |
+      - Summary.ContentQuality.score1
+      - Example
+        - Summary.ContentQuality.example
+  Grammar:
+    score5: |
+      - Summary.Grammar.score5
+      - Example
+        - Summary.Grammar.example      
+    score3: |
+      - Summary.Grammar.score3
+      - Example
+        - Summary.Grammar.example
+    score1: |
+      - Summary.Grammar.score1
+      - Example
+        - Summary.Grammar.example
+  Length:
+    score5: |
+      - Summary.Length.score5
+      - Example
+        - Summary.Length.example      
+    score3: |
+      - Summary.Length.score3
+      - Example
+        - Summary.Length.example
+    score1: |
+      - Summary.Length.score1
+      - Example
+        - Summary.Length.example
+  RoleRelevance:
+    score5: |
+      - Summary.RoleRelevance.score5
+      - Example
+        - Summary.RoleRelevance.example      
+    score3: |
+      - Summary.RoleRelevance.score3
+      - Example
+        - Summary.RoleRelevance.example
+    score1: |
+      - Summary.RoleRelevance.score1
+      - Example
+        - Summary.RoleRelevance.example
+
+output_guidelines:
+  Summary: |
+    - Completeness:
+      - score_5 : output_guidelines.Summary.Completeness.guideline
+      - score_3 : output_guidelines.Summary.Completeness.guideline
+      - score_1 : output_guidelines.Summary.Completeness.guideline
+    - ContentQuality:
+      - score_5 : output_guidelines.Summary.Completeness.guideline
+      - score_3 : output_guidelines.Summary.Completeness.guideline
+      - score_1 : output_guidelines.Summary.Completeness.guideline
+    - RoleRelevance:
+      - score_5 : output_guidelines.Summary.Completeness.guideline
+      - score_3 : output_guidelines.Summary.Completeness.guideline
+      - score_1 : output_guidelines.Summary.Completeness.guideline
+    - Grammar:
+      - score_5 : output_guidelines.Summary.Completeness.guideline
+      - score_3 : output_guidelines.Summary.Completeness.guideline
+      - score_1 : output_guidelines.Summary.Completeness.guideline
+    - Length:
+      - score_5 : output_guidelines.Summary.Completeness.guideline
+      - score_3 : output_guidelines.Summary.Completeness.guideline
+      - score_1 : output_guidelines.Summary.Completeness.guideline

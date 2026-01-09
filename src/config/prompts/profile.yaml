@@ -1,0 +1,50 @@
+version: profile_prompt_v1
+
+task:
+  task1: |
+    Evaluate <section_name> section with <targetrole> role
+    
+expected_content:
+  Profile: |
+    - point A
+    - point B
+    - point C
+    
+criteria:
+  Completeness:
+    score5: |
+      - Profile.Completeness.score5
+      - Example
+        - Profile.ContentQuality.example      
+    score3: |
+      Profile.Completeness.score3
+      - Example
+        - Profile.ContentQuality.example
+    score1: |
+      Profile.Completeness.score1
+      - Example
+        - Profile.ContentQuality.example
+  ContentQuality:
+    score5: |
+      - Profile.ContentQuality.score5
+      - Example
+        - Profile.ContentQuality.example
+    score3: |
+      - Profile.ContentQuality.score3
+      - Example
+        - Profile.ContentQuality.example
+    score1: |
+      - Profile.ContentQuality.score1
+      - Example
+        - Profile.ContentQuality.example
+
+output_guidelines:
+  Profile: |
+    - Completeness:
+      - score_5 : output_guidelines.Profile.Completeness.guideline
+      - score_3 : output_guidelines.Profile.Completeness.guideline
+      - score_1 : output_guidelines.Profile.Completeness.guideline
+    - ContentQuality:
+      - score_5 : output_guidelines.Profile.Completeness.guideline
+      - score_3 : output_guidelines.Profile.Completeness.guideline
+      - score_1 : output_guidelines.Profile.Completeness.guideline

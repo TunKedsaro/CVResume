@@ -7,7 +7,7 @@ import asyncio
 from core.helper import Helper
 from core.llmcaller import LlmCaller
 from core.getmetadata import get_metadata
-from core.promptbuilder import PromptBuilder
+from core.promptbuilder import ExPromptBuilder, PromptBuilder, BasePromptBuilder
 from core.aggregator import SectionScoreAggregator, GlobalAggregator
 from core.logcost import estimate_gemini_cost
 from core.llm_excel_logger import log_llm_usage
@@ -373,7 +373,7 @@ def evaluate_education(payload: EvaluationPayload):
 
 def evaluate_experience(payload: EvaluationPayload):
     start_time = time()
-    p4 = PromptBuilder( 
+    p4 = BasePromptBuilder( 
         section     = "Experience", 
         criteria    = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"],
         targetrole  = payload.target_role,
@@ -381,6 +381,7 @@ def evaluate_experience(payload: EvaluationPayload):
         output_lang = payload.output_lang 
     )   
     prompt4 = p4.build()
+    print(f"prompt4->\n{prompt4}")
     op4,raw = caller.call(prompt4)
     s4 = agg.aggregate(op4)
     finish_time   = time()

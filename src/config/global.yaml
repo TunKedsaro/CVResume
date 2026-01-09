@@ -16,3 +16,5 @@ logging:
   logging_round_digit : 5            # rounding time before keep in log
 feedback:
   session_feedback_word : 20         # promptbuilder.py limit session_feedback_words
+output:
+  number_of_words : 20               # Number of word use with promputbuilder.py

@@ -1,0 +1,84 @@
+version: activities_prompt_v1
+
+task:
+  task1: |
+    Evaluate <section_name> section with <targetrole> role
+
+expected_content:
+  Activities: |
+    - point A
+    - point B
+    - point C
+    
+criteria:
+  Completeness:
+    score5: |
+      - Activities.Completeness.score5
+      - Example
+        - Activities.Completeness.example      
+    score3: |
+      - Activities.Completeness.score3
+      - Example
+        - Activities.Completeness.example
+    score1: |
+      - Activities.Completeness.score1
+      - Example
+        - Activities.Completeness.example
+  ContentQuality:
+    score5: |
+      - Activities.ContentQuality.score5
+      - Example
+        - Activities.ContentQuality.example      
+    score3: |
+      - Activities.ContentQuality.score3
+      - Example
+        - Activities.ContentQuality.example
+    score1: |
+      - Activities.ContentQuality.score1
+      - Example
+        - Activities.ContentQuality.example
+  Grammar:
+    score5: |
+      - Activities.Grammar.score5
+      - Example
+        - Activities.Grammar.example      
+    score3: |
+      - Activities.Grammar.score3
+      - Example
+        - Activities.Grammar.example
+    score1: |
+      - Activities.Grammar.score1
+      - Example
+        - Activities.Grammar.example
+  Length:
+    score5: |
+      - Activities.Length.score5
+      - Example
+        - Activities.Length.example      
+    score3: |
+      - Activities.Length.score3
+      - Example
+        - Activities.Length.example
+    score1: |
+      - Activities.Length.score1
+      - Example
+        - Activities.Length.example
+
+output_guidelines:
+  Activities: |
+    - Completeness:
+      - score_5 : output_guidelines.Summary.Completeness.guideline
+      - score_3 : output_guidelines.Summary.Completeness.guideline
+      - score_1 : output_guidelines.Summary.Completeness.guideline
+    - ContentQuality:
+      - score_5 : output_guidelines.Summary.Completeness.guideline
+      - score_3 : output_guidelines.Summary.Completeness.guideline
+      - score_1 : output_guidelines.Summary.Completeness.guideline
+    - Grammar:
+      - score_5 : output_guidelines.Summary.Completeness.guideline
+      - score_3 : output_guidelines.Summary.Completeness.guideline
+      - score_1 : output_guidelines.Summary.Completeness.guideline
+    - Length:
+      - score_5 : output_guidelines.Summary.Completeness.guideline
+      - score_3 : output_guidelines.Summary.Completeness.guideline
+      - score_1 : output_guidelines.Summary.Completeness.guideline
