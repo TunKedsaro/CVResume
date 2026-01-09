@@ -584,7 +584,10 @@ def evaluate_resume(payload: EvaluationPayload):
     s5 = agg.aggregate(op5)
     s6 = agg.aggregate(op6)
 
-    x = GlobalAggregator(SectionScoreAggregator_output = [s1,s2,s3,s4,s5,s6])
+    x = GlobalAggregator(
+        SectionScoreAggregator_output = [s1,s2,s3,s4,s5,s6],
+        output_lang = output_lang
+        )
 
     output = x.fn0()
 
@@ -656,7 +659,8 @@ async def evaluate_resume(payload: EvaluationPayload):
     Ss = [agg.aggregate(s) for s in parsed_outputs]
 
     final = GlobalAggregator(
-        SectionScoreAggregator_output=Ss
+        SectionScoreAggregator_output=Ss,
+        output_lang = output_lang
     ).fn0()
 
     finish_time = time()

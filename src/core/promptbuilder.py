@@ -30,8 +30,9 @@ class PromptBuilder(Helper):
         self.include_fewshot= include_fewshot
         self.output_lang    = output_lang
         
-        self.config = self.load_yaml("src/config/prompt.yaml")
-        self.criteria_cfg = self.config.get("criteria", {})
+        self.config         = self.load_yaml("src/config/prompt.yaml")
+        self.config_global  = self.load_yaml("src/config/global.yaml")
+        self.criteria_cfg   = self.config.get("criteria", {})
 
     def build_response_template(self):
         """
@@ -43,7 +44,8 @@ class PromptBuilder(Helper):
             "section": self.section,
             "scores": {
                 c: {"score": 0, "feedback": ""} for c in self.criteria
-            }
+            },
+            "session_feedback":""
         }
     
     def _build_criteria_block(self) -> str:
@@ -91,16 +93,28 @@ class PromptBuilder(Helper):
         prompt_expected  = f"Expected :\n{config_expected}\n"
         prompt_criteria  = f"Criteria :\n{criteria_block}\n"
         prompt_scale     = f"Scale :\n{config_scale}\n"
-        prompt_output    = f"Otput :\n{json.dumps(self.build_response_template(), indent=2)}\n\n"
+        prompt_extra     = '''
+Session feedback :
+After scoring all criteria, analyze all criterion-level feedback together.
+Then generate a concise overall evaluation for this section ("session_feedback") that:
+- Synthesizes strengths and weaknesses across all criteria
+- Explains what the section does well and what limits its effectiveness
+- Avoids repeating individual criterion feedback verbatim
+- Reflects how this section impacts the candidate's positioning for the target role
+- Limit the session_feedback to one short paragraph with <session_feedback-word> words.\n
+'''
+        prompt_output    = f"Output :\n{json.dumps(self.build_response_template(), indent=2)}\n\n"
         prompt_cvresume  = f"CV/Resume: \n{self.cvresume}\n"
         prompt = (
             prompt_role + prompt_objective + prompt_section + promnt_lang
-            + prompt_expected + prompt_criteria + prompt_scale
-            + prompt_output + prompt_cvresume 
+            + prompt_expected + prompt_criteria + prompt_scale + prompt_extra
+            + prompt_output  + prompt_cvresume
         )
-        # print(f"prompt -> \n{prompt}")
+
         prompt = prompt.replace("<section_name>", self.section)
         prompt = prompt.replace("<targetrole>", self.targetrole)
+        prompt = prompt.replace("<session_feedback-word>", str(self.config_global['feedback']['session_feedback_word']))
+        # print(f"prompt -> \n{prompt}")
         return prompt
 
 

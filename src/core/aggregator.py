@@ -1,7 +1,8 @@
 from datetime import datetime,timezone,timedelta
 from core.helper import Helper
+from core.llmcaller import LlmCaller
 import copy
-
+import json
 class SectionScoreAggregator(Helper):
     """
     Aggregates raw LLM criterion scores for a single resume section
@@ -34,6 +35,7 @@ class SectionScoreAggregator(Helper):
     def __init__(self):
         self.config          = self.load_yaml("src/config/weight.yaml")         # config
     def aggregate(self,llm_output:dict):
+        # print(f"llm_output ->\n{llm_output}")
         self.llm_output      = llm_output             # op
         self.section         = llm_output["section"]  # Get section
         self.section_weights = self.config["weights"][self.section]  # config["weights"][section_key][criteria]
@@ -51,11 +53,11 @@ class SectionScoreAggregator(Helper):
         return {
             "section": self.section,
             "total_score":total,
-            "scores":ddict
+            "scores":ddict,
+            "session_feedback":self.llm_output['session_feedback']
         }
     
-    
-class GlobalAggregator(Helper):
+class GlobalAggregator(LlmCaller,Helper):
     """
     Aggregates section-level evaluation results into a final resume score.
     Combines weighted section scores, detailed per-section breakdowns,
@@ -143,12 +145,14 @@ class GlobalAggregator(Helper):
     }                                                                                       
 
     """
-    def __init__(self,SectionScoreAggregator_output:list):
+    def __init__(self,SectionScoreAggregator_output:list,output_lang):
+        super().__init__()
         self.section_outputs = SectionScoreAggregator_output
         self.timestamp       = str(datetime.now(tz=(timezone(timedelta(hours=7)))))
         self.model_config    = Helper.load_yaml("src/config/model.yaml")     # should include model name
         self.weight_config   = Helper.load_yaml("src/config/weight.yaml")    # includes weights + version
         self.prompt_config   = Helper.load_yaml("src/config/prompt.yaml")    # includes prompt version
+        self.config_lang     = self.prompt_config['Language_output_style'][output_lang]
     def fn1(self):
         """
         Calculate the final resume score using section-level weights.
@@ -174,7 +178,8 @@ class GlobalAggregator(Helper):
             total = total + section_contrib
         return {
             "final_resume_score":Helper.fop(total),
-            "section_contribution":contribution
+            "section_contribution":contribution,
+            "globalfeedback":self.parse
         }
     def fn2(self):
         """
@@ -185,11 +190,57 @@ class GlobalAggregator(Helper):
         """
         details = {}
         for section_data in self.section_outputs:
+            # print(f"section_data->\n{section_data}")
             details[section_data["section"]] = {
                 'total_score':section_data['total_score'],
-                'scores':section_data['scores']
+                'scores':section_data['scores'],
+                'session_feedback':section_data['session_feedback']
             }
+        prompt = f"""
+        You are an expert CV and Resume reviewer.
+
+        Your task is to generate a SINGLE, GLOBAL feedback summary based on the full resume evaluation results below.
+
+        IMPORTANT:
+        - You MUST read and consider feedback from ALL resume sections.
+        - Do NOT repeat section-by-section feedback.
+        - Synthesize insights into an overall assessment.
+        - Assume the user will NOT read individual section details.
+        - Limit the session_feedback to one short paragraph with 20 words.
+
+        Focus on:
+        1. Overall strengths of the resume
+        2. Key weaknesses or gaps
+        3. High-impact, actionable improvement advice
+
+        Guidelines:
+        - Be professional, constructive, and specific
+        - Avoid generic statements
+        - Do NOT assume missing information
+        - Base your feedback ONLY on the evaluation data provided
+        {self.config_lang}
+
+        INPUT (section-level evaluation results):
+        {json.dumps(details, indent=2)}
+
+        STRICT OUTPUT RULES:
+        - Return JSON ONLY
+        - No markdown
+        - No explanation
+        - No extra text
+
+        Output schema:
+        {
+            {
+            "response": "Concise but insightful global feedback covering strengths, weaknesses, and improvement suggestions."
+            }
+        }
+        """
+        # print(f"prompt->\n{prompt}")
+        self.parse,_ = self._call_raw(prompt)
+        # print(self.parse)
         return details
+    
     def fn3(self):
         """
         Generate metadata describing the evaluation context.
@@ -214,14 +265,10 @@ class GlobalAggregator(Helper):
             dict:
                 Final aggregated resume evaluation result.
         """
-        conclution_part = self.fn1()
         detail_part     = self.fn2()
+        conclution_part = self.fn1()
         metadata_part   = self.fn3()
-        # return {
-        #     "conclution":conclution_part,
-        #     "section_detail":detail_part,
-        #     "metadata":metadata_part
-        # }
+
         return {
             "conclution":conclution_part,
             "section_detail":detail_part,

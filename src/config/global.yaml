@@ -14,4 +14,5 @@ currency:
   USD_to_THB : 31.42                 # 1 USD = 31.42 Baht 251221.12:24 
 logging:
   logging_round_digit : 5            # rounding time before keep in log
-
+feedback:
+  session_feedback_word : 20         # promptbuilder.py limit session_feedback_words

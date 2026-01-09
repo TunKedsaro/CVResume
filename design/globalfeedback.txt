@@ -1,0 +1,13 @@
+{
+    'section': 'Experience',
+    'total_score': 78,
+    'scores': {
+        'RoleRelevance':  {'score': 30.0, 'feedback': 'xxx'},
+        'Length':         {'score': 8.0, 'feedback': 'yyy'},
+        'Grammar':        {'score': 10.0, 'feedback': 'zzz'},
+        'ContentQuality': {'score': 24.0, 'feedback': 'aaa'},
+        'Completeness':   {'score': 6.0, 'feedback': 'bbb'}
+            },
+    'session_feedback' : abcdefghi
+    
+}

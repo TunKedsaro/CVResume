@@ -150,6 +150,7 @@ class SectionEvaluation(BaseModel):
     """
     section: str
     scores: Dict[str, CriterionScore]
+    session_feedback: str
 
 class LlmCaller(Helper):
     def __init__(self):
@@ -208,6 +209,7 @@ class LlmCaller(Helper):
         Raises:
             ValidationError: If the output does not match the schema.
         """
+        # print(f"raw_output ->\n{raw_output}")
         return SectionEvaluation.model_validate(raw_output)
     
     def _repair_prompt(self, error_msg: str) -> str:
@@ -257,6 +259,7 @@ class LlmCaller(Helper):
             final_prompt = repair_prompt + prompt
             # print(f"final_prompt attemp : {attemp} -> \n {final_prompt}")
             output, raw = self._call_raw(final_prompt)
+            # print(f"Output -> \n{output}")
             try:
                 validated = self._validate(output)
                 # print('Status : 1')
