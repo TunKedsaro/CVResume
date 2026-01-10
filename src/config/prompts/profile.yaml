@@ -2,49 +2,69 @@ version: profile_prompt_v1
 
 task:
   task1: |
-    Evaluate <section_name> section with <targetrole> role
-    
+    Evaluate the <section_name> section of the resume using the scoring criteria
+    and assess how clearly the candidate's basic professional identity is presented
+    for the <targetrole> role.
+
 expected_content:
   Profile: |
-    - point A
-    - point B
-    - point C
-    
+    - Candidate name
+    - Professional title or current status
+    - Contact information (email, phone)
+    - Optional links (portfolio, GitHub, LinkedIn)
+    - Avoids unnecessary personal details
+
 criteria:
   Completeness:
     score5: |
-      - Profile.Completeness.score5
-      - Example
-        - Profile.ContentQuality.example      
+      - Includes name, professional title or current status, and contact information
+      - Information is clearly presented and easy to locate
+      - Optional links are included where relevant
+      - Example:
+        - John Doe | Data Analyst | john.doe@email.com | GitHub: github.com/johndoe
     score3: |
-      Profile.Completeness.score3
-      - Example
-        - Profile.ContentQuality.example
+      - Includes basic identification but missing one or more key elements
+      - Title, contact details, or links may be incomplete or unclear
+      - Example:
+        - John Doe | Student | john.doe@email.com
     score1: |
-      Profile.Completeness.score1
-      - Example
-        - Profile.ContentQuality.example
+      - Missing critical information such as name, title, or contact details
+      - Profile section is unclear or fragmented
+      - Example:
+        - John Doe
+
   ContentQuality:
     score5: |
-      - Profile.ContentQuality.score5
-      - Example
-        - Profile.ContentQuality.example
+      - Uses a clear, professional title or status
+      - Avoids informal language or unnecessary personal statements
+      - Presents a concise and professional first impression
+      - Example:
+        - Data Scientist | Machine Learning & Analytics
     score3: |
-      - Profile.ContentQuality.score3
-      - Example
-        - Profile.ContentQuality.example
+      - Title or status is present but generic or weakly defined
+      - Professional identity is understandable but not precise
+      - Example:
+        - Student interested in data
     score1: |
-      - Profile.ContentQuality.score1
-      - Example
-        - Profile.ContentQuality.example
+      - Uses vague, informal, or non-professional wording
+      - Focuses on personal wishes rather than professional identity
+      - Example:
+        - Looking for a chance to learn and grow
 
 output_guidelines:
   Profile: |
     - Completeness:
-      - score_5 : output_guidelines.Profile.Completeness.guideline
-      - score_3 : output_guidelines.Profile.Completeness.guideline
-      - score_1 : output_guidelines.Profile.Completeness.guideline
+      - score_5:
+        Clearly presents the candidate's identity and contact information,
+        allowing the reader to immediately understand who the candidate is.
+      - score_3:
+        Provides basic identification but lacks some essential details or clarity.
+      - score_1:
+        Fails to provide sufficient information to identify or contact the candidate.
     - ContentQuality:
-      - score_5 : output_guidelines.Profile.Completeness.guideline
-      - score_3 : output_guidelines.Profile.Completeness.guideline
-      - score_1 : output_guidelines.Profile.Completeness.guideline
+      - score_5:
+        Uses a clear and professional title or status without unnecessary or informal details.
+      - score_3:
+        Communicates identity but with generic or weak professional positioning.
+      - score_1:
+        Uses vague or personal statements that do not establish a professional identity.

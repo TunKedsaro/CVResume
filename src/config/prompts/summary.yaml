@@ -2,100 +2,145 @@ version: summary_prompt_v1
 
 task:
   task1: |
-    Evaluate <section_name> section with <targetrole> role
+    Evaluate the <section_name> section of the resume using the scoring criteria
+    and assess how well the candidate's professional summary positions them
+    for the <targetrole> role. Consider clarity, value proposition, relevance,
+    and overall writing quality.
 
 expected_content:
   Summary: |
-    - point A
-    - point B
-    - point C
+    - 2-4 sentence professional summary
+    - Clear professional identity or current status
+    - Key experiences or achievements
+    - Core skills or areas of expertise
+    - Clear value proposition or career focus
+    - Avoids clichés and unnecessary personal statements
     
 criteria:
   Completeness:
     score5: |
-      - Summary.Completeness.score5
-      - Example
-        - Summary.Completeness.example      
+      - Clearly states professional identity or current status
+      - Mentions key experience or achievement
+      - Highlights relevant skills or expertise
+      - Communicates a clear career direction or value proposition
+      - Example:
+        - Data Analyst with experience in SQL, Python, and Tableau, delivering actionable insights
+          through data-driven analysis to support business decisions
     score3: |
-      - Summary.Completeness.score3
-      - Example
-        - Summary.Completeness.example
+      - Includes identity and some skills or experience
+      - Career direction or value proposition is vague or generic
+      - Example:
+        - Final-year student interested in data analytics with experience using Python and SQL
     score1: |
-      - Summary.Completeness.score1
-      - Example
-        - Summary.Completeness.example
+      - Missing clear identity or focus
+      - Lacks meaningful information about skills, experience, or direction
+      - Example:
+        - Looking for an opportunity to learn and grow
   ContentQuality:
     score5: |
-      - Summary.ContentQuality.score5
-      - Example
-        - Summary.ContentQuality.example      
+      - Specific, focused, and informative
+      - Avoids buzzwords and clichés
+      - Emphasizes strengths and value the candidate can bring
+      - Example:
+        - Data-driven Marketing Analyst who increased campaign ROI by 25% using cohort analysis
+          and A/B testing
     score3: |
-      - Summary.ContentQuality.score3
-      - Example
-        - Summary.ContentQuality.example
+      - Understandable but generic
+      - Mentions skills or experience without concrete impact
+      - Example:
+        - Experienced in data analysis and project coordination
     score1: |
-      - Summary.ContentQuality.score1
-      - Example
-        - Summary.ContentQuality.example
+      - Very generic or cliché-heavy
+      - Provides little to no signal about actual capability
+      - Example:
+        - Hard-working, passionate team player eager to learn
   Grammar:
     score5: |
-      - Summary.Grammar.score5
-      - Example
-        - Summary.Grammar.example      
+      - Writing is clear, professional, and grammatically correct
+      - Sentences flow naturally and are easy to read
+      - Example:
+        - Analytical Economics graduate with strong statistical and programming skills
     score3: |
-      - Summary.Grammar.score3
-      - Example
-        - Summary.Grammar.example
+      - Minor grammatical or wording issues
+      - Overall meaning remains clear
+      - Example:
+        - Economics graduate with strong skill in statistic and programming
     score1: |
-      - Summary.Grammar.score1
-      - Example
-        - Summary.Grammar.example
+      - Frequent grammar or spelling errors
+      - Reduces clarity and professionalism
+      - Example:
+        - Graduate economics strong skill statistic programming
   Length:
     score5: |
-      - Summary.Length.score5
-      - Example
-        - Summary.Length.example      
+      - Length is appropriate (2-4 sentences)
+      - Each sentence adds clear value with no redundancy
+      - Example:
+        - A concise 3-sentence summary covering identity, skills, and value
     score3: |
-      - Summary.Length.score3
-      - Example
-        - Summary.Length.example
+      - Slightly too short or slightly verbose
+      - Some sentences add limited new information
+      - Example:
+        - 1-2 short sentences with partial information
     score1: |
-      - Summary.Length.score1
-      - Example
-        - Summary.Length.example
+      - Far too short or excessively long
+      - Difficult to quickly understand the candidate's profile
+      - Example:
+        - One vague sentence or a long paragraph with repeated ideas
   RoleRelevance:
     score5: |
-      - Summary.RoleRelevance.score5
-      - Example
-        - Summary.RoleRelevance.example      
+      - Summary strongly aligns with the target role
+      - Skills, experiences, and focus match role expectations
+      - Example:
+        - Summary emphasizes analytics, experimentation, and business impact for a data role
     score3: |
-      - Summary.RoleRelevance.score3
-      - Example
-        - Summary.RoleRelevance.example
+      - Partial alignment with the target role
+      - Mentions some relevant skills but focus is diluted
+      - Example:
+        - Mixes technical and unrelated skills without clear prioritization
     score1: |
-      - Summary.RoleRelevance.score1
-      - Example
-        - Summary.RoleRelevance.example
+      - Summary is largely unrelated to the target role
+      - Focuses on goals or traits instead of relevant capabilities
+      - Example:
+        - Describes personal aspirations with no role-specific skills
 
 output_guidelines:
   Summary: |
     - Completeness:
-      - score_5 : output_guidelines.Summary.Completeness.guideline
-      - score_3 : output_guidelines.Summary.Completeness.guideline
-      - score_1 : output_guidelines.Summary.Completeness.guideline
+      - score_5:
+        Clearly communicates who the candidate is, what they are good at,
+        and where they are heading in a concise professional summary.
+      - score_3:
+        Provides basic identity and skills but lacks a strong or clear
+        value proposition or career direction.
+      - score_1:
+        Fails to establish a clear professional identity or focus.
     - ContentQuality:
-      - score_5 : output_guidelines.Summary.Completeness.guideline
-      - score_3 : output_guidelines.Summary.Completeness.guideline
-      - score_1 : output_guidelines.Summary.Completeness.guideline
+      - score_5:
+        Uses specific, meaningful language that highlights strengths and
+        avoids generic or cliché statements.
+      - score_3:
+        Understandable but generic, with limited differentiation.
+      - score_1:
+        Relies heavily on clichés or vague statements with little signal.
     - RoleRelevance:
-      - score_5 : output_guidelines.Summary.Completeness.guideline
-      - score_3 : output_guidelines.Summary.Completeness.guideline
-      - score_1 : output_guidelines.Summary.Completeness.guideline
+      - score_5:
+        Strongly aligns the candidate's skills and experience with the
+        expectations of the target role.
+      - score_3:
+        Shows some alignment but lacks focus or depth.
+      - score_1:
+        Shows little or no alignment with the target role.
     - Grammar:
-      - score_5 : output_guidelines.Summary.Completeness.guideline
-      - score_3 : output_guidelines.Summary.Completeness.guideline
-      - score_1 : output_guidelines.Summary.Completeness.guideline
+      - score_5:
+        Writing is polished, professional, and error-free.
+      - score_3:
+        Minor language issues reduce polish but not understanding.
+      - score_1:
+        Frequent errors significantly reduce clarity and professionalism.
     - Length:
-      - score_5 : output_guidelines.Summary.Completeness.guideline
-      - score_3 : output_guidelines.Summary.Completeness.guideline
-      - score_1 : output_guidelines.Summary.Completeness.guideline
+      - score_5:
+        Length is well-balanced and easy to scan, with high information density.
+      - score_3:
+        Length is acceptable but could be more concise or more informative.
+      - score_1:
+        Length is inappropriate and hinders understanding.

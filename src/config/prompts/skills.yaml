@@ -2,67 +2,92 @@ version: skills_prompt_v1
 
 task:
   task1: |
-    Evaluate <section_name> section with <targetrole> role
+    Evaluate the <section_name> section of the resume using the scoring criteria
+    and assess how well the listed skills support the <targetrole> role.
+    Consider completeness, relevance, and appropriateness of skill quantity.
 
 expected_content:
   Skills: |
-    - point A
-    - point B
-    - point C
-    
+    - Technical skills (e.g., programming languages, tools, frameworks)
+    - Domain or functional skills relevant to the target role
+    - Soft skills where appropriate
+    - Clear grouping or categorization of skills
+    - Appropriate number of skills (neither too few nor excessive)
+
 criteria:
   Completeness:
     score5: |
-      - Skills.Completeness.score5
-      - Example
-        - Skills.Completeness.example      
+      - Lists a comprehensive set of relevant skills
+      - Includes technical, domain, and applicable soft skills
+      - Skills are clearly grouped or organized
+      - Example:
+        - Programming: Python, SQL | ML: scikit-learn, TensorFlow | Tools: Git, Power BI
     score3: |
-      - Skills.Completeness.score3
-      - Example
-        - Skills.Completeness.example
+      - Lists some relevant skills but lacks grouping or balance
+      - Missing either technical depth or supporting skills
+      - Example:
+        - Python, SQL, Excel, Communication
     score1: |
-      - Skills.Completeness.score1
-      - Example
-        - Skills.Completeness.example
+      - Very few skills listed or skills are unclear
+      - No organization or structure
+      - Example:
+        - Computer skills
+
   Length:
     score5: |
-      - Skills.Length.score5
-      - Example
-        - Skills.Length.example      
+      - Number of skills is appropriate (typically 10-20)
+      - Easy to scan without being overwhelming
+      - Example:
+        - Well-balanced list covering core and supporting skills
     score3: |
-      - Skills.Length.score3
-      - Example
-        - Skills.Length.example
+      - Slightly too few or too many skills
+      - Still understandable but less effective
+      - Example:
+        - Very short list or long ungrouped list
     score1: |
-      - Skills.Length.score1
-      - Example
-        - Skills.Length.example
+      - Extremely short or excessively long list
+      - Hard to identify key strengths
+      - Example:
+        - Only 2 skills or a long paragraph of dozens of tools
+
   RoleRelevance:
     score5: |
-      - Skills.RoleRelevance.score5
-      - Example
-        - Skills.RoleRelevance.example      
+      - Skills strongly align with the target role
+      - Clearly reflect required tools and competencies
+      - Example:
+        - Python, SQL, machine learning, statistics for a data role
     score3: |
-      - Skills.RoleRelevance.score3
-      - Example
-        - Skills.RoleRelevance.example
+      - Partial alignment with the target role
+      - Mix of relevant and unrelated skills
+      - Example:
+        - Combination of data tools and unrelated general software
     score1: |
-      - Skills.RoleRelevance.score1
-      - Example
-        - Skills.RoleRelevance.example
-
+      - Skills are largely unrelated to the target role
+      - Little evidence of required competencies
+      - Example:
+        - Office administration tools for a technical role
 
 output_guidelines:
   Skills: |
     - Completeness:
-      - score_5 : output_guidelines.Summary.Completeness.guideline
-      - score_3 : output_guidelines.Summary.Completeness.guideline
-      - score_1 : output_guidelines.Summary.Completeness.guideline
+      - score_5:
+        Provides a well-organized and comprehensive list of skills that
+        clearly represents the candidate's capabilities.
+      - score_3:
+        Lists some relevant skills but lacks structure, balance, or coverage.
+      - score_1:
+        Provides an insufficient or unclear skill list.
     - RoleRelevance:
-      - score_5 : output_guidelines.Summary.Completeness.guideline
-      - score_3 : output_guidelines.Summary.Completeness.guideline
-      - score_1 : output_guidelines.Summary.Completeness.guideline
+      - score_5:
+        Skills are highly relevant and directly support the target role.
+      - score_3:
+        Skills show partial relevance but include unnecessary or unrelated items.
+      - score_1:
+        Skills do not align with the target role.
     - Length:
-      - score_5 : output_guidelines.Summary.Completeness.guideline
-      - score_3 : output_guidelines.Summary.Completeness.guideline
-      - score_1 : output_guidelines.Summary.Completeness.guideline
+      - score_5:
+        Skill list length is appropriate and easy to scan.
+      - score_3:
+        Length is acceptable but could be better balanced.
+      - score_1:
+        Length is inappropriate and reduces clarity.

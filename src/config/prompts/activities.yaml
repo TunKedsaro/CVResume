@@ -2,83 +2,120 @@ version: activities_prompt_v1
 
 task:
   task1: |
-    Evaluate <section_name> section with <targetrole> role
+    Evaluate the <section_name> section of the resume using the scoring criteria
+    and assess how well the candidate's activities support the <targetrole> role.
+    Consider clarity of role, responsibility, initiative, scale, and relevance.
 
 expected_content:
   Activities: |
-    - point A
-    - point B
-    - point C
+    - Activity name or title
+    - Role or responsibility in the activity
+    - Organization, event, or context
+    - Dates or time period
+    - Bullet-point descriptions of contributions
+    - Evidence of initiative, leadership, or impact where applicable
     
 criteria:
   Completeness:
     score5: |
-      - Activities.Completeness.score5
-      - Example
-        - Activities.Completeness.example      
+      - Clearly states activity name, role, context, and dates
+      - Contributions are described with sufficient detail
+      - No essential information is missing
+      - Example:
+        - Event Lead, Chulalongkorn Economic Society (2024): Led logistics for a 200+ attendee forum  
     score3: |
-      - Activities.Completeness.score3
-      - Example
-        - Activities.Completeness.example
+      - Activity and role are stated but details such as dates, scale, or contribution are unclear
+      - Description is understandable but incomplete
+      - Example:
+        - Volunteer Member, Economic Society: Helped organize events
     score1: |
-      - Activities.Completeness.score1
-      - Example
-        - Activities.Completeness.example
+      - Lists activity name only with no role, responsibility, or context
+      - Very sparse or unclear information
+      - Example:
+        - Member of student club
   ContentQuality:
     score5: |
-      - Activities.ContentQuality.score5
-      - Example
-        - Activities.ContentQuality.example      
+      - Clearly explains what the candidate did and their level of responsibility
+      - Shows initiative, leadership, or meaningful contribution
+      - Mentions scale, outcomes, or impact where relevant
+      - Example:
+        - Spearheaded the "Eco-Forum 2025" for 200+ attendees, coordinating speakers and logistics,
+          reducing event check-in time by 30% 
     score3: |
-      - Activities.ContentQuality.score3
-      - Example
-        - Activities.ContentQuality.example
+      - Describes participation and responsibilities but impact or initiative is limited
+      - Some specificity, but contribution is not distinctive
+      - Example:
+        - Helped organize club events and attended weekly planning meetings
     score1: |
-      - Activities.ContentQuality.score1
-      - Example
-        - Activities.ContentQuality.example
+      - Very generic description with no clear responsibility or contribution
+      - Adds little signal to the resume
+      - Example:
+        - Participated in various activities
   Grammar:
     score5: |
-      - Activities.Grammar.score5
-      - Example
-        - Activities.Grammar.example      
+      - Writing is clear, professional, and grammatically correct
+      - Bullet points are easy to read and well-structured
+      - Example:
+        - Directed a 15-member team to manage student-led initiatives  
     score3: |
-      - Activities.Grammar.score3
-      - Example
-        - Activities.Grammar.example
+      - Minor grammar or wording issues but meaning remains clear
+      - Slightly reduces professionalism
+      - Example:
+        - Direct team for manage student activity
     score1: |
-      - Activities.Grammar.score1
-      - Example
-        - Activities.Grammar.example
+      - Frequent grammar or spelling errors
+      - Sentences are confusing or difficult to understand
+      - Example:
+        - Direct team manage activity student
   Length:
     score5: |
-      - Activities.Length.score5
-      - Example
-        - Activities.Length.example      
+      - Activity descriptions are concise yet sufficiently detailed
+      - Appropriate number of bullets (2-3) with high information value
+      - Example:
+        - Two focused bullets describing role and measurable outcome     
     score3: |
-      - Activities.Length.score3
-      - Example
-        - Activities.Length.example
+      - Length is acceptable but slightly too brief or mildly repetitive
+      - Some bullets add limited value
+      - Example:
+        - Several short bullets repeating similar ideas
     score1: |
-      - Activities.Length.score1
-      - Example
-        - Activities.Length.example
+      - Extremely short or overly verbose with little useful information
+      - Hard to understand the activity or contribution
+      - Example:
+        - One vague line or a long paragraph with no clear focus
 
 output_guidelines:
   Activities: |
     - Completeness:
-      - score_5 : output_guidelines.Summary.Completeness.guideline
-      - score_3 : output_guidelines.Summary.Completeness.guideline
-      - score_1 : output_guidelines.Summary.Completeness.guideline
+      - score_5:
+        Clearly explains the activity, role, context, and timing, making the
+        candidate's involvement easy to understand and evaluate.
+      - score_3:
+        Describes the activity and role but leaves some details unclear,
+        such as scale, dates, or specific contributions.
+      - score_1:
+        Lists the activity with little or no explanation of role or responsibility.
     - ContentQuality:
-      - score_5 : output_guidelines.Summary.Completeness.guideline
-      - score_3 : output_guidelines.Summary.Completeness.guideline
-      - score_1 : output_guidelines.Summary.Completeness.guideline
+      - score_5:
+        Highlights clear responsibility, initiative, or leadership with
+        specific actions and outcomes that add strong signal to the resume.
+      - score_3:
+        Shows participation and some responsibility but lacks distinctive
+        impact or initiative.
+      - score_1:
+        Uses generic descriptions that provide little insight into the
+        candidate's contribution or skills.
     - Grammar:
-      - score_5 : output_guidelines.Summary.Completeness.guideline
-      - score_3 : output_guidelines.Summary.Completeness.guideline
-      - score_1 : output_guidelines.Summary.Completeness.guideline
+      - score_5:
+        Writing is clear, professional, and free of grammatical errors.
+      - score_3:
+        Minor language issues reduce polish but not understanding.
+      - score_1:
+        Frequent errors significantly reduce clarity and professionalism.
     - Length:
-      - score_5 : output_guidelines.Summary.Completeness.guideline
-      - score_3 : output_guidelines.Summary.Completeness.guideline
-      - score_1 : output_guidelines.Summary.Completeness.guideline
+      - score_5:
+        Descriptions are concise and appropriately detailed for extracurricular activities.
+      - score_3:
+        Length is acceptable but could be more focused or more informative.
+      - score_1:
+        Content is either too brief to be meaningful or overly verbose with low value.

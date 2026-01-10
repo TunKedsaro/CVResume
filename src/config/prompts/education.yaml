@@ -2,50 +2,74 @@ version: education_prompt_v1
 
 task:
   task1: |
-    Evaluate <section_name> section with <targetrole> role
+    Evaluate the <section_name> section of the resume using the scoring criteria
+    and assess how well the candidate's educational background supports the
+    <targetrole> role. Consider completeness, clarity, and relevance.
 
 expected_content:
   Education: |
-    - point A
-    - point B
-    - point C
+    - Institution name
+    - Degree obtained or program enrolled
+    - Field of study or major
+    - Dates attended (start-end or graduation year)
+    - GPA or honors (optional)
+    - Evidence of relevance to the target role where applicable
     
 criteria:
   Completeness:
     score5: |
-      - Education.Completeness.score5
-      - Example
-        - Education.Completeness.example      
+      - Clearly states institution, degree, field of study, and dates
+      - Optional details such as GPA or honors are included if available
+      - Information is easy to understand with no missing core elements
+      - Example:
+        - B.Sc. in Computer Science, Chulalongkorn University (2019-2023), GPA 3.65    
     score3: |
-      - Education.Completeness.score3
-      - Example
-        - Education.Completeness.example
+      - Includes institution and degree but some details are unclear or missing
+      - Dates, field of study, or optional details may be omitted
+      - Example:
+        - Bachelor's Degree, Computer Science, Chulalongkorn University
     score1: |
-      - Education.Completeness.score1
-      - Example
-        - Education.Completeness.example
+      - Missing key elements such as degree, institution, or dates
+      - Education entry is vague or incomplete
+      - Example:
+        - Studied at university
   RoleRelevance:
     score5: |
-      - Education.RoleRelevance.score5
-      - Example
-        - Education.RoleRelevance.example      
+      - Field of study and coursework are strongly aligned with the target role
+      - Clearly supports required knowledge or skills for the role
+      - Example:
+        - Degree in Data Science with coursework in machine learning and statistics     
     score3: |
-      - Education.RoleRelevance.score3
-      - Example
-        - Education.RoleRelevance.example
+      - Partial alignment with the target role
+      - Some relevant knowledge, but not a direct or strong match
+      - Example:
+        - Degree in Business Administration applying for a data-related role
     score1: |
-      - Education.RoleRelevance.score1
-      - Example
-        - Education.RoleRelevance.example
+      - Field of study is largely unrelated to the target role
+      - Little evidence that education supports required skills
+      - Example:
+        - Degree in unrelated field with no relevant coursework mentioned
 
 
 output_guidelines:
   Education: |
     - Completeness:
-      - score_5 : output_guidelines.Summary.Completeness.guideline
-      - score_3 : output_guidelines.Summary.Completeness.guideline
-      - score_1 : output_guidelines.Summary.Completeness.guideline
+      - score_5:
+        Clearly presents institution, degree, field of study, and dates,
+        allowing the reader to easily understand the candidate's education.
+      - score_3:
+        Shows basic education information but lacks some clarity or detail,
+        such as dates, major, or optional academic achievements.
+      - score_1:
+        Provides insufficient or vague education information, making it
+        difficult to assess the candidate's academic background.
     - RoleRelevance:
-      - score_5 : output_guidelines.Summary.Completeness.guideline
-      - score_3 : output_guidelines.Summary.Completeness.guideline
-      - score_1 : output_guidelines.Summary.Completeness.guideline
+      - score_5:
+        Explains that the educational background strongly supports the
+        knowledge and skills expected for the target role.
+      - score_3:
+        Indicates partial relevance, noting that the education provides
+        some useful foundation but is not fully aligned.
+      - score_1:
+        Explains that the education has little relevance to the target role
+        and does not support required competencies.

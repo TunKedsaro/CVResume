@@ -220,15 +220,16 @@ def update_prompt_config(
 )
 def evaluation_profile(payload: EvaluationPayload):
     start_time = time()
-    p1 = PromptBuilder(
+    p1 = BasePromptBuilder(
         section     = "Profile",
         criteria    = ["Completeness", "ContentQuality"],
         targetrole  = payload.target_role,
         cvresume    = payload.resume_json,
         output_lang = payload.output_lang 
     )
-    prompt = p1.build()
-    op1,raw = caller.call(prompt)
+    prompt1 = p1.build()
+    print(f"prompt1->\n{prompt1}")
+    op1,raw = caller.call(prompt1)
     s1 = agg.aggregate(op1)
     finish_time = time()
 
@@ -237,7 +238,7 @@ def evaluation_profile(payload: EvaluationPayload):
     ip = {
             "id":"API08",
             "output_lange":payload.output_lang,
-            "prompt_length_chars":len(prompt),
+            "prompt_length_chars":len(prompt1),
             "input_tokens" :cost['prompt_tokens'],
             "output_tokens":cost['output_tokens'],
             "total_tokens" :cost['prompt_tokens']+cost['output_tokens'],
@@ -284,15 +285,16 @@ def evaluation_profile(payload: EvaluationPayload):
 
 def evaluate_summary(payload: EvaluationPayload):
     start_time = time()
-    p2 = PromptBuilder( 
+    p2 = BasePromptBuilder( 
         section     = "Summary", 
         criteria    = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"],
         targetrole  = payload.target_role,
         cvresume    = payload.resume_json,
         output_lang = payload.output_lang 
     )
-    prompt = p2.build()
-    op2,raw = caller.call(prompt)
+    prompt2 = p2.build()
+    print(f"prompt2->\n{prompt2}")
+    op2,raw = caller.call(prompt2)
     s2 = agg.aggregate(op2)
     finish_time   = time()
 
@@ -302,7 +304,7 @@ def evaluate_summary(payload: EvaluationPayload):
     ip = {
             "id":"API09",
             "output_lange":payload.output_lang,
-            "prompt_length_chars":len(prompt),
+            "prompt_length_chars":len(prompt2),
             "input_tokens" :cost['prompt_tokens'],
             "output_tokens":cost['output_tokens'],
             "total_tokens" :cost['prompt_tokens']+cost['output_tokens'],
@@ -329,7 +331,7 @@ def evaluate_summary(payload: EvaluationPayload):
    
 def evaluate_education(payload: EvaluationPayload):
     start_time = time()
-    p3 = PromptBuilder( 
+    p3 = BasePromptBuilder( 
         section     = "Education", 
         criteria    = ["Completeness","RoleRelevance"],
         targetrole  = payload.target_role,
@@ -337,6 +339,7 @@ def evaluate_education(payload: EvaluationPayload):
         output_lang = payload.output_lang 
     )
     prompt3 = p3.build()
+    print(f"prompt3->\n{prompt3}")
     op3,raw = caller.call(prompt3)
     s3 = agg.aggregate(op3)
     finish_time   = time()
@@ -419,7 +422,7 @@ def evaluate_experience(payload: EvaluationPayload):
 
 def evaluate_activities(payload: EvaluationPayload):
     start_time = time()
-    p5 = PromptBuilder( 
+    p5 = BasePromptBuilder( 
         section     = "Activities", 
         criteria    = ["Completeness", "ContentQuality","Grammar","Length"],
         targetrole  = payload.target_role,
@@ -427,6 +430,7 @@ def evaluate_activities(payload: EvaluationPayload):
         output_lang = payload.output_lang 
     )
     prompt5 = p5.build()
+    print(f"prompt5->\n{prompt5}")
     op5,raw = caller.call(prompt5)
     s5 = agg.aggregate(op5)
     finish_time   = time()
@@ -464,7 +468,7 @@ def evaluate_activities(payload: EvaluationPayload):
 
 def evaluate_skills(payload: EvaluationPayload):
     start_time = time()
-    p6 = PromptBuilder( 
+    p6 = BasePromptBuilder( 
         section     = "Skills", 
         criteria    = ["Completeness","Length","RoleRelevance"],
         targetrole  = payload.target_role,
@@ -636,12 +640,12 @@ async def evaluate_resume(payload: EvaluationPayload):
     output_lang = payload.output_lang
 
     builders = [
-        PromptBuilder("Profile",    ["Completeness","ContentQuality"], targetrole, resume_json, output_lang=output_lang),
-        PromptBuilder("Summary",    ["Completeness","ContentQuality","Grammar","Length","RoleRelevance"], targetrole, resume_json, output_lang=output_lang),
-        PromptBuilder("Education",  ["Completeness","RoleRelevance"], targetrole, resume_json, output_lang=output_lang),
-        PromptBuilder("Experience", ["Completeness","ContentQuality","Grammar","Length","RoleRelevance"], targetrole, resume_json, output_lang=output_lang),
-        PromptBuilder("Activities", ["Completeness","ContentQuality","Grammar","Length"], targetrole, resume_json, output_lang=output_lang),
-        PromptBuilder("Skills",     ["Completeness","Length","RoleRelevance"], targetrole, resume_json, output_lang=output_lang),
+        BasePromptBuilder("Profile",    ["Completeness","ContentQuality"], targetrole, resume_json, output_lang=output_lang),
+        BasePromptBuilder("Summary",    ["Completeness","ContentQuality","Grammar","Length","RoleRelevance"], targetrole, resume_json, output_lang=output_lang),
+        BasePromptBuilder("Education",  ["Completeness","RoleRelevance"], targetrole, resume_json, output_lang=output_lang),
+        BasePromptBuilder("Experience", ["Completeness","ContentQuality","Grammar","Length","RoleRelevance"], targetrole, resume_json, output_lang=output_lang),
+        BasePromptBuilder("Activities", ["Completeness","ContentQuality","Grammar","Length"], targetrole, resume_json, output_lang=output_lang),
+        BasePromptBuilder("Skills",     ["Completeness","Length","RoleRelevance"], targetrole, resume_json, output_lang=output_lang),
     ]
 
     prompts = [b.build() for b in builders]
