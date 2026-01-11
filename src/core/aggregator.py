@@ -146,7 +146,7 @@ class GlobalAggregator(LlmCaller,Helper):
 
     """
     def __init__(self,SectionScoreAggregator_output:list,output_lang):
-        super().__init__()
+        super().__init__()    # Run Llmcaller class 
         self.section_outputs = SectionScoreAggregator_output
         self.timestamp       = str(datetime.now(tz=(timezone(timedelta(hours=7)))))
         self.model_config    = Helper.load_yaml("src/config/model.yaml")     # should include model name
@@ -196,46 +196,7 @@ class GlobalAggregator(LlmCaller,Helper):
                 'scores':section_data['scores'],
                 'session_feedback':section_data['session_feedback']
             }
-        prompt = f"""
-        You are an expert CV and Resume reviewer.
-
-        Your task is to generate a SINGLE, GLOBAL feedback summary based on the full resume evaluation results below.
-
-        IMPORTANT:
-        - You MUST read and consider feedback from ALL resume sections.
-        - Do NOT repeat section-by-section feedback.
-        - Synthesize insights into an overall assessment.
-        - Assume the user will NOT read individual section details.
-        - Limit the session_feedback to one short paragraph with 20 words.
-
-        Focus on:
-        1. Overall strengths of the resume
-        2. Key weaknesses or gaps
-        3. High-impact, actionable improvement advice
-
-        Guidelines:
-        - Be professional, constructive, and specific
-        - Avoid generic statements
-        - Do NOT assume missing information
-        - Base your feedback ONLY on the evaluation data provided
-        {self.config_lang}
-
-        INPUT (section-level evaluation results):
-        {json.dumps(details, indent=2)}
-
-        STRICT OUTPUT RULES:
-        - Return JSON ONLY
-        - No markdown
-        - No explanation
-        - No extra text
-
-        Output schema:
-        {
-            {
-            "response": "Concise but insightful global feedback covering strengths, weaknesses, and improvement suggestions."
-            }
-        }
-        """
+        prompt = self.prompt_config['feedback']['globalfeedback']
         # print(f"prompt->\n{prompt}")
         self.parse,_ = self._call_raw(prompt)
         # print(self.parse)

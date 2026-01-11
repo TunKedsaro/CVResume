@@ -163,8 +163,8 @@ class LlmCaller(Helper):
         - Return validated output along with raw LLM response
         """
         api_key        = os.getenv("GOOGLE_API_KEY")
-        self.model_cfg = self.load_yaml("src/config/model.yaml")
         self.client    = genai.Client(api_key=api_key)
+        self.model_cfg = self.load_yaml("src/config/model.yaml")
         self.model     = self.model_cfg["model"]["generation_model"]
         self.usd2bath  = Helper.load_yaml("src/config/global.yaml")['currency']['USD_to_THB']
         self.log_digit = Helper.load_yaml("src/config/global.yaml")['logging']['logging_round_digit']
@@ -197,7 +197,7 @@ class LlmCaller(Helper):
         except json.JSONDecodeError as e:
             pass        
         try:
-           return self.extract_json(text)
+            return self.extract_json(text)
         except Exception as e:
             raise ValueError(f"INVALID_JSON::{text}") from e
     

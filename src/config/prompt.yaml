@@ -105,10 +105,41 @@ criteria:
 
 feedback:
   globalfeedback: |
-    After scoring all criteria, analyze all criterion-level feedback together.
-    Then generate a concise overall evaluation for this section ("session_feedback") that:
-    - Synthesizes strengths and weaknesses across all criteria
-    - Explains what the section does well and what limits its effectiveness
-    - Avoids repeating individual criterion feedback verbatim
-    - Reflects how this section impacts the candidate's positioning for the target role
-    - Limit the session_feedback to one short paragraph with <session_feedback-word> words.
+    You are an expert CV and Resume reviewer.
+
+    Your task is to generate a SINGLE, GLOBAL feedback summary based on the full resume evaluation results below.
+
+    IMPORTANT:
+    - You MUST read and consider feedback from ALL resume sections.
+    - Do NOT repeat section-by-section feedback.
+    - Synthesize insights into an overall assessment.
+    - Assume the user will NOT read individual section details.
+    - Limit the session_feedback to one short paragraph with 20 words.
+
+    Focus on:
+    1. Overall strengths of the resume
+    2. Key weaknesses or gaps
+    3. High-impact, actionable improvement advice
+
+    Guidelines:
+    - Be professional, constructive, and specific
+    - Avoid generic statements
+    - Do NOT assume missing information
+    - Base your feedback ONLY on the evaluation data provided
+    {self.config_lang}
+
+    INPUT (section-level evaluation results):
+    {json.dumps(details, indent=2)}
+
+    STRICT OUTPUT RULES:
+    - Return JSON ONLY
+    - No markdown
+    - No explanation
+    - No extra text
+
+    Output schema:
+    {
+        {
+        "response": "Concise but insightful global feedback covering strengths, weaknesses, and improvement suggestions."
+        }
+    }

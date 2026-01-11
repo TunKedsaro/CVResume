@@ -7,7 +7,8 @@ import asyncio
 from core.helper import Helper
 from core.llmcaller import LlmCaller
 from core.getmetadata import get_metadata
-from core.promptbuilder import ExPromptBuilder, PromptBuilder, BasePromptBuilder
+# from core.promptbuilder import PromptBuilder
+from core.promptbuilder import BasePromptBuilder
 from core.aggregator import SectionScoreAggregator, GlobalAggregator
 from core.logcost import estimate_gemini_cost
 from core.llm_excel_logger import log_llm_usage
@@ -20,11 +21,11 @@ from schema.admin_schema import ModelUpdatePayload, GlobalUpdatePayload, WeightU
 
 app = FastAPI(
     title="CV/Resume Evaluation API",
-    version="0.1.5",
+    version="0.3.0",
     description=(
         "Microservices for CV/Resume evaluation (In progress krub)"
         "<br>"
-        f"Last time Update : 2025-12-20 11:00:15.996293+07:00"
+        f"Last time Update : 2026-01-11 18:03:15.996293+07:00"
         # f"Last time Update : {str(datetime.now(tz=(timezone(timedelta(hours=7)))))}"
     ),
     contact={
@@ -105,9 +106,9 @@ def health_gemini():
 )
 
 def metadata():
-    start_time = time()
-    resp   = get_metadata()
-    finish_time   = time()
+    start_time  = time()
+    resp        = get_metadata()
+    finish_time = time()
     return {
         "message":resp,
         "response_time" : f"{finish_time - start_time:.5f} s"
@@ -141,7 +142,7 @@ def call_example_payload_json_body():
         "resume_json": mock_data
         }
     start_time = time()
-    p1 = PromptBuilder(
+    p1 = BasePromptBuilder(
         section    = "Profile",
         criteria   = ["Completeness", "ContentQuality"],
         targetrole = "data scientist",
@@ -182,7 +183,7 @@ def call_example_payload_json_body():
 )
 def prompt_lab(payload:PromptBuilderPayload):
     pl = payload.model_dump()
-    pb = PromptBuilder(
+    pb = BasePromptBuilder(
         section    = pl["section"],
         criteria   = pl["criteria"],
         targetrole = pl["targetrole"],
@@ -228,7 +229,7 @@ def evaluation_profile(payload: EvaluationPayload):
         output_lang = payload.output_lang 
     )
     prompt1 = p1.build()
-    print(f"prompt1->\n{prompt1}")
+    # print(f"prompt1->\n{prompt1}")
     op1,raw = caller.call(prompt1)
     s1 = agg.aggregate(op1)
     finish_time = time()
@@ -256,26 +257,6 @@ def evaluation_profile(payload: EvaluationPayload):
         "estimated_cost_thd": f"{(cost['total_cost']*usd2bath):.5f} ฿"
     }
 
-# def evaluation_profile(payload: EvaluationPayload):
-#     Inlang = payload.output_lang
-#     p1 = PromptBuilder(
-#         section     = "Profile",
-#         criteria    = ["Completeness", "ContentQuality"],
-#         targetrole  = payload.target_role,
-#         cvresume    = payload.resume_json,
-#         output_lang = Inlang 
-#     )
-#     prompt = p1.build()
-#     s1,meta = caller.run_llm(
-#         prompt = prompt,
-#         api_id = 'API08',
-#         Oplang = Inlang
-#         )
-#     return {
-#         "response": s1,
-#         "response_time": f"{meta['usage_time']:.5f} s",
-#         "estimated_cost_thd": f"{meta['total_cost']:.5f} ฿"
-#     }
 ### Evaluation.API:09 #######################################################
 @app.post(
     "/evaluation/summary",
@@ -293,7 +274,7 @@ def evaluate_summary(payload: EvaluationPayload):
         output_lang = payload.output_lang 
     )
     prompt2 = p2.build()
-    print(f"prompt2->\n{prompt2}")
+    # print(f"prompt2->\n{prompt2}")
     op2,raw = caller.call(prompt2)
     s2 = agg.aggregate(op2)
     finish_time   = time()
@@ -339,7 +320,7 @@ def evaluate_education(payload: EvaluationPayload):
         output_lang = payload.output_lang 
     )
     prompt3 = p3.build()
-    print(f"prompt3->\n{prompt3}")
+    # print(f"prompt3->\n{prompt3}")
     op3,raw = caller.call(prompt3)
     s3 = agg.aggregate(op3)
     finish_time   = time()
@@ -384,7 +365,7 @@ def evaluate_experience(payload: EvaluationPayload):
         output_lang = payload.output_lang 
     )   
     prompt4 = p4.build()
-    print(f"prompt4->\n{prompt4}")
+    # print(f"prompt4->\n{prompt4}")
     op4,raw = caller.call(prompt4)
     s4 = agg.aggregate(op4)
     finish_time   = time()
@@ -424,13 +405,13 @@ def evaluate_activities(payload: EvaluationPayload):
     start_time = time()
     p5 = BasePromptBuilder( 
         section     = "Activities", 
-        criteria    = ["Completeness", "ContentQuality","Grammar","Length"],
+        criteria    = ["Completeness","ContentQuality","Grammar","Length"],
         targetrole  = payload.target_role,
         cvresume    = payload.resume_json,
         output_lang = payload.output_lang 
     )
     prompt5 = p5.build()
-    print(f"prompt5->\n{prompt5}")
+    # print(f"prompt5->\n{prompt5}")
     op5,raw = caller.call(prompt5)
     s5 = agg.aggregate(op5)
     finish_time   = time()
@@ -521,7 +502,7 @@ def evaluate_resume(payload: EvaluationPayload):
     targetrole  = payload.target_role
     output_lang = payload.output_lang 
 
-    p1 = PromptBuilder(
+    p1 = BasePromptBuilder(
         section     = "Profile",
         criteria    = ["Completeness", "ContentQuality"],
         targetrole  = targetrole,
@@ -530,7 +511,7 @@ def evaluate_resume(payload: EvaluationPayload):
     )
     prompt1 = p1.build()
     
-    p2 = PromptBuilder( 
+    p2 = BasePromptBuilder( 
         section     = "Summary", 
         criteria    = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"],
         targetrole  = targetrole,
@@ -539,7 +520,7 @@ def evaluate_resume(payload: EvaluationPayload):
     )
     prompt2 = p2.build()
     
-    p3 = PromptBuilder( 
+    p3 = BasePromptBuilder( 
         section     = "Education", 
         criteria    = ["Completeness","RoleRelevance"],
         targetrole  = targetrole,
@@ -548,7 +529,7 @@ def evaluate_resume(payload: EvaluationPayload):
     )
     prompt3 = p3.build()
 
-    p4 = PromptBuilder( 
+    p4 = BasePromptBuilder( 
         section     = "Experience", 
         criteria    = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"],
         targetrole  = targetrole,
@@ -557,7 +538,7 @@ def evaluate_resume(payload: EvaluationPayload):
     )
     prompt4 = p4.build()
     
-    p5 = PromptBuilder( 
+    p5 = BasePromptBuilder( 
         section     = "Activities", 
         criteria    = ["Completeness", "ContentQuality","Grammar","Length"],
         targetrole  = targetrole,
@@ -566,7 +547,7 @@ def evaluate_resume(payload: EvaluationPayload):
     )
     prompt5 = p5.build()
     
-    p6 = PromptBuilder( 
+    p6 = BasePromptBuilder( 
         section     = "Skills", 
         criteria    = ["Completeness","Length","RoleRelevance"],
         targetrole  = targetrole,
