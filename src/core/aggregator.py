@@ -38,6 +38,7 @@ class SectionScoreAggregator(Helper):
         # print(f"llm_output ->\n{llm_output}")
         self.llm_output      = llm_output             # op
         self.section         = llm_output["section"]  # Get section
+        print(f"self.section->{self.section}")
         self.section_weights = self.config["weights"][self.section]  # config["weights"][section_key][criteria]
         ddict = {}
         total = 0.0
@@ -196,7 +197,47 @@ class GlobalAggregator(LlmCaller,Helper):
                 'scores':section_data['scores'],
                 'session_feedback':section_data['session_feedback']
             }
-        prompt = self.prompt_config['feedback']['globalfeedback']
+        # prompt = self.prompt_config['feedback']['globalfeedback']
+        prompt = f'''
+    You are an expert CV and Resume reviewer.
+
+    Your task is to generate a SINGLE, GLOBAL feedback summary based on the full resume evaluation results below.
+
+    IMPORTANT:
+    - You MUST read and consider feedback from ALL resume sections.
+    - Do NOT repeat section-by-section feedback.
+    - Synthesize insights into an overall assessment.
+    - Assume the user will NOT read individual section details.
+    - Limit the session_feedback to one short paragraph with 20 words.
+
+    Focus on:
+    1. Overall strengths of the resume
+    2. Key weaknesses or gaps
+    3. High-impact, actionable improvement advice
+
+    Guidelines:
+    - Be professional, constructive, and specific
+    - Avoid generic statements
+    - Do NOT assume missing information
+    - Base your feedback ONLY on the evaluation data provided
+    {self.config_lang}
+
+    INPUT (section-level evaluation results):
+    {json.dumps(details, indent=2)}
+
+    STRICT OUTPUT RULES:
+    - Return JSON ONLY
+    - No markdown
+    - No explanation
+    - No extra text
+
+    Output schema:
+    {
+        {
+        "response": "Concise but insightful global feedback covering strengths, weaknesses, and improvement suggestions."
+        }
+    }
+'''
         # print(f"prompt->\n{prompt}")
         self.parse,_ = self._call_raw(prompt)
         # print(self.parse)
