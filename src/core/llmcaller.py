@@ -130,6 +130,7 @@ import asyncio
 
 from pydantic import BaseModel, Field, ValidationError
 from typing import Dict
+from google.genai import types
 
 class CriterionScore(BaseModel):
     """
@@ -214,7 +215,16 @@ class LlmCaller(Helper):
         resp = self.client.models.generate_content(
             model=self.model,
             contents=prompt
-        )
+    #         config=types.GenerateContentConfig(
+    #             # thinking_config=types.ThinkingConfig(thinking_budget=1024)
+    #             # Turn off thinking:
+    #             thinking_config=types.ThinkingConfig(thinking_budget=0)
+    #             # Turn on dynamic thinking:
+    #             # thinking_config=types.ThinkingConfig(thinking_budget=-1)
+    # )
+)
+
+        
         parsed = self._parse(resp)
         return parsed, resp
     
