@@ -22,6 +22,7 @@ class BasePromptBuilder(Helper):
         self.section_config  = self.load_yaml(f"{self.base_dir}/{self.section.lower()}.yaml")
         self.number_of_words = self.load_yaml("src/config/global.yaml")["output"]["number_of_words"]
         self.criteria_cfg    = self.section_config['criteria']
+        
     def _build_response_template(self):
         return {
             "section": self.section,
