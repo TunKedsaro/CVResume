@@ -5,13 +5,27 @@ role:
 
 scale:
   score1: |
-    - 0 = missing
-    - 1 = poor
-    - 2 = weak
-    - 3 = sufficient
-    - 4 = strong
-    - 5 = excellent
+    First check if the section has ANY meaningful content.
 
+    Score = 0 (NO DATA) if:
+    - The section is empty, missing, null, or whitespace only
+    - Contains only placeholders (e.g. "-", "N/A", "none")
+    - Has no evaluable information
+
+    If any of the above is true:
+    - You MUST return score = 0
+    - Do NOT guess or infer
+
+    Only if content exists, score 1-5.
+
+    You have to give the score 0 if no data presence and 1-5 if there are data 
+
+    - 0: Missing / no data
+    - 1: Poor
+    - 2: Weak
+    - 3: Sufficient
+    - 4: Strong
+    - 5: Excellent
 
 Language_output_style:
   en: |

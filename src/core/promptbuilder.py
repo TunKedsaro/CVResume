@@ -8,6 +8,10 @@ from core.helper import Helper
 class BasePromptBuilder(Helper):
     '''
     PromptBuilder v3 : PromptBuilder + Session,Global feedback + PromptSplit
+    Builds a structured evaluation prompt for a specific resume section.
+    Uses YAML-driven configuration to assemble role instructions,
+    evaluation criteria, scoring scale, expected content, and
+    the candidate resume into a single LLM-ready prompt.
     '''
     base_dir = "src/config/prompts"         # Prompts .yaml config file folder path
     def __init__(self, section, criteria, targetrole, cvresume, include_fewshot: bool = True, output_lang = "en"):
@@ -22,6 +26,7 @@ class BasePromptBuilder(Helper):
         self.section_config  = self.load_yaml(f"{self.base_dir}/{self.section.lower()}.yaml")
         self.number_of_words = self.load_yaml("src/config/global.yaml")["output"]["number_of_words"]
         self.criteria_cfg    = self.section_config['criteria']
+
     def _build_response_template(self):
         return {
             "section": self.section,

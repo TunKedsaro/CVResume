@@ -75,7 +75,7 @@ class Helper:
         Returns:
             float: Rounded number with one decimal precision.
         """
-        return float(f"{num:.1f}")
+        return float(f"{num:.2f}")
     
     @staticmethod
     def prettyjson(txt:str) -> str:

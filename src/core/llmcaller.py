@@ -214,17 +214,15 @@ class LlmCaller(Helper):
         """
         resp = self.client.models.generate_content(
             model=self.model,
-            contents=prompt
-    #         config=types.GenerateContentConfig(
-    #             # thinking_config=types.ThinkingConfig(thinking_budget=1024)
-    #             # Turn off thinking:
-    #             thinking_config=types.ThinkingConfig(thinking_budget=0)
-    #             # Turn on dynamic thinking:
-    #             # thinking_config=types.ThinkingConfig(thinking_budget=-1)
-    # )
-)
-
-        
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                # thinking_config=types.ThinkingConfig(thinking_budget=1024)
+                # Turn off thinking:
+                thinking_config=types.ThinkingConfig(thinking_budget=0)
+                # Turn on dynamic thinking:
+                # thinking_config=types.ThinkingConfig(thinking_budget=-1)
+            )
+        )
         parsed = self._parse(resp)
         return parsed, resp
     
@@ -273,7 +271,7 @@ class LlmCaller(Helper):
                 }}
         """
     
-    def call(self,prompt:str, max_retry:int = 3):
+    def call(self,prompt:str, max_retry:int = 1):
         """
         Call the LLM with validation and automatic retry.
         Attempts to validate the LLM response. If validation fails,
