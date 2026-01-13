@@ -8,7 +8,7 @@ from core.helper import Helper
 from core.llmcaller import LlmCaller
 from core.getmetadata import get_metadata
 # from core.promptbuilder import PromptBuilder
-from core.promptbuilder import BasePromptBuilder
+from core.promptbuilder import BasePromptBuilder         # new version of PromptBuilder
 from core.aggregator import SectionScoreAggregator, GlobalAggregator
 from core.logcost import estimate_gemini_cost
 from core.llm_excel_logger import log_llm_usage
@@ -25,12 +25,15 @@ app = FastAPI(
     description=(
         "Microservices for CV/Resume evaluation (In progress krub)"
         "<br>"
-        f"Last time Update : 2026-01-11 18:03:15.996293+07:00"
+        f"Last time Update : 2026-01-13 12:20:15"
         # f"Last time Update : {str(datetime.now(tz=(timezone(timedelta(hours=7)))))}"
+        "<br>"
+        "Repo : https://github.com/TunKedsaro/CVResume/tree/dev"
     ),
     contact={
         "name": "Tun Kedsaro",
-        "email": "tun.k@terradigitalventures.com"
+        "email": "tun.k@terradigitalventures.com",
+        
     },
 )
 
@@ -42,11 +45,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Llmcaller.py
 caller    = LlmCaller()
+# aggregator.py
 agg       = SectionScoreAggregator()
+# mock.resume4.json
 mock_data = Helper.load_json("src/mock/resume3.json")   
+# config global.yaml 
 usd2bath  = Helper.load_yaml("src/config/global.yaml")['currency']['USD_to_THB']
 log_digit = Helper.load_yaml("src/config/global.yaml")['logging']['logging_round_digit']
+
 ### Health & Metadata #######################################################
 ### Health & Metadata.API:01 ################################################
 @app.get(
@@ -57,8 +65,6 @@ log_digit = Helper.load_yaml("src/config/global.yaml")['logging']['logging_round
 
 def health_fastapi():
     start_time  = time()
-    # for i in range(100000):
-    #     print(i)
     finish_time = time()
     process_time = finish_time - start_time
     return {
@@ -77,8 +83,8 @@ def health_fastapi():
 def health_gemini():
     start_time = time()
     res,_ = caller.call(
-        '''This is just test connect to Gemini model 
-        just Return this as JSON: 
+        '''This is just Gemini model connect testing
+        Just return this as JSON format: 
         {
             "response": {
                 "section": "ConnectionStatus",
@@ -309,7 +315,7 @@ def evaluate_summary(payload: EvaluationPayload):
     tags=["Evaluation"],
     description="API:10 Evaluates the Education section of a resume for completeness and role relevance, returning aggregated LLM-based scores with processing latency."
 )
-   
+
 def evaluate_education(payload: EvaluationPayload):
     start_time = time()
     p3 = BasePromptBuilder( 
@@ -504,7 +510,7 @@ def evaluate_resume(payload: EvaluationPayload):
 
     p1 = BasePromptBuilder(
         section     = "Profile",
-        criteria    = ["Completeness", "ContentQuality"],
+        criteria    = ["Completeness","ContentQuality"],
         targetrole  = targetrole,
         cvresume    = resume_json,
         output_lang = output_lang 
@@ -513,7 +519,7 @@ def evaluate_resume(payload: EvaluationPayload):
     
     p2 = BasePromptBuilder( 
         section     = "Summary", 
-        criteria    = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"],
+        criteria    = ["Completeness","ContentQuality","Grammar","Length","RoleRelevance"],
         targetrole  = targetrole,
         cvresume    = resume_json,
         output_lang = output_lang 
@@ -531,7 +537,7 @@ def evaluate_resume(payload: EvaluationPayload):
 
     p4 = BasePromptBuilder( 
         section     = "Experience", 
-        criteria    = ["Completeness", "ContentQuality","Grammar","Length","RoleRelevance"],
+        criteria    = ["Completeness","ContentQuality","Grammar","Length","RoleRelevance"],
         targetrole  = targetrole,
         cvresume    = resume_json,
         output_lang = output_lang 
@@ -540,7 +546,7 @@ def evaluate_resume(payload: EvaluationPayload):
     
     p5 = BasePromptBuilder( 
         section     = "Activities", 
-        criteria    = ["Completeness", "ContentQuality","Grammar","Length"],
+        criteria    = ["Completeness","ContentQuality","Grammar","Length"],
         targetrole  = targetrole,
         cvresume    = resume_json,
         output_lang = output_lang 
@@ -570,12 +576,12 @@ def evaluate_resume(payload: EvaluationPayload):
     s5 = agg.aggregate(op5)
     s6 = agg.aggregate(op6)
 
-    x = GlobalAggregator(
+    Ss = GlobalAggregator(
         SectionScoreAggregator_output = [s1,s2,s3,s4,s5,s6],
         output_lang = output_lang
         )
 
-    output = x.fn0()
+    output = Ss.build_final_evaluation()
 
     finish_time   = time()
     usage_time = finish_time - start_time
@@ -647,12 +653,11 @@ async def evaluate_resume(payload: EvaluationPayload):
     final = GlobalAggregator(
         SectionScoreAggregator_output=Ss,
         output_lang = output_lang
-    ).fn0()
+    ).build_final_evaluation()
 
     finish_time = time()
     usage_time  = finish_time - start_time
 
-    # cost aggregation (unchanged logic)
     costs = [estimate_gemini_cost(r) for r in raw_outputs]
 
     ip = {

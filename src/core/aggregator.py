@@ -206,6 +206,7 @@ class GlobalAggregator(LlmCaller,Helper):
     def aggregate_weighted_section_scores(self):         # def fn1(self):
         weights      = self.weight_config["weights"]
         contribution = {}                    # Keep stat of score and detail
+        total_section_weighted   = 0.0       # Accumulate section weight for every section (normally It's should be 1.0)
         total_weighted_raw_score = 0.0       # Accumulate raw score after time by weight
         total_weighted_max_score = 0.0       # Accumulate max score after time by weight
         for section_data in self.section_outputs: # Loop with section_output (Ss)
@@ -225,6 +226,7 @@ class GlobalAggregator(LlmCaller,Helper):
                 "total_section_raw_score_x_weight":total_section_raw_score_x_weight,
                 "total_section_max_score_x_weight":total_section_max_score_x_weight
             }
+            total_section_weighted    = total_section_weighted   + section_weight
             total_weighted_raw_score  = total_weighted_raw_score + total_section_raw_score_x_weight   # E(raw_score x weight)
             total_weighted_max_score  = total_weighted_max_score + total_section_max_score_x_weight   # E(max_score x weight)
             
@@ -232,6 +234,7 @@ class GlobalAggregator(LlmCaller,Helper):
             "global_grade":self.normalize_score_to_grade(total_weighted_raw_score,total_weighted_max_score), # Grading CVResume with (total_weighted_raw_score/total_weighted_max_score)*100 -> if else 
             "total_weighted_raw_score":total_weighted_raw_score, # E(raw_score x weight) Summation of raw score for every section every criteria
             "total_weighted_max_score":total_weighted_max_score, # E(max_score x weight) Summation of max score for every section every criteria
+            "total_section_weight":total_section_weighted,
             "section_contribution":contribution,                 # Details
             "globalfeedback":self.parse_global_feedback
         }
@@ -308,7 +311,7 @@ class GlobalAggregator(LlmCaller,Helper):
             "prompt_version": self.prompt_config.get("version", "unknown")
         }
     
-    def fn0(self):
+    def build_final_evaluation(self):
         """
         Assemble the final evaluation response.
         Combines the final resume score, detailed section results,
@@ -326,6 +329,3 @@ class GlobalAggregator(LlmCaller,Helper):
             "Section_detail":detail_part,
             "Metadata":metadata_part
         }
-    
-
-
