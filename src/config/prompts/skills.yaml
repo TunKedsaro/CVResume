@@ -68,26 +68,27 @@ criteria:
         - Office administration tools for a technical role
 
 output_guidelines:
-  Skills: |
-    - Completeness:
-      - score_5:
-        Provides a well-organized and comprehensive list of skills that
+  Completeness:
+    score5: |
+      - Provides a well-organized and comprehensive list of skills that
         clearly represents the candidate's capabilities.
-      - score_3:
-        Lists some relevant skills but lacks structure, balance, or coverage.
-      - score_1:
-        Provides an insufficient or unclear skill list.
-    - RoleRelevance:
-      - score_5:
-        Skills are highly relevant and directly support the target role.
-      - score_3:
-        Skills show partial relevance but include unnecessary or unrelated items.
-      - score_1:
-        Skills do not align with the target role.
-    - Length:
-      - score_5:
-        Skill list length is appropriate and easy to scan.
-      - score_3:
-        Length is acceptable but could be better balanced.
-      - score_1:
-        Length is inappropriate and reduces clarity.
+    score3: |
+      - Lists some relevant skills but lacks structure, balance, or coverage.
+    score1: |
+      - Provides an insufficient or unclear skill list.
+
+  RoleRelevance:
+    score5: |
+      - Skills are highly relevant and directly support the target role.
+    score3: |
+      - Skills show partial relevance but include unnecessary or unrelated items.
+    score1: |
+      - Skills do not align with the target role.  
+  
+  Length:
+    score5: |
+      - Skill list length is appropriate and easy to scan.
+    score3: |
+      - Length is acceptable but could be better balanced.
+    score1: |
+      - Length is inappropriate and reduces clarity.

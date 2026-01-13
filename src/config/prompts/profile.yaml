@@ -52,19 +52,19 @@ criteria:
         - Looking for a chance to learn and grow
 
 output_guidelines:
-  Profile: |
-    - Completeness:
-      - score_5:
-        Clearly presents the candidate's identity and contact information,
+  Completeness:
+    score5: |
+      - Clearly presents the candidate's identity and contact information,
         allowing the reader to immediately understand who the candidate is.
-      - score_3:
-        Provides basic identification but lacks some essential details or clarity.
-      - score_1:
-        Fails to provide sufficient information to identify or contact the candidate.
-    - ContentQuality:
-      - score_5:
-        Uses a clear and professional title or status without unnecessary or informal details.
-      - score_3:
-        Communicates identity but with generic or weak professional positioning.
-      - score_1:
-        Uses vague or personal statements that do not establish a professional identity.
+    score3: |
+      - Provides basic identification but lacks some essential details or clarity.
+    score1: |
+      - Fails to provide sufficient information to identify or contact the candidate.
+
+  ContentQuality:
+    score5: |
+      - Uses a clear and professional title or status without unnecessary or informal details.
+    score3: |
+      - Communicates identity but with generic or weak professional positioning.
+    score1: |
+      - Uses vague or personal statements that do not establish a professional identity.

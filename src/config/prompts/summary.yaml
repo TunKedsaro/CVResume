@@ -104,43 +104,46 @@ criteria:
         - Describes personal aspirations with no role-specific skills
 
 output_guidelines:
-  Summary: |
-    - Completeness:
-      - score_5:
-        Clearly communicates who the candidate is, what they are good at,
+  Completeness:
+    score5: |
+      - Clearly communicates who the candidate is, what they are good at,
         and where they are heading in a concise professional summary.
-      - score_3:
-        Provides basic identity and skills but lacks a strong or clear
+    score3: |
+      - Provides basic identity and skills but lacks a strong or clear
         value proposition or career direction.
-      - score_1:
-        Fails to establish a clear professional identity or focus.
-    - ContentQuality:
-      - score_5:
-        Uses specific, meaningful language that highlights strengths and
+    score1: |
+      - Fails to establish a clear professional identity or focus.
+      
+  ContentQuality:
+    score5: |
+      - Uses specific, meaningful language that highlights strengths and
         avoids generic or cliché statements.
-      - score_3:
-        Understandable but generic, with limited differentiation.
-      - score_1:
-        Relies heavily on clichés or vague statements with little signal.
-    - RoleRelevance:
-      - score_5:
-        Strongly aligns the candidate's skills and experience with the
+    score3: |
+      - Understandable but generic, with limited differentiation.
+    score1: |
+      - Relies heavily on clichés or vague statements with little signal.  
+      
+  RoleRelevance:
+    score5: |
+      - Strongly aligns the candidate's skills and experience with the
         expectations of the target role.
-      - score_3:
-        Shows some alignment but lacks focus or depth.
-      - score_1:
-        Shows little or no alignment with the target role.
-    - Grammar:
-      - score_5:
-        Writing is polished, professional, and error-free.
-      - score_3:
-        Minor language issues reduce polish but not understanding.
-      - score_1:
-        Frequent errors significantly reduce clarity and professionalism.
-    - Length:
-      - score_5:
-        Length is well-balanced and easy to scan, with high information density.
-      - score_3:
-        Length is acceptable but could be more concise or more informative.
-      - score_1:
-        Length is inappropriate and hinders understanding.
+    score3: |
+      - Shows some alignment but lacks focus or depth.
+    score1: |
+      - Shows little or no alignment with the target role.  
+      
+  Grammar:
+    score5: |
+      - Writing is polished, professional, and error-free.
+    score3: |
+      - Minor language issues reduce polish but not understanding.
+    score1: |
+      - Frequent errors significantly reduce clarity and professionalism.  
+  
+  Length:
+    score5: |
+      - Length is well-balanced and easy to scan, with high information density.
+    score3: |
+      - Length is acceptable but could be more concise or more informative.
+    score1: |
+      - Length is inappropriate and hinders understanding.

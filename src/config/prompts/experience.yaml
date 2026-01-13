@@ -107,56 +107,60 @@ criteria:
         - Administrative duties with no connection to the target role
 
 output_guidelines:
-  Experience: |
-    - Completeness:
-      - score_5:
-        Clearly explains that all key elements are present, including role,
+  Completeness:
+    score5: |
+      - Clearly explains that all key elements are present, including role,
         company, duration, responsibilities, and outcomes, making the
         experience easy to understand and evaluate.
-      - score_3:
-        Explains that most key elements are present but points out missing
+    score3: |
+      - Explains that most key elements are present but points out missing
         or unclear details such as outcomes, dates, or role scope.
-      - score_1:
-        Highlights that core elements such as role, duration, or structured
+    score1: |
+      - Highlights that core elements such as role, duration, or structured
         responsibilities are missing, making the experience hard to assess.
-    - ContentQuality:
-      - score_5:
-        Emphasizes a strong action-method-impact structure with specific
+      
+  ContentQuality:
+    score5: |
+      - Emphasizes a strong action-method-impact structure with specific
         tools, techniques, and measurable results that demonstrate
         meaningful contributions.
-      - score_3:
-        Notes some concrete actions or methods but explains the lack of
+    score3: |
+      - Notes some concrete actions or methods but explains the lack of
         depth, technical detail, or quantified impact.
-      - score_1:
-        Points out that the content is generic, vague, and lacks clear
-        methods, tools, or measurable outcomes.
-    - RoleRelevance:
-      - score_5:
-        Clearly explains that the experience strongly aligns with the target
+    score1: |
+      - Points out that the content is generic, vague, and lacks clear
+        methods, tools, or measurable outcomes.  
+    
+  RoleRelevance:
+    score5: |
+      - Clearly explains that the experience strongly aligns with the target
         role, reflecting relevant responsibilities, skills, and domain focus.
-      - score_3:
-        Indicates partial alignment with the target role but notes gaps in
+    score3: |
+      - Indicates partial alignment with the target role but notes gaps in
         relevance, depth, or consistency with expected responsibilities.
-      - score_1:
-        Explains that the experience shows little or no relevance to the
-        target role, with responsibilities unrelated to expected tasks.
-    - Grammar:
-      - score_5:
-        States that the writing is clear, professional, and free of
+    score1: |
+      - Explains that the experience shows little or no relevance to the
+        target role, with responsibilities unrelated to expected tasks.  
+  
+  Grammar:
+    score5: |
+      - States that the writing is clear, professional, and free of
         grammatical or spelling errors, ensuring strong readability.
-      - score_3:
-        Notes minor grammatical or wording issues that do not block
+    score3: |
+      - Notes minor grammatical or wording issues that do not block
         understanding but reduce overall polish.
-      - score_1:
-        Highlights frequent grammatical or spelling errors that negatively
-        affect clarity and professionalism.
-    - Length:
-      - score_5:
-        Explains that the descriptions are concise yet sufficiently detailed,
+    score1: |
+      - Highlights frequent grammatical or spelling errors that negatively
+        affect clarity and professionalism.  
+  
+  Length:
+    score5: |
+      - Explains that the descriptions are concise yet sufficiently detailed,
         providing clear information without unnecessary repetition.
-      - score_3:
-        Notes that the length is acceptable but either slightly verbose or
+    score3: |
+      - Notes that the length is acceptable but either slightly verbose or
         slightly brief, reducing clarity or impact.
-      - score_1:
-        Explains that the content is either too short to convey meaningful
+    score1: |
+      - Explains that the content is either too short to convey meaningful
         information or overly verbose with low informational value.
+    

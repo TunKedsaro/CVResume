@@ -7,5 +7,5 @@ class EvaluationPayload(BaseModel):
         default = "en",
         description = "Output language for feedback text"
     )
-    target_role: str  | None = Field (default="Data scientist")
+    target_role: str  | None = Field (default="NA")
     resume_json: dict | None = Field (default="resume_json")

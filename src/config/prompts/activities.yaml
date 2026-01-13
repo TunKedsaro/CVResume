@@ -85,37 +85,39 @@ criteria:
         - One vague line or a long paragraph with no clear focus
 
 output_guidelines:
-  Activities: |
-    - Completeness:
-      - score_5:
-        Clearly explains the activity, role, context, and timing, making the
+  Completeness:
+    score5: |
+      - Clearly explains the activity, role, context, and timing, making the
         candidate's involvement easy to understand and evaluate.
-      - score_3:
-        Describes the activity and role but leaves some details unclear,
+    score3: |
+      - Describes the activity and role but leaves some details unclear,
         such as scale, dates, or specific contributions.
-      - score_1:
-        Lists the activity with little or no explanation of role or responsibility.
-    - ContentQuality:
-      - score_5:
-        Highlights clear responsibility, initiative, or leadership with
+    score1: |
+      - Lists the activity with little or no explanation of role or responsibility.
+
+  ContentQuality:
+    score5: |
+      - Highlights clear responsibility, initiative, or leadership with
         specific actions and outcomes that add strong signal to the resume.
-      - score_3:
-        Shows participation and some responsibility but lacks distinctive
+    score3: |
+      - Shows participation and some responsibility but lacks distinctive
         impact or initiative.
-      - score_1:
-        Uses generic descriptions that provide little insight into the
-        candidate's contribution or skills.
-    - Grammar:
-      - score_5:
-        Writing is clear, professional, and free of grammatical errors.
-      - score_3:
-        Minor language issues reduce polish but not understanding.
-      - score_1:
-        Frequent errors significantly reduce clarity and professionalism.
-    - Length:
-      - score_5:
-        Descriptions are concise and appropriately detailed for extracurricular activities.
-      - score_3:
-        Length is acceptable but could be more focused or more informative.
-      - score_1:
-        Content is either too brief to be meaningful or overly verbose with low value.
+    score1: |
+      - Uses generic descriptions that provide little insight into the
+        candidate's contribution or skills.  
+    
+  Grammar:
+    score5: |
+      - Writing is clear, professional, and free of grammatical errors.
+    score3: |
+      - Minor language issues reduce polish but not understanding.
+    score1: |
+      - Frequent errors significantly reduce clarity and professionalism.  
+  
+  Length:
+    score5: |
+      - Descriptions are concise and appropriately detailed for extracurricular activities.
+    score3: |
+      - Length is acceptable but could be more focused or more informative.
+    score1: |
+      - Content is either too brief to be meaningful or overly verbose with low value.

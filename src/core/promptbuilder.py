@@ -21,11 +21,16 @@ class BasePromptBuilder(Helper):
         self.cvresume        = cvresume
         self.include_fewshot = include_fewshot
         self.output_lang     = output_lang
+        if self.targetrole == "NA" and 'RoleRelevance' in self.criteria:
+            self.criteria.remove("RoleRelevance")
+        if self.targetrole in ["", "NA", None]:
+            self.targetrole = "__NO_ROLE__"
 
         self.global_config   = self.load_yaml("src/config/prompts/base.yaml")
         self.section_config  = self.load_yaml(f"{self.base_dir}/{self.section.lower()}.yaml")
         self.number_of_words = self.load_yaml("src/config/global.yaml")["output"]["number_of_words"]
         self.criteria_cfg    = self.section_config['criteria']
+        self.output_gd_cfg   = self.section_config['output_guidelines']
 
     def _build_response_template(self):
         return {
@@ -50,13 +55,27 @@ class BasePromptBuilder(Helper):
             blocks.append(block)
         return "".join(blocks)
 
+    def _build_output_guideline_block(self) -> str:
+            blocks = []
+            for crit in self.criteria:
+                block = f"- {crit}\n"
+                for i in [5,3,1]:
+                    block += f"  score {i} :\n"
+                    x = f"score{i}"
+                    block += "\n".join(
+                        "    " + line
+                        for line in self.output_gd_cfg[crit][x].splitlines()
+                    ) + "\n"
+                blocks.append(block)
+            return "\n".join(b.strip() for b in blocks) + "\n"
+
     def build(self):
         config_role       = self.global_config['role']['role1']
         config_task       = self.section_config['task']['task1']
         config_lang       = self.global_config['Language_output_style'][self.output_lang]
         config_expected   = self.section_config['expected_content'][self.section]
         criteria_block    = self._build_criteria_block()
-        config_example    = self.section_config['output_guidelines'][self.section]
+        config_example    = self._build_output_guideline_block()
         config_scale      = self.global_config['scale']['score1']
         config_feedback   = self.global_config['feedback']['globalfeedback']
 
@@ -81,6 +100,7 @@ class BasePromptBuilder(Helper):
         prompt = prompt.replace("<targetrole>", self.targetrole)
         prompt = prompt.replace("<number_of_words>", str(self.number_of_words))
 
+        print(f"prompt->\n{prompt}")
         return prompt
 
 # p4 = BasePromptBuilder( 

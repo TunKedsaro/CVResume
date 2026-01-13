@@ -50,26 +50,25 @@ criteria:
       - Example:
         - Degree in unrelated field with no relevant coursework mentioned
 
-
 output_guidelines:
-  Education: |
-    - Completeness:
-      - score_5:
-        Clearly presents institution, degree, field of study, and dates,
+  Completeness:
+    score5: |
+      - Clearly presents institution, degree, field of study, and dates,
         allowing the reader to easily understand the candidate's education.
-      - score_3:
-        Shows basic education information but lacks some clarity or detail,
+    score3: |
+      - Shows basic education information but lacks some clarity or detail,
         such as dates, major, or optional academic achievements.
-      - score_1:
-        Provides insufficient or vague education information, making it
+    score1: |
+      - Provides insufficient or vague education information, making it
         difficult to assess the candidate's academic background.
-    - RoleRelevance:
-      - score_5:
-        Explains that the educational background strongly supports the
+      
+  RoleRelevance:
+    score5: |
+      - Explains that the educational background strongly supports the
         knowledge and skills expected for the target role.
-      - score_3:
-        Indicates partial relevance, noting that the education provides
+    score3: |
+      - Indicates partial relevance, noting that the education provides
         some useful foundation but is not fully aligned.
-      - score_1:
-        Explains that the education has little relevance to the target role
+    score1: |
+      - Explains that the education has little relevance to the target role
         and does not support required competencies.
