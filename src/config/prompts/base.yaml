@@ -14,6 +14,7 @@ scale:
 
     If any of the above is true:
     - You MUST return score = 0
+    - You MUST return feedback = "The section is empty, missing, null, or whitespace only."
     - Do NOT guess or infer
 
     Only if content exists, score 1-5.

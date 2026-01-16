@@ -67,7 +67,7 @@ class Helper:
             return yaml.dump(newconfig,file,sort_keys=False)
         
     @staticmethod
-    def fop(num: float) -> float:
+    def fop(num: float,digit=2) -> float:
         """
         Format a number to one decimal place.
         Args:
@@ -75,7 +75,8 @@ class Helper:
         Returns:
             float: Rounded number with one decimal precision.
         """
-        return float(f"{num:.2f}")
+        # return float(f"{num:.5f}")
+        return round(float(num),digit)
     
     @staticmethod
     def prettyjson(txt:str) -> str:

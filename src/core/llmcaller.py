@@ -219,6 +219,8 @@ class LlmCaller(Helper):
                 # thinking_config=types.ThinkingConfig(thinking_budget=1024)
                 # Turn off thinking:
                 thinking_config=types.ThinkingConfig(thinking_budget=0)
+                # # "minimal", "low", "medium", and "high"
+                # thinking_config=types.ThinkingConfig(thinking_level="low")
                 # Turn on dynamic thinking:
                 # thinking_config=types.ThinkingConfig(thinking_budget=-1)
             )

@@ -170,38 +170,62 @@ class GlobalAggregator(LlmCaller,Helper):
         normalize_score = (total_raw_score / total_max_score) * 100
         # print(f"normalize_score -> {normalize_score}/100")
         score = round(normalize_score)
-        if score == 0:
-            return "-"
-        elif score == 100:
-            return "S"
-        elif 95 <= score <= 99:
+
+        if 90 <= score <= 100 :
             return "A+"
-        elif 90 <= score <= 94:
+        elif score >= 80:
             return "A"
-        elif 85 <= score <= 89:
-            return "A-"
-        elif 80 <= score <= 84:
+        elif score >= 70:
             return "B+"
-        elif 75 <= score <= 79:
+        elif score >= 60:
             return "B"
-        elif 70 <= score <= 74:
-            return "B-"
-        elif 65 <= score <= 69:
+        elif score >= 50:
             return "C+"
-        elif 60 <= score <= 64:
+        elif score >= 40:
             return "C"
-        elif 55 <= score <= 59:
-            return "C-"
-        elif 50 <= score <= 54:
+        elif score >= 30:
             return "D+"
-        elif 45 <= score <= 49:
+        elif score >= 20:
             return "D"
-        elif 40 <= score <= 44:
-            return "D-"
-        elif 1 <= score <= 39:
+        elif 1 <= score < 20:
             return "F"
+        elif score == 0:
+            return "-"
         else:
             return "Grading error"
+
+        # if score == 0:
+        #     return "-"
+        # elif score == 100:
+        #     return "S"
+        # elif 95 <= score <= 99:
+        #     return "A+"
+        # elif 90 <= score <= 94:
+        #     return "A"
+        # elif 85 <= score <= 89:
+        #     return "A-"
+        # elif 80 <= score <= 84:
+        #     return "B+"
+        # elif 75 <= score <= 79:
+        #     return "B"
+        # elif 70 <= score <= 74:
+        #     return "B-"
+        # elif 65 <= score <= 69:
+        #     return "C+"
+        # elif 60 <= score <= 64:
+        #     return "C"
+        # elif 55 <= score <= 59:
+        #     return "C-"
+        # elif 50 <= score <= 54:
+        #     return "D+"
+        # elif 45 <= score <= 49:
+        #     return "D"
+        # elif 40 <= score <= 44:
+        #     return "D-"
+        # elif 1 <= score <= 39:
+        #     return "F"
+        # else:
+        #     return "Grading error"
         
     def aggregate_weighted_section_scores(self):         # def fn1(self):
         weights      = self.weight_config["weights"]
@@ -236,7 +260,7 @@ class GlobalAggregator(LlmCaller,Helper):
             "total_weighted_max_score":total_weighted_max_score, # E(max_score x weight) Summation of max score for every section every criteria
             "total_section_weight":total_section_weighted,
             "section_contribution":contribution,                 # Details
-            "globalfeedback":self.parse_global_feedback
+            "globalfeedback":self.parse_global_feedback['response']
         }
     
     def generate_global_feedback(self):    # def fn2(self)
@@ -292,7 +316,6 @@ class GlobalAggregator(LlmCaller,Helper):
         '''
         # print(f"prompt->\n{prompt}")
         self.parse_global_feedback,_ = self._call_raw(prompt)
-        # print(self.parse)
         return details
     
     def build_metadata(self):    # def fn3(self):
