@@ -626,6 +626,11 @@ async def evaluate_resume(payload: EvaluationPayload):
     targetrole  = payload.target_role
     output_lang = payload.output_lang
 
+    if targetrole == "" or targetrole is None:
+        targetrole = "NA"
+
+    # print(f"targetrole->\n{targetrole}")
+    # print("x"*100)
     builders = [
         BasePromptBuilder("Profile",    ["Completeness","ContentQuality"], targetrole, resume_json, output_lang=output_lang),
         BasePromptBuilder("Summary",    ["Completeness","ContentQuality","Grammar","Length","RoleRelevance"], targetrole, resume_json, output_lang=output_lang),
